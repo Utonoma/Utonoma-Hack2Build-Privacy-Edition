@@ -40,8 +40,27 @@ contract ContentStorage is Context {
         emit fileUploaded(_contentLibrary.length);
     }
 
+    function likeContent(uint256 index) public {
+        require(index < _contentLibrary.length, "Out of index");
+        _contentLibrary[index].likes++;
+        emit contentLikedOrDisliked(_contentLibrary[index].contentHash, true);
+    }
+
+    function dislikeContent(uint256 index) public {
+        require(index < _contentLibrary.length, "Out of index");
+        _contentLibrary[index].dislikes++;
+        emit contentLikedOrDisliked(_contentLibrary[index].contentHash, false);
+    }
+
+
     //When listening for this event, remember that you will get the length of the library, to 
     //access the file substract 1 to this number in the frontend. We are saving gas in here 
     //so we are delegating it to the front
     event fileUploaded(uint256 indexInLibrary);
+
+    /**
+    * @dev Emits an event when like or dislike were successful.
+    * {likeOrDislike} should be set to true for liking and false for disliking
+    */
+    event contentLikedOrDisliked(bytes32 content, bool likeOrDislike);
 }
