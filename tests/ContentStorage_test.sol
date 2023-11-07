@@ -45,4 +45,63 @@ contract ContentStorage_test {
             "When using the uploadFile method, the hash stored in 'metadataHash' should be the same that was provided in the parameter 'metadata' to the method"
         );
     }
+
+    function likeDislikeContentSuccess() public {
+        //upload a file to the content library
+        contentStorage.uploadFile(
+            0x017dfd85d4f6cb4dcd715a88101f7b1f06cd1e009b2327a0809d01eb9c91f231, 
+            0x7465737400000000000000000000000000000000000000000000000000000000
+        );
+        uint256 length = contentStorage.getContentLibraryLength();
+        //like the uploaded file
+        contentStorage.likeContent(length - 1);
+        //dislike the uploaded file
+        contentStorage.dislikeContent(length - 1);
+
+        Assert.equal(
+            contentStorage.getContentByIndex(length - 1).likes, 
+            1, 
+            "When using the likeContent method, the number of likes on the target content should increase by one."
+        );
+
+        Assert.equal(
+            contentStorage.getContentByIndex(length - 1).dislikes, 
+            1, 
+            "When using the dislikeContent method, the number of dislikes on the target content should increase by one."
+        );
+    }
+
+    function likeDislikeContentShouldRevert() public {
+        //upload a file to the content library
+        contentStorage.uploadFile(
+            0x017dfd85d4f6cb4dcd715a88101f7b1f06cd1e009b2327a0809d01eb9c91f231, 
+            0x7465737400000000000000000000000000000000000000000000000000000000
+        );
+        uint256 length = contentStorage.getContentLibraryLength();
+        
+        //like an unexisting content
+        try contentStorage.likeContent(length + 1) {
+            Assert.ok(false, 'method execution should fail');
+        } catch Error(string memory reason) {
+            // Compare failure reason, check if it is as expected
+            Assert.equal(
+                reason, 
+                "Out of index", 
+                "When using the likeContent method and providing an out of range value for the index the execution should be reverted");
+        } catch (bytes memory /*lowLevelData*/) {
+            Assert.ok(false, 'failed unexpected');
+        }
+
+        //dislike an unexisting content
+        try contentStorage.dislikeContent(length) {
+            Assert.ok(false, 'method execution should fail');
+        } catch Error(string memory reason) {
+            // Compare failure reason, check if it is as expected
+            Assert.equal(reason, 
+            "Out of index", 
+            "When using the dislikeContent method and providing an out of range value for the index the execution should be reverted");
+        } catch (bytes memory /*lowLevelData*/) {
+            Assert.ok(false, 'failed unexpected');
+        }
+    }
 }
