@@ -3,8 +3,9 @@
 pragma solidity 0.8.22;
 
 import {Context} from "@openzeppelin/contracts/utils/Context.sol";
+import {Users} from "contracts/Users.sol";
 
-contract ContentStorage is Context {
+contract ContentStorage is Context, Users {
 
     Content[] private _contentLibrary;
 
@@ -37,18 +38,21 @@ contract ContentStorage is Context {
                 0
             )
         );
+        updateLatestInteraction();
         emit fileUploaded(_contentLibrary.length);
     }
 
     function likeContent(uint256 index) public {
         require(index < _contentLibrary.length, "Out of index");
         _contentLibrary[index].likes++;
+        updateLatestInteraction();
         emit contentLikedOrDisliked(_contentLibrary[index].contentHash, true);
     }
 
     function dislikeContent(uint256 index) public {
         require(index < _contentLibrary.length, "Out of index");
         _contentLibrary[index].dislikes++;
+        updateLatestInteraction();
         emit contentLikedOrDisliked(_contentLibrary[index].contentHash, false);
     }
 
