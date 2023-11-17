@@ -3,8 +3,10 @@
 pragma solidity 0.8.22;
 
 import {Context} from "@openzeppelin/contracts/utils/Context.sol";
+import {Users} from "contracts/Users.sol";
+import {Time} from "contracts/Time.sol";
 
-contract ContentStorage is Context {
+contract ContentStorage is Context, Users, Time {
 
     Content[] private _contentLibrary;
 
@@ -37,18 +39,21 @@ contract ContentStorage is Context {
                 0
             )
         );
+        calculateMAU(block.timestamp, _startTimeOfTheNetwork);
         emit fileUploaded(_contentLibrary.length);
     }
 
     function likeContent(uint256 index) public {
         require(index < _contentLibrary.length, "Out of index");
         _contentLibrary[index].likes++;
+        calculateMAU(block.timestamp, _startTimeOfTheNetwork);
         emit contentLikedOrDisliked(_contentLibrary[index].contentHash, true);
     }
 
     function dislikeContent(uint256 index) public {
         require(index < _contentLibrary.length, "Out of index");
         _contentLibrary[index].dislikes++;
+        calculateMAU(block.timestamp, _startTimeOfTheNetwork);
         emit contentLikedOrDisliked(_contentLibrary[index].contentHash, false);
     }
 

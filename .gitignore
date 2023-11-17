@@ -59,7 +59,7 @@ contracts-exposed
 
 # Hardhat
 /cache
-/artifacts
+**/artifacts
 
 # Remix
 .deps/
