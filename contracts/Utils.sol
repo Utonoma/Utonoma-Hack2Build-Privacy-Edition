@@ -6,6 +6,11 @@ import {Math} from "@openzeppelin/contracts/utils/math/Math.sol";
 
 contract Utils {
 
+    //uint256 internal constant _baseReward = 1000;
+    //uint256 internal constant _commision = 1333333333333333333;
+    //If the values of the _baseReward or _commission changes, the next const should also be recalculated
+    uint256 internal constant _commisionByBaseReward = 1333333333333333333000;
+
     /**
     * @dev Receives the number of likes, dislikes and the minimum quorum required to deliverate about a content
     * returns the true if the content should be eliminated, false if not. 
@@ -31,5 +36,10 @@ contract Utils {
         uint256 twoThirds = 666666666700000000;
         
         return pMinusRootByZ > twoThirds;
+    }
+
+    function calculateFee(uint256 usersNumber) public pure returns(uint256) {
+        require(usersNumber != 0, "Number of users can't be zero");
+        return _commisionByBaseReward / usersNumber**2;
     }
 }
