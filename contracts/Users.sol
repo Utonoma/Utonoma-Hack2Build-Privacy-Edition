@@ -18,9 +18,15 @@ contract Users is Context {
         return _users[account].latestInteraction;
     }
 
+    /** @dev Gets the current MAU calculation. In case that there are no users (nobody has uploaded a content) 
+    *   it will return 0. For the first month of work of the application, the return will be the current period
+    *   calculation. For the rest of time, the return will be the MAU calculation of the previous period.
+    */
     function getMAU() public view returns(uint256) {
         if(_MAU.length < 2){
-            return 0;
+            if(_MAU.length < 1) return 0;
+            //for the first month the users number should be the current MAU calculation
+            return _MAU[_MAU.length - 1];
         }
         return _MAU[_MAU.length - 2];
     }
