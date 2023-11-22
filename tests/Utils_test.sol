@@ -104,4 +104,36 @@ contract testSuite {
             Assert.ok(false, 'failed unexpected');
         }
     }
+
+    function calculateFee() public {
+        Assert.equal(
+            utils.calculateFee(10),
+            13333333333333333330, 
+            "calculateFee method, when receiving 10 users as parameter, should return 13.333333"
+        );
+        Assert.equal(
+            utils.calculateFee(16),
+            5208333333333333332, 
+            "calculateFee method, when receiving 10 users as parameter, should return 5.2083332"
+        );
+        Assert.equal(
+            utils.calculateFee(10305168),
+            12555343, 
+            "calculateFee method, when receiving 10,305,168 users as parameter, should return 0.00000000001255534275"
+        );
+    }
+
+    function calculateFeeShouldRevert() public {
+        //pass zero in the number of users
+        try utils.calculateFee(0) {
+            Assert.ok(false, 'method execution should fail');
+        } catch Error(string memory reason) {
+            Assert.equal(
+                reason, 
+                "Number of users can't be zero", 
+                "In the calculateFee method if the number of users is 0 the transaction should be reverted, as the it will divide by 0");
+        } catch (bytes memory /*lowLevelData*/) {
+            Assert.ok(false, 'failed unexpected');
+        }
+    }
 }
