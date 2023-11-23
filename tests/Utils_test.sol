@@ -5,7 +5,7 @@ pragma solidity 0.8.22;
 import "remix_tests.sol";
 import "../contracts/Utils.sol";
 
-contract testSuite {
+contract Utils_test {
 
     Utils utils;
 
