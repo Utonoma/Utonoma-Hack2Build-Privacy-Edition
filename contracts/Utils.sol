@@ -3,6 +3,7 @@
 pragma solidity 0.8.22;
 
 import {Math} from "@openzeppelin/contracts/utils/math/Math.sol";
+import {IERC20} from "@openzeppelin/contracts/token/ERC20/IERC20.sol";
 
 contract Utils {
 
@@ -41,5 +42,12 @@ contract Utils {
     function calculateFee(uint256 usersNumber) public pure returns(uint256) {
         require(usersNumber != 0, "Number of users can't be zero");
         return _commissionByBaseReward / usersNumber**2;
+    }
+
+    function collectFee(uint256 fee) internal {
+        require(IERC20(address(this)).balanceOf(msg.sender) >= fee, "Balance is not enough to pay the fee");
+        require(IERC20(address(this)).allowance(msg.sender, address(this)) >= fee, 
+            "No allowance to this smarcontract for the fee amount");
+        IERC20(address(this)).transferFrom(msg.sender, address(this), fee);
     }
 }

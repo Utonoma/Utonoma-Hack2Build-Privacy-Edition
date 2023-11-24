@@ -45,6 +45,10 @@ contract ContentStorage_test {
             "When using the uploadFile method, the hash stored in 'metadataHash' should be the same that was provided in the parameter 'metadata' to the method"
         );
     }
+    
+    /*
+    Note: As the methods for liking and disliking content depends on another contract (Utils and Utonoma) because of the 
+    add fee functionality, this methods can't be unitarily tested anymore and needs integration testing to be validated
 
     function likeDislikeContentSuccess() public {
         //upload a file to the content library
@@ -70,6 +74,7 @@ contract ContentStorage_test {
             "When using the dislikeContent method, the number of dislikes on the target content should increase by one."
         );
     }
+    */
 
     function likeDislikeContentShouldRevert() public {
         //upload a file to the content library
