@@ -105,6 +105,38 @@ contract Utils_test {
         }
     }
 
+    function calculateReward() public {
+        Assert.equal(
+            utils.calculateReward(10),
+            10000000000000000000, 
+            "calculateFee method, when receiving 10 users as parameter, should return 10"
+        );
+        Assert.equal(
+            utils.calculateReward(16),
+            3906250000000000000, 
+            "calculateFee method, when receiving 10 users as parameter, should return 3.906250"
+        );
+        Assert.equal(
+            utils.calculateReward(10305168),
+            9416507,
+            "calculateFee method, when receiving 10,305,168 users as parameter, should return 0.000000000009416507"
+        );
+    }
+
+    function calculateRewardShouldRevert() public {
+        //pass zero in the number of users
+        try utils.calculateReward(0) {
+            Assert.ok(false, 'method execution should fail');
+        } catch Error(string memory reason) {
+            Assert.equal(
+                reason, 
+                "Number of users can't be zero", 
+                "In the calculateReward method if the number of users is 0 the transaction should be reverted, as the it will divide by 0");
+        } catch (bytes memory /*lowLevelData*/) {
+            Assert.ok(false, 'failed unexpected');
+        }
+    }
+
     function calculateFee() public {
         Assert.equal(
             utils.calculateFee(10),
