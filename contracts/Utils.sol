@@ -7,10 +7,15 @@ import {IERC20} from "@openzeppelin/contracts/token/ERC20/IERC20.sol";
 
 contract Utils {
 
-    //uint256 internal constant _baseReward = 1000;
+    uint256 internal constant _baseReward = 1000;
     //uint256 internal constant _commission = 1333333333333333333;
     //If the values of the _baseReward or _commission changes, the next const should also be recalculated
     uint256 internal constant _commissionByBaseReward = 1333333333333333333000;
+ 
+    function baseReward() public pure returns (uint256) {
+        return _baseReward;
+    }
+
 
     /**
     * @dev Receives the number of likes, dislikes and the minimum quorum required to deliverate about a content
@@ -37,6 +42,11 @@ contract Utils {
         uint256 twoThirds = 666666666700000000;
         
         return pMinusRootByZ > twoThirds;
+    }
+
+    function calculateReward(uint256 usersNumber) public pure returns(uint256) {
+        require(usersNumber != 0, "Number of users can't be zero");
+        return (10**18 * _baseReward) / usersNumber**2;
     }
 
     function calculateFee(uint256 usersNumber) public pure returns(uint256) {
