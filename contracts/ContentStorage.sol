@@ -9,7 +9,7 @@ import {Utils} from "contracts/Utils.sol";
 
 contract ContentStorage is Context, Users, Time, Utils {
 
-    Content[] private _contentLibrary;
+    Content[] internal _contentLibrary;
 
     struct Content {
         address contentOwner;

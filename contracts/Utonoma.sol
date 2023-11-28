@@ -9,4 +9,19 @@ contract Utonoma is ERC20, ContentStorage {
     constructor(uint256 initialSupply) ERC20("Omas", "OMA") {
         _mint(msg.sender, initialSupply);
     }
+
+    function harvestLikes(uint256 indexOfContent) public {
+        Content memory file = _contentLibrary[indexOfContent];
+        //Check that positive votes are more than negatives
+        require(file.likes > file.dislikes, "Likes should be greater than dislikes");
+        //Check that the file should not be deleted
+        require(shouldContentBeEliminated(file.likes, file.dislikes) == false, "Content should be eliminated");
+        require(file.likes > (file.dislikes + file.harvestedLikes), "There are no more likes to harvest");
+        
+        uint64 likesToHarvest = file.likes - file.dislikes - file.harvestedLikes;
+        //update the number of harvested likes
+        _contentLibrary[indexOfContent].harvestedLikes += likesToHarvest;
+        uint256 reward = likesToHarvest * calculateReward(getMAU());
+        _mint(file.contentOwner, reward);
+    }
 }

@@ -12,7 +12,7 @@ contract Users is Context {
     mapping(address account => UserProfile) internal _users;
 
     //Each element from the array corresponds to one month
-    uint256[] internal _MAU;
+    uint256[] private _MAU;
 
     function getLatestInteractionTime(address account) public view returns(uint256) {
         return _users[account].latestInteraction;
