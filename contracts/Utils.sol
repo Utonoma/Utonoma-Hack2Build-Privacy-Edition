@@ -7,13 +7,22 @@ import {IERC20} from "@openzeppelin/contracts/token/ERC20/IERC20.sol";
 
 contract Utils {
 
-    uint256 internal constant _baseReward = 1000;
+    uint256 private constant _baseReward = 1000;
     //uint256 internal constant _commission = 1333333333333333333;
     //If the values of the _baseReward or _commission changes, the next const should also be recalculated
-    uint256 internal constant _commissionByBaseReward = 1333333333333333333000;
- 
+    uint256 private constant _commissionByBaseReward = 1333333333333333333000;
+    uint256 private constant _minimumQuorum = 5;
+
     function baseReward() public pure returns (uint256) {
         return _baseReward;
+    }
+
+    function commissionByBaseReward() public pure returns(uint256) {
+        return _commissionByBaseReward;
+    }
+
+    function minimumQuorum() public pure returns(uint256) {
+        return _minimumQuorum;
     }
 
 
@@ -25,9 +34,9 @@ contract Utils {
     * the proportion of negative votes that will cause the content to be eliminated. 
     * https://en.wikipedia.org/wiki/Confidence_interval.
     */
-    function shouldContentBeEliminated(uint256 likes, uint256 dislikes, uint256 minimumQuorum) public pure returns(bool) {
+    function shouldContentBeEliminated(uint256 likes, uint256 dislikes) public pure returns(bool) {
         uint256 likesPlusDislikes = (likes + dislikes);
-        require(likesPlusDislikes > minimumQuorum, "Minimum quorum hasn't been reached");
+        require(likesPlusDislikes > _minimumQuorum, "Minimum quorum hasn't been reached");
         if(dislikes == 0) return false;
         uint256 normalizedDislikes = dislikes * 10**18;
         uint256 p = normalizedDislikes / likesPlusDislikes;
@@ -39,7 +48,7 @@ contract Utils {
         uint256 z = 1960000000000000000;
         uint256 rootByZ = (root * z) / 10**9;
         uint256 pMinusRootByZ = p - rootByZ;
-        uint256 twoThirds = 666666666700000000;
+                uint256 twoThirds = 666666666700000000;
         
         return pMinusRootByZ > twoThirds;
     }
