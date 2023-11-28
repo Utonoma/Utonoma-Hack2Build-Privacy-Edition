@@ -9,7 +9,7 @@ abstract contract Time {
         _startTimeOfTheNetwork = block.timestamp;
     }
 
-    function startTimeOfTheNetwork() public view virtual returns (uint256) {
+    function startTimeOfTheNetwork() public view returns (uint256) {
         return _startTimeOfTheNetwork;
     }
 }
