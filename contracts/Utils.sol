@@ -47,8 +47,12 @@ contract Utils {
         uint256 root = Math.sqrt(pByOneMinusPBetweenN);
         uint256 z = 1960000000000000000;
         uint256 rootByZ = (root * z) / 10**9;
-        uint256 pMinusRootByZ = p - rootByZ;
-                uint256 twoThirds = 666666666700000000;
+        uint256 pMinusRootByZ;
+        unchecked{
+            pMinusRootByZ = p - rootByZ;
+        }
+        if(pMinusRootByZ > p) return false;
+        uint256 twoThirds = 666666666700000000;
         
         return pMinusRootByZ > twoThirds;
     }
