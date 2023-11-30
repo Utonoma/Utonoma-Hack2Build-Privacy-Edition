@@ -9,7 +9,23 @@ import {Utils} from "contracts/Utils.sol";
 
 contract ContentStorage is Context, Users, Time, Utils {
 
-    Content[] internal _contentLibrary;
+    enum ContentTypes {
+        audios,
+        music,
+        podcasts,
+        audioLivestreams,
+        videos,
+        shortVideos,
+        movies,
+        videoLivestreams,
+        comments,
+        blogs,
+        books,
+        images,
+        animations,
+        videoGames,
+        apps
+    }
 
     struct Content {
         address contentOwner;
@@ -20,17 +36,27 @@ contract ContentStorage is Context, Users, Time, Utils {
         uint64 harvestedLikes;
     }
 
-    function getContentLibraryLength() public view returns(uint256){
-        return _contentLibrary.length;
+    Content[][15] internal _contentLibraries;
+
+    function getMinContentTypes() public pure returns(uint256) {
+        return uint256(type(ContentTypes).min);
     }
 
-    function getContentByIndex(uint256 index) public view returns(Content memory){
-        require(index < _contentLibrary.length, "Out of index");
-        return _contentLibrary[index];
+    function getMaxContentTypes() public pure returns(uint256) {
+        return uint256(type(ContentTypes).max);
     }
 
-    function uploadFile(bytes32 content, bytes32 metadata) public {
-        _contentLibrary.push(
+    function getContentLibraryLength(ContentTypes contentType) public view returns(uint256){
+        return _contentLibraries[uint256(contentType)].length;
+    }
+
+    function getContentByIndex(uint256 index, ContentTypes contentType) public view returns(Content memory){
+        require(index < _contentLibraries[uint256(contentType)].length, "Out of index");
+        return _contentLibraries[uint256(contentType)][index];
+    }
+
+    function uploadFile(bytes32 content, bytes32 metadata, ContentTypes contentType) public {
+        _contentLibraries[uint256(contentType)].push(
             Content(
                 _msgSender(),
                 content,
@@ -41,34 +67,35 @@ contract ContentStorage is Context, Users, Time, Utils {
             )
         );
         calculateMAU(block.timestamp, _startTimeOfTheNetwork);
-        emit fileUploaded(_contentLibrary.length);
+        emit fileUploaded(_contentLibraries.length, contentType);
     }
 
-    function likeContent(uint256 index) public {
-        require(index < _contentLibrary.length, "Out of index");
+    function likeContent(uint256 index, ContentTypes contentType) public {
+        require(index < _contentLibraries[uint256(contentType)].length, "Out of index");
         collectFee(calculateFee(getMAU()));
-        _contentLibrary[index].likes++;
+        _contentLibraries[uint256(contentType)][index].likes++;
         calculateMAU(block.timestamp, _startTimeOfTheNetwork);
-        emit contentLikedOrDisliked(_contentLibrary[index].contentHash, true);
+        emit contentLikedOrDisliked(_contentLibraries[uint256(contentType)][index].contentHash, contentType, true);
     }
 
-    function dislikeContent(uint256 index) public {
-        require(index < _contentLibrary.length, "Out of index");
+    function dislikeContent(uint256 index, ContentTypes contentType) public {
+        require(index < _contentLibraries[uint256(contentType)].length, "Out of index");
         collectFee(calculateFee(getMAU()));
-        _contentLibrary[index].dislikes++;
+        _contentLibraries[uint256(contentType)][index].dislikes++;
         calculateMAU(block.timestamp, _startTimeOfTheNetwork);
-        emit contentLikedOrDisliked(_contentLibrary[index].contentHash, false);
+        emit contentLikedOrDisliked(_contentLibraries[uint256(contentType)][index].contentHash, contentType, false);
     }
 
 
     //When listening for this event, remember that you will get the length of the library, to 
     //access the file substract 1 to this number in the frontend. We are saving gas in here 
     //so we are delegating it to the front
-    event fileUploaded(uint256 indexInLibrary);
+    event fileUploaded(uint256 indexInLibrary, ContentTypes contentType);
 
     /**
     * @dev Emits an event when like or dislike were successful.
     * {likeOrDislike} should be set to true for liking and false for disliking
     */
-    event contentLikedOrDisliked(bytes32 content, bool likeOrDislike);
+    event contentLikedOrDisliked(bytes32 content, ContentTypes contentType, bool likeOrDislike);
+
 }
