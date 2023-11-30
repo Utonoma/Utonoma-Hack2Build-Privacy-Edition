@@ -11,21 +11,22 @@ contract ContentStorage_test {
 
     function beforeAll() public {
         contentStorage = new ContentStorage();
-        Assert.equal(contentStorage.getContentLibraryLength(), 0, "Library length should be 0 when the contract just has been deployed");
+        Assert.equal(contentStorage.getContentLibraryLength(ContentStorage.ContentTypes(0)), 0, "Library length should be 0 when the contract just has been deployed");
     }
 
     function uploadFileSuccess() public {
-        uint256 originalLibraryLength = contentStorage.getContentLibraryLength();
+        uint256 originalLibraryLength = contentStorage.getContentLibraryLength(ContentStorage.ContentTypes(0));
         bytes32 content = 0x017dfd85d4f6cb4dcd715a88101f7b1f06cd1e009b2327a0809d01eb9c91f231;
         bytes32 metadata = 0x7465737400000000000000000000000000000000000000000000000000000000;
         contentStorage.uploadFile(
             content, 
-            metadata
+            metadata,
+            ContentStorage.ContentTypes(0)
         );
 
-        uint256 modifiedLibraryLength = contentStorage.getContentLibraryLength();
-        bytes32 insertedContent = contentStorage.getContentByIndex(modifiedLibraryLength - 1).contentHash; 
-        bytes32 insertedMetadata = contentStorage.getContentByIndex(modifiedLibraryLength - 1).metadataHash;
+        uint256 modifiedLibraryLength = contentStorage.getContentLibraryLength(ContentStorage.ContentTypes(0));
+        bytes32 insertedContent = contentStorage.getContentByIndex(modifiedLibraryLength - 1, ContentStorage.ContentTypes(0)).contentHash; 
+        bytes32 insertedMetadata = contentStorage.getContentByIndex(modifiedLibraryLength - 1, ContentStorage.ContentTypes(0)).metadataHash;
 
         Assert.equal(
             modifiedLibraryLength, 
@@ -80,12 +81,13 @@ contract ContentStorage_test {
         //upload a file to the content library
         contentStorage.uploadFile(
             0x017dfd85d4f6cb4dcd715a88101f7b1f06cd1e009b2327a0809d01eb9c91f231, 
-            0x7465737400000000000000000000000000000000000000000000000000000000
+            0x7465737400000000000000000000000000000000000000000000000000000000,
+            ContentStorage.ContentTypes(0)
         );
-        uint256 length = contentStorage.getContentLibraryLength();
+        uint256 length = contentStorage.getContentLibraryLength(ContentStorage.ContentTypes(0));
         
         //like an unexisting content
-        try contentStorage.likeContent(length + 1) {
+        try contentStorage.likeContent(length + 1, ContentStorage.ContentTypes(0)) {
             Assert.ok(false, 'method execution should fail');
         } catch Error(string memory reason) {
             // Compare failure reason, check if it is as expected
@@ -98,7 +100,7 @@ contract ContentStorage_test {
         }
 
         //dislike an unexisting content
-        try contentStorage.dislikeContent(length) {
+        try contentStorage.dislikeContent(length, ContentStorage.ContentTypes(0)) {
             Assert.ok(false, 'method execution should fail');
         } catch Error(string memory reason) {
             // Compare failure reason, check if it is as expected
