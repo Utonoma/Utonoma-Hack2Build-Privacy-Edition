@@ -55,52 +55,24 @@ contract ContentStorage is Context, Users, Time, Utils {
         return _contentLibraries[uint256(contentType)].length;
     }
 
-    function getContentById(Identifier calldata id) public view returns(Content memory){
-        require(id.index < _contentLibraries[uint256(id.contentLibrary)].length, "Out of index");
+    function getContentById(Identifier calldata id) contentShouldExists(id) public view returns(Content memory){
         return _contentLibraries[uint256(id.contentLibrary)][id.index];
     }
-
-    function uploadFile(bytes32 content, bytes32 metadata, ContentTypes contentType) public {
-        _contentLibraries[uint256(contentType)].push(
-            Content(
-                _msgSender(),
-                content,
-                metadata,
-                0,
-                0,
-                0
-            )
-        );
-        calculateMAU(block.timestamp, _startTimeOfTheNetwork);
-        emit fileUploaded(_contentLibraries.length, contentType);
-    }
-
-    function likeContent(uint256 index, ContentTypes contentType) public {
-        require(index < _contentLibraries[uint256(contentType)].length, "Out of index");
-        collectFee(calculateFee(getMAU()));
-        _contentLibraries[uint256(contentType)][index].likes++;
-        calculateMAU(block.timestamp, _startTimeOfTheNetwork);
-        emit contentLikedOrDisliked(_contentLibraries[uint256(contentType)][index].contentHash, contentType, true);
-    }
-
-    function dislikeContent(uint256 index, ContentTypes contentType) public {
-        require(index < _contentLibraries[uint256(contentType)].length, "Out of index");
-        collectFee(calculateFee(getMAU()));
-        _contentLibraries[uint256(contentType)][index].dislikes++;
-        calculateMAU(block.timestamp, _startTimeOfTheNetwork);
-        emit contentLikedOrDisliked(_contentLibraries[uint256(contentType)][index].contentHash, contentType, false);
-    }
-
     
+    modifier contentShouldExists(Identifier calldata id) {
+        require(id.index < _contentLibraries[uint256(id.contentLibrary)].length, "Out of index");
+        _;
+    }
+
     //When listening for this event, remember that you will get the length of the library, to 
     //access the file substract 1 to this number in the frontend. We are saving gas in here 
     //so we are delegating it to the front
-    event fileUploaded(uint256 indexInLibrary, ContentTypes contentType);
+    event fileUploaded(Identifier indexed id);
 
     /**
     * @dev Emits an event when like or dislike were successful.
     * {likeOrDislike} should be set to true for liking and false for disliking
     */
-    event contentLikedOrDisliked(bytes32 content, ContentTypes contentType, bool likeOrDislike);
+    event contentLikedOrDisliked(Identifier indexed id, bool likeOrDislike);
 
 }
