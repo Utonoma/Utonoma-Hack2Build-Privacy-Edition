@@ -27,6 +27,11 @@ contract ContentStorage is Context, Users, Time, Utils {
         apps
     }
 
+    struct Identifier {
+        uint256 index;
+        ContentTypes contentLibrary;
+    }
+
     struct Content {
         address contentOwner;
         bytes32 contentHash;
@@ -50,9 +55,9 @@ contract ContentStorage is Context, Users, Time, Utils {
         return _contentLibraries[uint256(contentType)].length;
     }
 
-    function getContentByIndex(uint256 index, ContentTypes contentType) public view returns(Content memory){
-        require(index < _contentLibraries[uint256(contentType)].length, "Out of index");
-        return _contentLibraries[uint256(contentType)][index];
+    function getContentById(Identifier calldata id) public view returns(Content memory){
+        require(id.index < _contentLibraries[uint256(id.contentLibrary)].length, "Out of index");
+        return _contentLibraries[uint256(id.contentLibrary)][id.index];
     }
 
     function uploadFile(bytes32 content, bytes32 metadata, ContentTypes contentType) public {
@@ -86,7 +91,7 @@ contract ContentStorage is Context, Users, Time, Utils {
         emit contentLikedOrDisliked(_contentLibraries[uint256(contentType)][index].contentHash, contentType, false);
     }
 
-
+    
     //When listening for this event, remember that you will get the length of the library, to 
     //access the file substract 1 to this number in the frontend. We are saving gas in here 
     //so we are delegating it to the front
