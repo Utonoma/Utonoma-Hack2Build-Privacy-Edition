@@ -26,20 +26,22 @@ contract Utonoma is ERC20, ContentStorage, Utils, Users, Time {
         createContent(content, contentType);
     }
 
-    function likeContent(uint256 index, ContentTypes contentType) public {
-        require(index < _contentLibraries[uint256(contentType)].length, "Out of index");
+    function like(Identifier calldata id) public {
         collectFee(calculateFee(getMAU()));
-        _contentLibraries[uint256(contentType)][index].likes++;
+        Content memory content = getContentById(id);
+        content.likes++;
+        updateContent(content, id);
         calculateMAU(block.timestamp, _startTimeOfTheNetwork);
-        emit contentLikedOrDisliked(Identifier(index, contentType), true);
+        emit contentLikedOrDisliked(id, true);
     }
 
-    function dislikeContent(uint256 index, ContentTypes contentType) public {
-        require(index < _contentLibraries[uint256(contentType)].length, "Out of index");
+    function dislike(Identifier calldata id) public {
         collectFee(calculateFee(getMAU()));
-        _contentLibraries[uint256(contentType)][index].dislikes++;
+        Content memory content = getContentById(id);
+        content.dislikes++;
+        updateContent(content, id);
         calculateMAU(block.timestamp, _startTimeOfTheNetwork);
-        emit contentLikedOrDisliked(Identifier(index, contentType), false);
+        emit contentLikedOrDisliked(id, false);
     }
 
     function harvestLikes(uint256 indexOfContent, ContentTypes contentType) public {
