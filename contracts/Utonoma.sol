@@ -4,25 +4,26 @@ pragma solidity 0.8.22;
 
 import {ERC20} from "@openzeppelin/contracts/token/ERC20/ERC20.sol";
 import {ContentStorage} from "contracts/ContentStorage.sol";
+import {Users} from "contracts/Users.sol";
+import {Time} from "contracts/Time.sol";
+import {Utils} from "contracts/Utils.sol";
 
-contract Utonoma is ERC20, ContentStorage {
+contract Utonoma is ERC20, ContentStorage, Utils, Users, Time {
     constructor(uint256 initialSupply) ERC20("Omas", "OMA") {
         _mint(msg.sender, initialSupply);
     }
 
-    function uploadFile(bytes32 content, bytes32 metadata, ContentTypes contentType) public {
-        _contentLibraries[uint256(contentType)].push(
-            Content(
-                _msgSender(),
-                content,
-                metadata,
-                0,
-                0,
-                0
-            )
-        );
+    function upload(bytes32 contentHash, bytes32 metadataHash, ContentTypes contentType) public {
         calculateMAU(block.timestamp, _startTimeOfTheNetwork);
-        emit fileUploaded(Identifier(_contentLibraries.length, contentType));
+        Content memory content = Content(
+            _msgSender(),
+            contentHash,
+            metadataHash,
+            0,
+            0,
+            0
+        );
+        createContent(content, contentType);
     }
 
     function likeContent(uint256 index, ContentTypes contentType) public {

@@ -2,12 +2,7 @@
 
 pragma solidity 0.8.22;
 
-import {Context} from "@openzeppelin/contracts/utils/Context.sol";
-import {Users} from "contracts/Users.sol";
-import {Time} from "contracts/Time.sol";
-import {Utils} from "contracts/Utils.sol";
-
-contract ContentStorage is Context, Users, Time, Utils {
+contract ContentStorage {
 
     enum ContentTypes {
         audios,
@@ -55,24 +50,27 @@ contract ContentStorage is Context, Users, Time, Utils {
         return _contentLibraries[uint256(contentType)].length;
     }
 
-    function getContentById(Identifier calldata id) contentShouldExists(id) public view returns(Content memory){
+    function getContentById(Identifier memory id) contentShouldExists(id) public view returns(Content memory){
         return _contentLibraries[uint256(id.contentLibrary)][id.index];
     }
     
-    modifier contentShouldExists(Identifier calldata id) {
+    function createContent(Content memory content, ContentTypes contentType) internal {
+        _contentLibraries[uint256(contentType)].push(content);
+        emit contentCreated(Identifier(getContentLibraryLength(contentType) - 1, contentType));
+    }
+
+    modifier contentShouldExists(Identifier memory id) {
         require(id.index < _contentLibraries[uint256(id.contentLibrary)].length, "Out of index");
         _;
     }
 
-    //When listening for this event, remember that you will get the length of the library, to 
-    //access the file substract 1 to this number in the frontend. We are saving gas in here 
-    //so we are delegating it to the front
-    event fileUploaded(Identifier indexed id);
+    /// @dev Emits an event when a content was created giving the identifier of the content.
+    event contentCreated(Identifier indexed id);
 
     /**
     * @dev Emits an event when like or dislike were successful.
     * {likeOrDislike} should be set to true for liking and false for disliking
     */
-    event contentLikedOrDisliked(Identifier indexed id, bool likeOrDislike);
+    event contentLikedOrDisliked(Identifier indexed id, bool indexed likeOrDislike);
 
 }
