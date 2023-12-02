@@ -44,18 +44,16 @@ contract Utonoma is ERC20, ContentStorage, Utils, Users, Time {
         emit contentLikedOrDisliked(id, false);
     }
 
-    function harvestLikes(uint256 indexOfContent, ContentTypes contentType) public {
-        Content memory file = _contentLibraries[uint256(contentType)][indexOfContent];
-        //Check that positive votes are more than negatives
-        require(file.likes > file.dislikes, "Likes should be greater than dislikes");
-        //Check that the file should not be deleted
-        require(shouldContentBeEliminated(file.likes, file.dislikes) == false, "Content should be eliminated");
-        require(file.likes > (file.dislikes + file.harvestedLikes), "There are no more likes to harvest");
+    function harvestLikes(Identifier calldata id) public {
+        Content memory content = getContentById(id);
+        require(content.likes > content.dislikes, "Likes should be greater than dislikes");
+        require(shouldContentBeEliminated(content.likes, content.dislikes) == false, "Content should be eliminated");
+        require(content.likes > (content.dislikes + content.harvestedLikes), "There are no more likes to harvest");
         
-        uint64 likesToHarvest = file.likes - file.dislikes - file.harvestedLikes;
-        //update the number of harvested likes
-        _contentLibraries[uint256(contentType)][indexOfContent].harvestedLikes += likesToHarvest;
+        uint64 likesToHarvest = content.likes - content.dislikes - content.harvestedLikes;
+        content.harvestedLikes += likesToHarvest;
+        updateContent(content, id);
         uint256 reward = likesToHarvest * calculateReward(getMAU());
-        _mint(file.contentOwner, reward);
+        _mint(content.contentOwner, reward);
     }
 }
