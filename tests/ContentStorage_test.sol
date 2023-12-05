@@ -59,69 +59,80 @@ contract ContentStorage_test is ContentStorage {
         }
     }
 
-    /*
-    Note: As the methods for liking and disliking content depends on another contract (Utils and Utonoma) because of the 
-    add fee functionality, this methods can't be unitarily tested anymore and needs integration testing to be validated
-
-    function likeDislikeContentSuccess() public {
-        //upload a file to the content library
-        contentStorage.uploadFile(
-            0x017dfd85d4f6cb4dcd715a88101f7b1f06cd1e009b2327a0809d01eb9c91f231, 
-            0x7465737400000000000000000000000000000000000000000000000000000000
-        );
-        uint256 length = contentStorage.getContentLibraryLength();
-        //like the uploaded file
-        contentStorage.likeContent(length - 1);
-        //dislike the uploaded file
-        contentStorage.dislikeContent(length - 1);
-
-        Assert.equal(
-            contentStorage.getContentByIndex(length - 1).likes, 
-            1, 
-            "When using the likeContent method, the number of likes on the target content should increase by one."
-        );
-
-        Assert.equal(
-            contentStorage.getContentByIndex(length - 1).dislikes, 
-            1, 
-            "When using the dislikeContent method, the number of dislikes on the target content should increase by one."
-        );
-    }
-    
-
-    function likeDislikeContentShouldRevert() public {
-        //upload a file to the content library
-        contentStorage.uploadFile(
-            0x017dfd85d4f6cb4dcd715a88101f7b1f06cd1e009b2327a0809d01eb9c91f231, 
-            0x7465737400000000000000000000000000000000000000000000000000000000,
-            ContentStorage.ContentTypes(0)
-        );
-        uint256 length = contentStorage.getContentLibraryLength(ContentStorage.ContentTypes(0));
+    /// #sender: account-1
+    function updateContentSuccess() public {
+        Identifier memory targetContentIdentifier = Identifier(0, ContentTypes(0));
+        bytes32 modifiedContentHash = 0x017dfd85d4f6cb4dcd715a88101f7b1f06cd1e009b2327a0809d888777555555;
+        bytes32 modifiedMetadataHash = 0x7465737400000000000000000000000000000000000000000000222222111111;
         
-        //like an unexisting content
-        try contentStorage.likeContent(length + 1, ContentStorage.ContentTypes(0)) {
-            Assert.ok(false, 'method execution should fail');
-        } catch Error(string memory reason) {
-            // Compare failure reason, check if it is as expected
-            Assert.equal(
-                reason, 
-                "Out of index", 
-                "When using the likeContent method and providing an out of range value for the index the execution should be reverted");
-        } catch (bytes memory /*lowLevelData*//*) {
-            Assert.ok(false, 'failed unexpected');
-        }
+        Content memory originalContent = getContentById(targetContentIdentifier);
+        
+        Content memory content2 = Content(
+            msg.sender,
+            modifiedContentHash,
+            modifiedMetadataHash,
+            originalContent.likes++,
+            originalContent.dislikes++,
+            originalContent.harvestedLikes++
+        );
 
-        //dislike an unexisting content
-        try contentStorage.dislikeContent(length, ContentStorage.ContentTypes(0)) {
-            Assert.ok(false, 'method execution should fail');
-        } catch Error(string memory reason) {
-            // Compare failure reason, check if it is as expected
-            Assert.equal(reason, 
-            "Out of index", 
-            "When using the dislikeContent method and providing an out of range value for the index the execution should be reverted");
-        } catch (bytes memory /*lowLevelData*//*) {
-            Assert.ok(false, 'failed unexpected');
-        }
+        updateContent(content2, targetContentIdentifier);
+
+        Content memory modifiedContent = getContentById(targetContentIdentifier);
+
+        Assert.notEqual(
+            modifiedContent.contentHash, 
+            originalContent.contentHash, 
+            "When using the updateContent method to modify the value of the contentHash, it should be different from the original one"
+        );
+        Assert.equal(
+            content2.contentHash,
+            modifiedContent.contentHash, 
+            "When using the updateContent method to modify the contentHash the new value should be equal to the updated information"
+        );
+
+        Assert.notEqual(
+            modifiedContent.metadataHash, 
+            originalContent.metadataHash, 
+            "When using the updateContent method to modify the value of the metadataHash, it should be different from the original one"
+        );
+        Assert.equal(
+            content2.metadataHash,
+            modifiedContent.metadataHash, 
+            "When using the updateContent method to modify the metadataHash the new value should be equal to the updated information"
+        );
+
+        Assert.notEqual(
+            modifiedContent.likes, 
+            originalContent.likes, 
+            "When using the updateContent method to modify the value of the likes, it should be different from the original one"
+        );
+        Assert.equal(
+            content2.likes,
+            modifiedContent.likes, 
+            "When using the updateContent method to modify the likes the new value should be equal to the updated information"
+        );
+
+        Assert.notEqual(
+            modifiedContent.dislikes, 
+            originalContent.dislikes, 
+            "When using the updateContent method to modify the value of the dislikes, it should be different from the original one"
+        );
+        Assert.equal(
+            content2.dislikes,
+            modifiedContent.dislikes, 
+            "When using the updateContent method to modify the dislikes the new value should be equal to the updated information"
+        );
+
+        Assert.notEqual(
+            modifiedContent.harvestedLikes, 
+            originalContent.harvestedLikes, 
+            "When using the updateContent method to modify the value of the harvestedLikes, it should be different from the original one"
+        );
+        Assert.equal(
+            content2.harvestedLikes,
+            modifiedContent.harvestedLikes, 
+            "When using the updateContent method to modify the harvestedLikes the new value should be equal to the updated information"
+        );
     }
-    */
 }
