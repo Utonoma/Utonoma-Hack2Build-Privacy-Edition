@@ -2,12 +2,7 @@
 
 pragma solidity 0.8.22;
 
-import {Context} from "@openzeppelin/contracts/utils/Context.sol";
-import {Users} from "contracts/Users.sol";
-import {Time} from "contracts/Time.sol";
-import {Utils} from "contracts/Utils.sol";
-
-contract ContentStorage is Context, Users, Time, Utils {
+contract ContentStorage {
 
     enum ContentTypes {
         audios,
@@ -25,6 +20,11 @@ contract ContentStorage is Context, Users, Time, Utils {
         animations,
         videoGames,
         apps
+    }
+
+    struct Identifier {
+        uint256 index;
+        ContentTypes contentLibrary;
     }
 
     struct Content {
@@ -50,52 +50,21 @@ contract ContentStorage is Context, Users, Time, Utils {
         return _contentLibraries[uint256(contentType)].length;
     }
 
-    function getContentByIndex(uint256 index, ContentTypes contentType) public view returns(Content memory){
-        require(index < _contentLibraries[uint256(contentType)].length, "Out of index");
-        return _contentLibraries[uint256(contentType)][index];
+    function getContentById(Identifier memory id) contentShouldExists(id) public view returns(Content memory){
+        return _contentLibraries[uint256(id.contentLibrary)][id.index];
+    }
+    
+    function createContent(Content memory content, ContentTypes contentType) internal {
+        _contentLibraries[uint256(contentType)].push(content);
     }
 
-    function uploadFile(bytes32 content, bytes32 metadata, ContentTypes contentType) public {
-        _contentLibraries[uint256(contentType)].push(
-            Content(
-                _msgSender(),
-                content,
-                metadata,
-                0,
-                0,
-                0
-            )
-        );
-        calculateMAU(block.timestamp, _startTimeOfTheNetwork);
-        emit fileUploaded(_contentLibraries.length, contentType);
+    function updateContent(Content memory content, Identifier memory id) contentShouldExists(id) internal {
+        _contentLibraries[uint256(id.contentLibrary)][id.index] = content;
     }
 
-    function likeContent(uint256 index, ContentTypes contentType) public {
-        require(index < _contentLibraries[uint256(contentType)].length, "Out of index");
-        collectFee(calculateFee(getMAU()));
-        _contentLibraries[uint256(contentType)][index].likes++;
-        calculateMAU(block.timestamp, _startTimeOfTheNetwork);
-        emit contentLikedOrDisliked(_contentLibraries[uint256(contentType)][index].contentHash, contentType, true);
+    modifier contentShouldExists(Identifier memory id) {
+        require(id.index < _contentLibraries[uint256(id.contentLibrary)].length, "Out of index");
+        _;
     }
-
-    function dislikeContent(uint256 index, ContentTypes contentType) public {
-        require(index < _contentLibraries[uint256(contentType)].length, "Out of index");
-        collectFee(calculateFee(getMAU()));
-        _contentLibraries[uint256(contentType)][index].dislikes++;
-        calculateMAU(block.timestamp, _startTimeOfTheNetwork);
-        emit contentLikedOrDisliked(_contentLibraries[uint256(contentType)][index].contentHash, contentType, false);
-    }
-
-
-    //When listening for this event, remember that you will get the length of the library, to 
-    //access the file substract 1 to this number in the frontend. We are saving gas in here 
-    //so we are delegating it to the front
-    event fileUploaded(uint256 indexInLibrary, ContentTypes contentType);
-
-    /**
-    * @dev Emits an event when like or dislike were successful.
-    * {likeOrDislike} should be set to true for liking and false for disliking
-    */
-    event contentLikedOrDisliked(bytes32 content, ContentTypes contentType, bool likeOrDislike);
 
 }
