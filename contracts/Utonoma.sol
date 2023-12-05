@@ -32,7 +32,7 @@ contract Utonoma is ERC20, ContentStorage, Utils, Users, Time {
         content.likes++;
         updateContent(content, id);
         calculateMAU(block.timestamp, _startTimeOfTheNetwork);
-        emit contentLikedOrDisliked(id, true);
+        emit liked(id.index, uint256(id.contentLibrary));
     }
 
     function dislike(Identifier calldata id) public {
@@ -41,7 +41,7 @@ contract Utonoma is ERC20, ContentStorage, Utils, Users, Time {
         content.dislikes++;
         updateContent(content, id);
         calculateMAU(block.timestamp, _startTimeOfTheNetwork);
-        emit contentLikedOrDisliked(id, false);
+        emit disliked(id.index, uint256(id.contentLibrary));
     }
 
     function harvestLikes(Identifier calldata id) public {
@@ -55,5 +55,13 @@ contract Utonoma is ERC20, ContentStorage, Utils, Users, Time {
         updateContent(content, id);
         uint256 reward = likesToHarvest * calculateReward(getMAU());
         _mint(content.contentOwner, reward);
+        emit harvested(id.index, uint256(id.contentLibrary), reward);
     }
+
+    event liked(uint256 indexed index, uint256 indexed contentLibrary);
+
+    event disliked(uint256 indexed index, uint256 indexed contentLibrary);
+
+    event harvested(uint256 indexed index, uint256 indexed contentLibrary, uint256 amount);
+
 }

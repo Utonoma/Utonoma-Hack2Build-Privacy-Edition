@@ -56,29 +56,15 @@ contract ContentStorage {
     
     function createContent(Content memory content, ContentTypes contentType) internal {
         _contentLibraries[uint256(contentType)].push(content);
-        emit contentCreated(Identifier(getContentLibraryLength(contentType) - 1, contentType));
     }
 
     function updateContent(Content memory content, Identifier memory id) contentShouldExists(id) internal {
         _contentLibraries[uint256(id.contentLibrary)][id.index] = content;
-        emit contentEdited(id);
     }
 
     modifier contentShouldExists(Identifier memory id) {
         require(id.index < _contentLibraries[uint256(id.contentLibrary)].length, "Out of index");
         _;
     }
-
-    /// @dev Emits an event when a content was created giving the identifier of the content.
-    event contentCreated(Identifier indexed id);
-
-    /// @dev Emits an event when a content was edited giving the identifier of the content.
-    event contentEdited(Identifier indexed id);
-
-    /**
-    * @dev Emits an event when like or dislike were successful.
-    * {likeOrDislike} should be set to true for liking and false for disliking
-    */
-    event contentLikedOrDisliked(Identifier indexed id, bool indexed likeOrDislike);
 
 }
