@@ -135,4 +135,57 @@ contract ContentStorage_test is ContentStorage {
             "When using the updateContent method to modify the harvestedLikes the new value should be equal to the updated information"
         );
     }
+
+    function deleteSuccess() public {
+        Identifier memory targetIdentifier = Identifier(0, ContentTypes(0));
+        Content memory originalContent = getContentById(targetIdentifier);
+        uint256 originalContentLength = getContentLibraryLength(targetIdentifier.contentLibrary);
+
+        deleteContent(targetIdentifier);
+        Content memory storageSpaceAfterDeletion = getContentById(targetIdentifier);
+
+        Assert.notEqual(
+            originalContent.contentOwner,
+            storageSpaceAfterDeletion.contentOwner,
+            "When using the deleteContent method, the storage identifier should no longer contain the same information as before"
+        );
+
+        Assert.equal(
+            getContentLibraryLength(targetIdentifier.contentLibrary),
+            originalContentLength,
+            "When using the deleteContent method, the length of the content library before and after applying the method should be the same"
+        );
+
+        Assert.equal(
+            storageSpaceAfterDeletion.contentOwner,
+            address(0),
+            "When using the deleteContent method, the information of the contentOwner should be clear"
+        );
+        Assert.equal(
+            storageSpaceAfterDeletion.contentHash,
+            0x0,
+            "When using the deleteContent method, the information of the contentHash should be clear"
+        );
+        Assert.equal(
+            storageSpaceAfterDeletion.metadataHash,
+            0x0,
+            "When using the deleteContent method, the information of the metadataHash should be clear"
+        );
+        Assert.equal(
+            storageSpaceAfterDeletion.likes,
+            0,
+            "When using the deleteContent method, the information of the likes should be clear"
+        );
+        Assert.equal(
+            storageSpaceAfterDeletion.dislikes,
+            0,
+            "When using the deleteContent method, the information of the dislikes should be clear"
+        );
+        Assert.equal(
+            storageSpaceAfterDeletion.harvestedLikes,
+            0,
+            "When using the deleteContent method, the information of the harvestedLikes should be clear"
+        );
+
+    }
 }
