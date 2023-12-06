@@ -86,8 +86,8 @@ contract ContentStorage_test is ContentStorage {
             "When using the updateContent method to modify the value of the contentHash, it should be different from the original one"
         );
         Assert.equal(
-            content2.contentHash,
-            modifiedContent.contentHash, 
+            modifiedContent.contentHash,
+            content2.contentHash, 
             "When using the updateContent method to modify the contentHash the new value should be equal to the updated information"
         );
 
@@ -97,8 +97,8 @@ contract ContentStorage_test is ContentStorage {
             "When using the updateContent method to modify the value of the metadataHash, it should be different from the original one"
         );
         Assert.equal(
-            content2.metadataHash,
             modifiedContent.metadataHash, 
+            content2.metadataHash,
             "When using the updateContent method to modify the metadataHash the new value should be equal to the updated information"
         );
 
@@ -108,8 +108,8 @@ contract ContentStorage_test is ContentStorage {
             "When using the updateContent method to modify the value of the likes, it should be different from the original one"
         );
         Assert.equal(
-            content2.likes,
             modifiedContent.likes, 
+            content2.likes,
             "When using the updateContent method to modify the likes the new value should be equal to the updated information"
         );
 
@@ -119,8 +119,8 @@ contract ContentStorage_test is ContentStorage {
             "When using the updateContent method to modify the value of the dislikes, it should be different from the original one"
         );
         Assert.equal(
-            content2.dislikes,
             modifiedContent.dislikes, 
+            content2.dislikes,
             "When using the updateContent method to modify the dislikes the new value should be equal to the updated information"
         );
 
@@ -130,9 +130,62 @@ contract ContentStorage_test is ContentStorage {
             "When using the updateContent method to modify the value of the harvestedLikes, it should be different from the original one"
         );
         Assert.equal(
+            modifiedContent.harvestedLikes,
             content2.harvestedLikes,
-            modifiedContent.harvestedLikes, 
             "When using the updateContent method to modify the harvestedLikes the new value should be equal to the updated information"
         );
+    }
+
+    function deleteSuccess() public {
+        Identifier memory targetIdentifier = Identifier(0, ContentTypes(0));
+        Content memory originalContent = getContentById(targetIdentifier);
+        uint256 originalContentLength = getContentLibraryLength(targetIdentifier.contentLibrary);
+
+        deleteContent(targetIdentifier);
+        Content memory storageSpaceAfterDeletion = getContentById(targetIdentifier);
+
+        Assert.notEqual(
+            originalContent.contentOwner,
+            storageSpaceAfterDeletion.contentOwner,
+            "When using the deleteContent method, the storage identifier should no longer contain the same information as before"
+        );
+
+        Assert.equal(
+            getContentLibraryLength(targetIdentifier.contentLibrary),
+            originalContentLength,
+            "When using the deleteContent method, the length of the content library before and after applying the method should be the same"
+        );
+
+        Assert.equal(
+            storageSpaceAfterDeletion.contentOwner,
+            address(0),
+            "When using the deleteContent method, the information of the contentOwner should be clear"
+        );
+        Assert.equal(
+            storageSpaceAfterDeletion.contentHash,
+            0x0,
+            "When using the deleteContent method, the information of the contentHash should be clear"
+        );
+        Assert.equal(
+            storageSpaceAfterDeletion.metadataHash,
+            0x0,
+            "When using the deleteContent method, the information of the metadataHash should be clear"
+        );
+        Assert.equal(
+            storageSpaceAfterDeletion.likes,
+            0,
+            "When using the deleteContent method, the information of the likes should be clear"
+        );
+        Assert.equal(
+            storageSpaceAfterDeletion.dislikes,
+            0,
+            "When using the deleteContent method, the information of the dislikes should be clear"
+        );
+        Assert.equal(
+            storageSpaceAfterDeletion.harvestedLikes,
+            0,
+            "When using the deleteContent method, the information of the harvestedLikes should be clear"
+        );
+
     }
 }
