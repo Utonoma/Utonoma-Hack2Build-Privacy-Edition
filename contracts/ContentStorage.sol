@@ -62,6 +62,10 @@ contract ContentStorage {
         _contentLibraries[uint256(id.contentLibrary)][id.index] = content;
     }
 
+    function deleteContent(Identifier memory id) contentShouldExists(id) internal {
+        delete(_contentLibraries[uint256(id.contentLibrary)][id.index]);
+    }
+
     modifier contentShouldExists(Identifier memory id) {
         require(id.index < _contentLibraries[uint256(id.contentLibrary)].length, "Out of index");
         _;
