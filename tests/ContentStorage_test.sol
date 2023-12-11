@@ -139,7 +139,7 @@ contract ContentStorage_test is ContentStorage {
     function deleteSuccess() public {
         Identifier memory targetIdentifier = Identifier(0, ContentTypes(0));
         Content memory originalContent = getContentById(targetIdentifier);
-        uint256 originalContentLength = getContentLibraryLength(targetIdentifier.contentLibrary);
+        uint256 originalContentLength = getContentLibraryLength(targetIdentifier.contentType);
 
         deleteContent(targetIdentifier);
         Content memory storageSpaceAfterDeletion = getContentById(targetIdentifier);
@@ -151,7 +151,7 @@ contract ContentStorage_test is ContentStorage {
         );
 
         Assert.equal(
-            getContentLibraryLength(targetIdentifier.contentLibrary),
+            getContentLibraryLength(targetIdentifier.contentType),
             originalContentLength,
             "When using the deleteContent method, the length of the content library before and after applying the method should be the same"
         );

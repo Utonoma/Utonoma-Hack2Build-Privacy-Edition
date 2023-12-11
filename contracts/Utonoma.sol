@@ -32,7 +32,7 @@ contract Utonoma is ERC20, ContentStorage, Utils, Users, Time {
         content.likes++;
         updateContent(content, id);
         calculateMAU(block.timestamp, _startTimeOfTheNetwork);
-        emit liked(id.index, uint256(id.contentLibrary));
+        emit liked(id.index, uint256(id.contentType));
     }
 
     function dislike(Identifier calldata id) public {
@@ -41,7 +41,7 @@ contract Utonoma is ERC20, ContentStorage, Utils, Users, Time {
         content.dislikes++;
         updateContent(content, id);
         calculateMAU(block.timestamp, _startTimeOfTheNetwork);
-        emit disliked(id.index, uint256(id.contentLibrary));
+        emit disliked(id.index, uint256(id.contentType));
     }
 
     function harvestLikes(Identifier calldata id) public {
@@ -55,22 +55,24 @@ contract Utonoma is ERC20, ContentStorage, Utils, Users, Time {
         updateContent(content, id);
         uint256 reward = likesToHarvest * calculateReward(getMAU());
         _mint(content.contentOwner, reward);
-        emit harvested(id.index, uint256(id.contentLibrary), reward);
+        emit harvested(id.index, uint256(id.contentType), reward);
     }
 
     function deletion(Identifier calldata id) public {
         Content memory content = getContentById(id);
         require(shouldContentBeEliminated(content.likes, content.dislikes));
         deleteContent(id);
-        emit deleted(content.contentOwner, content.contentHash, content.metadataHash, id.index, uint8(id.contentLibrary));
+        emit deleted(content.contentOwner, content.contentHash, content.metadataHash, id.index, uint8(id.contentType));
     }
 
-    event liked(uint256 indexed index, uint256 indexed contentLibrary);
+    event liked(uint256 indexed index, uint256 indexed contentType);
 
-    event disliked(uint256 indexed index, uint256 indexed contentLibrary);
+    event disliked(uint256 indexed index, uint256 indexed contentType);
 
-    event harvested(uint256 indexed index, uint256 indexed contentLibrary, uint256 amount);
+    event harvested(uint256 indexed index, uint256 indexed contentType, uint256 amount);
 
-    event deleted(address indexed owner, bytes32 content, bytes32 metadata, uint256 index, uint8 contentLibrary);
+    event deleted(address indexed owner, bytes32 content, bytes32 metadata, uint256 index, uint8 contentType);
+
+    event replied(uint256 replyIndex, uint256 replyContentType, uint256 indexed replyingToIndex, uint256 indexed replyingToContentType);
 
 }

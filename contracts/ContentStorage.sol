@@ -24,7 +24,7 @@ contract ContentStorage {
 
     struct Identifier {
         uint256 index;
-        ContentTypes contentLibrary;
+        ContentTypes contentType;
     }
 
     struct Content {
@@ -34,7 +34,7 @@ contract ContentStorage {
         uint64 likes;
         uint64 dislikes;
         uint64 harvestedLikes;
-    }
+            }
 
     Content[][15] internal _contentLibraries;
 
@@ -51,7 +51,7 @@ contract ContentStorage {
     }
 
     function getContentById(Identifier memory id) contentShouldExists(id) public view returns(Content memory){
-        return _contentLibraries[uint256(id.contentLibrary)][id.index];
+        return _contentLibraries[uint256(id.contentType)][id.index];
     }
     
     function createContent(Content memory content, ContentTypes contentType) internal {
@@ -59,15 +59,15 @@ contract ContentStorage {
     }
 
     function updateContent(Content memory content, Identifier memory id) contentShouldExists(id) internal {
-        _contentLibraries[uint256(id.contentLibrary)][id.index] = content;
+        _contentLibraries[uint256(id.contentType)][id.index] = content;
     }
 
     function deleteContent(Identifier memory id) contentShouldExists(id) internal {
-        delete(_contentLibraries[uint256(id.contentLibrary)][id.index]);
+        delete(_contentLibraries[uint256(id.contentType)][id.index]);
     }
 
     modifier contentShouldExists(Identifier memory id) {
-        require(id.index < _contentLibraries[uint256(id.contentLibrary)].length, "Out of index");
+        require(id.index < _contentLibraries[uint256(id.contentType)].length, "Out of index");
         _;
     }
 
