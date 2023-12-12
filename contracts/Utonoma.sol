@@ -13,7 +13,7 @@ contract Utonoma is ERC20, ContentStorage, Utils, Users, Time {
         _mint(msg.sender, initialSupply);
     }
 
-    function upload(bytes32 contentHash, bytes32 metadataHash, ContentTypes contentType) public {
+    function upload(bytes32 contentHash, bytes32 metadataHash, ContentTypes contentType) public returns(Identifier memory) {
         calculateMAU(block.timestamp, _startTimeOfTheNetwork);
         Content memory content = Content(
             _msgSender(),
@@ -27,7 +27,9 @@ contract Utonoma is ERC20, ContentStorage, Utils, Users, Time {
             new uint256[](0),
             new uint8[](0)
         );
-        createContent(content, contentType);
+        Identifier memory id = createContent(content, contentType);
+        emit uploaded(_msgSender(), id.index, uint256(id.contentType));
+        return id;
     }
 
     function like(Identifier calldata id) public {
@@ -74,6 +76,8 @@ contract Utonoma is ERC20, ContentStorage, Utils, Users, Time {
         createReply(replyId, replyingToId);
         emit replied(replyId.index, uint256(replyId.contentType), replyingToId.index, uint256(replyingToId.contentType));
     }
+
+    event uploaded(address indexed contentCreator, uint256 index, uint256 contentType);
 
     event liked(uint256 indexed index, uint256 indexed contentType);
 

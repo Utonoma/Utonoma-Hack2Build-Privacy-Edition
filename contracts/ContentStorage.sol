@@ -82,8 +82,10 @@ contract ContentStorage {
         return repliesToThisContent;
     }
     
-    function createContent(Content memory content, ContentTypes contentType) internal {
+    /// @dev Creates a new content in the specified content library. Returns the id of this new content
+    function createContent(Content memory content, ContentTypes contentType) internal returns(Identifier memory) {
         _contentLibraries[uint256(contentType)].push(content);
+        return Identifier(getContentLibraryLength(contentType) - 1, contentType);
     }
 
     function createReply(
