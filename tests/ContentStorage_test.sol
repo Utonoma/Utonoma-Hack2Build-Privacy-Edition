@@ -25,7 +25,21 @@ contract ContentStorage_test is ContentStorage {
         bytes32 metadataHash = 0x7465737400000000000000000000000000000000000000000000000000000000;
         for(uint256 i = 0; i < getMaxContentTypes(); i++) { 
             uint256 originalLibraryLength = getContentLibraryLength(ContentTypes(i));
-            createContent(Content(msg.sender, contentHash, metadataHash, 0, 0, 0), ContentTypes(i));
+            createContent(
+                Content(
+                    msg.sender,
+                    contentHash,
+                    metadataHash,
+                    0,
+                    0,
+                    0,
+                    new uint256[](0),
+                    new uint8[](0),
+                    new uint256[](0),
+                    new uint8[](0)
+                ),
+                ContentTypes(i)
+            );
             
             uint256 modifiedLibraryLength = getContentLibraryLength(ContentTypes(i));
             Content memory insertedContent = getContentById(Identifier(modifiedLibraryLength - 1, ContentTypes(i)));
@@ -73,7 +87,11 @@ contract ContentStorage_test is ContentStorage {
             modifiedMetadataHash,
             originalContent.likes++,
             originalContent.dislikes++,
-            originalContent.harvestedLikes++
+            originalContent.harvestedLikes++,
+            new uint256[](0),
+            new uint8[](0),
+            new uint256[](0),
+            new uint8[](0)
         );
 
         updateContent(content2, targetContentIdentifier);

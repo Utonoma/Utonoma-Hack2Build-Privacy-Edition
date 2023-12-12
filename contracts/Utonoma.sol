@@ -15,13 +15,17 @@ contract Utonoma is ERC20, ContentStorage, Utils, Users, Time {
 
     function upload(bytes32 contentHash, bytes32 metadataHash, ContentTypes contentType) public {
         calculateMAU(block.timestamp, _startTimeOfTheNetwork);
-        Content memory content = Content(
+                Content memory content = Content(
             _msgSender(),
             contentHash,
             metadataHash,
             0,
             0,
-            0
+            0,
+            new uint256[](0),
+            new uint8[](0),
+            new uint256[](0),
+            new uint8[](0)
         );
         createContent(content, contentType);
     }

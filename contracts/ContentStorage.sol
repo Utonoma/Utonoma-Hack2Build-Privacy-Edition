@@ -34,7 +34,11 @@ contract ContentStorage {
         uint64 likes;
         uint64 dislikes;
         uint64 harvestedLikes;
-            }
+        uint256[] replyingTo;
+        uint8[] replyingToContentType;
+        uint256[] repliedBy;
+        uint8[] repliedByContentType;
+    }
 
     Content[][15] internal _contentLibraries;
 
