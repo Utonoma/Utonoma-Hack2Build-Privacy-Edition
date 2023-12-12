@@ -15,7 +15,7 @@ contract Utonoma is ERC20, ContentStorage, Utils, Users, Time {
 
     function upload(bytes32 contentHash, bytes32 metadataHash, ContentTypes contentType) public {
         calculateMAU(block.timestamp, _startTimeOfTheNetwork);
-                Content memory content = Content(
+        Content memory content = Content(
             _msgSender(),
             contentHash,
             metadataHash,
@@ -67,6 +67,12 @@ contract Utonoma is ERC20, ContentStorage, Utils, Users, Time {
         require(shouldContentBeEliminated(content.likes, content.dislikes));
         deleteContent(id);
         emit deleted(content.contentOwner, content.contentHash, content.metadataHash, id.index, uint8(id.contentType));
+    }
+
+    function reply(Identifier calldata replyId, Identifier calldata replyingToId) public {
+        require(_msgSender() == getContentById(replyId).contentOwner, "Only the owner of the content can use it as a reply");
+        createReply(replyId, replyingToId);
+        emit replied(replyId.index, uint256(replyId.contentType), replyingToId.index, uint256(replyingToId.contentType));
     }
 
     event liked(uint256 indexed index, uint256 indexed contentType);
