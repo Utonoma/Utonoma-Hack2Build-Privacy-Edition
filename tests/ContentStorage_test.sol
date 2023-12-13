@@ -5,9 +5,25 @@ pragma solidity 0.8.22;
 import "remix_tests.sol";
 import "remix_accounts.sol";
 import {ContentStorage} from "../contracts/ContentStorage.sol";
+import {Comparators} from "tests/test_utils/Comparators.sol";
 import "@openzeppelin/contracts/utils/Strings.sol";
 
-contract ContentStorage_test is ContentStorage {
+contract ContentStorage_test is ContentStorage, Comparators {
+
+    bytes32 contentHash = 0x017dfd85d4f6cb4dcd715a88101f7b1f06cd1e009b2327a0809d01eb9c91f231;
+    bytes32 metadataHash = 0x7465737400000000000000000000000000000000000000000000000000000000;
+    Content sampleContent = Content(
+        msg.sender,
+        contentHash,
+        metadataHash,
+        0,
+        0,
+        0,
+        new uint256[](0),
+        new uint8[](0),
+        new uint256[](0),
+        new uint8[](0)
+    );
 
     function beforeAll() public {
         for(uint256 i = 0; i < getMaxContentTypes(); i++) {
@@ -21,25 +37,9 @@ contract ContentStorage_test is ContentStorage {
 
     /// #sender: account-0
     function createContentSuccess() public {
-        bytes32 contentHash = 0x017dfd85d4f6cb4dcd715a88101f7b1f06cd1e009b2327a0809d01eb9c91f231;
-        bytes32 metadataHash = 0x7465737400000000000000000000000000000000000000000000000000000000;
         for(uint256 i = 0; i < getMaxContentTypes(); i++) { 
             uint256 originalLibraryLength = getContentLibraryLength(ContentTypes(i));
-            createContent(
-                Content(
-                    msg.sender,
-                    contentHash,
-                    metadataHash,
-                    0,
-                    0,
-                    0,
-                    new uint256[](0),
-                    new uint8[](0),
-                    new uint256[](0),
-                    new uint8[](0)
-                ),
-                ContentTypes(i)
-            );
+            Identifier memory createdContentId = createContent(sampleContent, ContentTypes(i));
             
             uint256 modifiedLibraryLength = getContentLibraryLength(ContentTypes(i));
             Content memory insertedContent = getContentById(Identifier(modifiedLibraryLength - 1, ContentTypes(i)));
@@ -50,6 +50,24 @@ contract ContentStorage_test is ContentStorage {
                 string.concat(
                     "When using the createContent method, the size of the contentLibrary ", Strings.toString(i)," should be increased by one"
                 )
+            );
+
+            Assert.equal(
+                createdContentId.index, 
+                modifiedLibraryLength - 1, 
+                "When using the createContent method, the identifier returned by the method should have an index corresponding to the length of the content library - 1"
+            );
+
+            Assert.equal(
+                uint8(createdContentId.contentType), 
+                uint8(ContentTypes(i)), 
+                "When using the createContent method, the identifier returned by the method should have a contentType corresponding to the content library that holds the content"
+            );
+
+            Assert.equal(
+                createdContentId.index, 
+                modifiedLibraryLength - 1, 
+                "When using the createContent method, the identifier returned by the method should have an index corresponding to the length of the content library - 1"
             );
 
             Assert.equal(
