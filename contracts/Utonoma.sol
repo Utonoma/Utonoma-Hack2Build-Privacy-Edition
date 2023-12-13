@@ -13,7 +13,7 @@ contract Utonoma is ERC20, ContentStorage, Utils, Users, Time {
         _mint(msg.sender, initialSupply);
     }
 
-    function upload(bytes32 contentHash, bytes32 metadataHash, ContentTypes contentType) public {
+    function upload(bytes32 contentHash, bytes32 metadataHash, ContentTypes contentType) public returns(Identifier memory) {
         calculateMAU(block.timestamp, _startTimeOfTheNetwork);
         Content memory content = Content(
             _msgSender(),
@@ -21,9 +21,15 @@ contract Utonoma is ERC20, ContentStorage, Utils, Users, Time {
             metadataHash,
             0,
             0,
-            0
+            0,
+            new uint256[](0),
+            new uint8[](0),
+            new uint256[](0),
+            new uint8[](0)
         );
-        createContent(content, contentType);
+        Identifier memory id = createContent(content, contentType);
+        emit uploaded(_msgSender(), id.index, uint256(id.contentType));
+        return id;
     }
 
     function like(Identifier calldata id) public {
@@ -32,7 +38,7 @@ contract Utonoma is ERC20, ContentStorage, Utils, Users, Time {
         content.likes++;
         updateContent(content, id);
         calculateMAU(block.timestamp, _startTimeOfTheNetwork);
-        emit liked(id.index, uint256(id.contentLibrary));
+        emit liked(id.index, uint256(id.contentType));
     }
 
     function dislike(Identifier calldata id) public {
@@ -41,7 +47,7 @@ contract Utonoma is ERC20, ContentStorage, Utils, Users, Time {
         content.dislikes++;
         updateContent(content, id);
         calculateMAU(block.timestamp, _startTimeOfTheNetwork);
-        emit disliked(id.index, uint256(id.contentLibrary));
+        emit disliked(id.index, uint256(id.contentType));
     }
 
     function harvestLikes(Identifier calldata id) public {
@@ -55,22 +61,32 @@ contract Utonoma is ERC20, ContentStorage, Utils, Users, Time {
         updateContent(content, id);
         uint256 reward = likesToHarvest * calculateReward(getMAU());
         _mint(content.contentOwner, reward);
-        emit harvested(id.index, uint256(id.contentLibrary), reward);
+        emit harvested(id.index, uint256(id.contentType), reward);
     }
 
     function deletion(Identifier calldata id) public {
         Content memory content = getContentById(id);
         require(shouldContentBeEliminated(content.likes, content.dislikes));
         deleteContent(id);
-        emit deleted(content.contentOwner, content.contentHash, content.metadataHash, id.index, uint8(id.contentLibrary));
+        emit deleted(content.contentOwner, content.contentHash, content.metadataHash, id.index, uint8(id.contentType));
     }
 
-    event liked(uint256 indexed index, uint256 indexed contentLibrary);
+    function reply(Identifier calldata replyId, Identifier calldata replyingToId) public {
+        require(_msgSender() == getContentById(replyId).contentOwner, "Only the owner of the content can use it as a reply");
+        createReply(replyId, replyingToId);
+        emit replied(replyId.index, uint256(replyId.contentType), replyingToId.index, uint256(replyingToId.contentType));
+    }
 
-    event disliked(uint256 indexed index, uint256 indexed contentLibrary);
+    event uploaded(address indexed contentCreator, uint256 index, uint256 contentType);
 
-    event harvested(uint256 indexed index, uint256 indexed contentLibrary, uint256 amount);
+    event liked(uint256 indexed index, uint256 indexed contentType);
 
-    event deleted(address indexed owner, bytes32 content, bytes32 metadata, uint256 index, uint8 contentLibrary);
+    event disliked(uint256 indexed index, uint256 indexed contentType);
+
+    event harvested(uint256 indexed index, uint256 indexed contentType, uint256 amount);
+
+    event deleted(address indexed owner, bytes32 content, bytes32 metadata, uint256 index, uint8 contentType);
+
+    event replied(uint256 replyIndex, uint256 replyContentType, uint256 indexed replyingToIndex, uint256 indexed replyingToContentType);
 
 }
