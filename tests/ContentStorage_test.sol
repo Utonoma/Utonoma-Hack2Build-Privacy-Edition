@@ -91,6 +91,70 @@ contract ContentStorage_test is ContentStorage, Comparators {
         }
     }
 
+    function createReplySuccess() public {
+
+        //Create 3 contents
+        Identifier memory contentId1 = createContent(sampleContent, ContentTypes(6));
+        Identifier memory contentId2 = createContent(sampleContent, ContentTypes(11));
+        Identifier memory contentId3 = createContent(sampleContent, ContentTypes(10));
+
+        uint256 originalRepliesToContent1Length = getRepliesToThisContent(contentId1).length;
+
+        //Content 2 should reply to 1
+        createReply(contentId2, contentId1);
+        //Content 3 should reply to 1
+        createReply(contentId3, contentId1);
+        Identifier[] memory repliesToContent1 = getRepliesToThisContent(contentId1);
+        //Check that content 2 is in the list of replies of content 1
+        bool is2InTheListOfReplies = false;
+        for(uint256 i = 0; i < repliesToContent1.length; i++) {
+            if(repliesToContent1[i].index == contentId2.index && uint256(repliesToContent1[i].contentType) == uint256(contentId2.contentType)) {
+                is2InTheListOfReplies = true;
+            } 
+        }
+
+        Assert.ok(
+            is2InTheListOfReplies,
+            "When using the method createReply to reply content 1 with content 2, the list of replies to content 1 should contain the id of content 2"
+        );
+
+        Assert.equal(
+            repliesToContent1.length,
+            originalRepliesToContent1Length + 2,
+            "When using the method createReply to reply two times to content 1, the length of the array of replies to content 1 should increase by 2"
+        );
+
+        Identifier memory contentId4 = createContent(sampleContent, ContentTypes(8));
+
+        uint256 originalContentsRepliedBy4Length = getContentsRepliedByThis(contentId4).length;
+
+        //Content 4 replies to 1, 2 and 3
+        createReply(contentId4, contentId1);
+        createReply(contentId4, contentId2);
+        createReply(contentId4, contentId3);
+
+        Identifier[] memory contentsRepliedBy4 = getContentsRepliedByThis(contentId4);
+        
+        //Check that content 1 is in the list of contents replied by 4
+        bool isRepliedBy4 = false;
+        for(uint256 i = 0; i < repliesToContent1.length; i++) {
+            if(repliesToContent1[i].index == contentId2.index && uint256(repliesToContent1[i].contentType) == uint256(contentId2.contentType)) {
+                isRepliedBy4 = true;
+            } 
+        }
+        
+        Assert.ok(
+            isRepliedBy4,
+            "When using the method createReply to reply content 1 with content 4, the list of contents replied by content 4 should contain the id of content 1"
+        );
+
+        Assert.equal(
+            contentsRepliedBy4.length,
+            originalContentsRepliedBy4Length + 3,
+            "When using the method createReply to reply three contents with content 4, the length of the array of contents replied by 4 should increase by three"
+        );
+    }
+
     /// #sender: account-1
     function updateContentSuccess() public {
         Identifier memory targetContentIdentifier = Identifier(0, ContentTypes(0));
