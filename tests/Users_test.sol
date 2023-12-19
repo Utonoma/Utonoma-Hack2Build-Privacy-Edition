@@ -157,7 +157,7 @@ contract Users_test is Users, Comparators {
         );
     }
 
-    function getMAUForMoreThanAMonthOfExistanceOfTheApp() public{
+    function getMAUForMoreThanAMonthOfExistanceOfTheApp() public {
         //Current time is: Tue Sep 12 2023 06:00:00 GMT+0000 (Begining of the nineth period)
         //Current period has 3 users if we get the MAU we should get the users of the previous
         //period (1)
@@ -167,8 +167,27 @@ contract Users_test is Users, Comparators {
             "When using the getMAU method at the begining of the nineth period, the result should be the number of users of the eight period, that is 1"
         );
     }    
+
+    /// #sender: account-0
+    function createUserNameSuccess() public {
+        bytes15 proposedUserName = bytes15(0x757365725f6e616d655f3100000000); //user_name_1
+        createUserName(proposedUserName);
+
+        address nameOwner = getUserNameOwner(proposedUserName);
+        UserProfile memory userProfile = getUserProfile(TestsAccounts.getAccount(0));
+
+        Assert.equal(
+            userProfile.userName,
+            proposedUserName,
+            "After using the createUserName method, the username in the profile of the user should be the one that was passed as an argument to the method"
+        );
+
+        Assert.equal(
+            nameOwner,
+            TestsAccounts.getAccount(0),
+            "After using the createUserName method, the message sender should be the owner of the username"
+        );
+
+    }
     
 }
-
-
-    

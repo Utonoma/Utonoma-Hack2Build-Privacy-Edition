@@ -177,4 +177,101 @@ contract Utils_test {
             Assert.ok(false, 'failed unexpected');
         }
     }
+
+    function isValidUserName() public {
+        bytes15[5] memory mockData = [
+            bytes15(0x6e756c6c6174746865656e64313200), //nullattheend12
+            0x616e6f726d616c757365726e616d65, //anormalusername
+            0x6e756d626572733132333435360000,  //numbers123456
+            0x616263310000000000000000000000, //abc1
+            0x757365725f6e616d655f3100000000 //user_name_1
+        ];
+
+        for(uint256 i = 0; i < mockData.length; i++) {
+            Assert.ok(
+                utils.isValidUserName(mockData[i]), 
+                "When using isValidUserName method, the return should be true if the received parameter is a username with at least 4 chars, only lower case letters, numbers and underscores"
+            );
+        }
+    }
+
+    function isValidUserNameShouldRevert() public {
+        try utils.isValidUserName(bytes15(0x000000000000000000000000000000)) {
+            Assert.ok(false, 'method execution should fail');
+        } catch Error(string memory reason) {
+            Assert.equal(
+                reason, 
+                "User name is empty", 
+                "When using isValidUserName method, transaction would revert if the received parameter is null");
+        } catch (bytes memory /*lowLevelData*/) {
+            Assert.ok(false, 'failed unexpected');
+        }
+
+        try utils.isValidUserName(bytes15(0x5550504552434153454e414d454565)) { //UPPERCASENAMEEe
+            Assert.ok(false, 'method execution should fail');
+        } catch Error(string memory reason) {
+            Assert.equal(
+                reason, 
+                "Forbidden character in username", 
+                "When using isValidUserName method, transaction would revert if the received username has upper case characters");
+        } catch (bytes memory /*lowLevelData*/) {
+            Assert.ok(false, 'failed unexpected');
+        }
+
+        try utils.isValidUserName(bytes15(0x696e76406c696425757365726e616d)) { //inv@lid%usernam
+            Assert.ok(false, 'method execution should fail');
+        } catch Error(string memory reason) {
+            Assert.equal(
+                reason, 
+                "Forbidden character in username", 
+                "When using isValidUserName method, transaction would revert if the received username has special characters, except _ (underscore)");
+        } catch (bytes memory /*lowLevelData*/) {
+            Assert.ok(false, 'failed unexpected');
+        }
+
+        try utils.isValidUserName(bytes15(0x757365727769746820737061636565)) { //userwith spacee
+            Assert.ok(false, 'method execution should fail');
+        } catch Error(string memory reason) {
+            Assert.equal(
+                reason, 
+                "Forbidden character in username", 
+                "When using isValidUserName method, transaction would revert if the received username has a blank space");
+        } catch (bytes memory /*lowLevelData*/) {
+            Assert.ok(false, 'failed unexpected');
+        }
+
+        try utils.isValidUserName(bytes15(0x6e756c6c76616c7565006265747765)) { //nullvalue betwe
+            Assert.ok(false, 'method execution should fail');
+        } catch Error(string memory reason) {
+            Assert.equal(
+                reason, 
+                "Invalid null value in between username", 
+                "When using isValidUserName method, transaction would revert if the received username has a null value in between");
+        } catch (bytes memory /*lowLevelData*/) {
+            Assert.ok(false, 'failed unexpected');
+        }
+
+        try utils.isValidUserName(bytes15(0x006e756c6c61747468657374617274)) { // nullatthestart
+            Assert.ok(false, 'method execution should fail');
+        } catch Error(string memory reason) {
+            Assert.equal(
+                reason, 
+                "Invalid null value in between username", 
+                "When using isValidUserName method, transaction would revert if the received username has a null value at the start");
+        } catch (bytes memory /*lowLevelData*/) {
+            Assert.ok(false, 'failed unexpected');
+        }
+
+        try utils.isValidUserName(bytes15(0x616263000000000000000000000000)) { //abc
+            Assert.ok(false, 'method execution should fail');
+        } catch Error(string memory reason) {
+            Assert.equal(
+                reason, 
+                "At least 4 characters", 
+                "When using isValidUserName method, transaction would revert if the received username has less than 4 characters");
+        } catch (bytes memory /*lowLevelData*/) {
+            Assert.ok(false, 'failed unexpected');
+        }
+    }
+
 }
