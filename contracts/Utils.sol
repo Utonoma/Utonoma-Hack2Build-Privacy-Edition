@@ -73,4 +73,31 @@ contract Utils {
             "No allowance to this smarcontract for the fee amount");
         IERC20(address(this)).transferFrom(msg.sender, address(this), fee);
     }
+
+    function isValidUserName(bytes15 userName) public pure returns(bool) {
+        require(userName != 0x0, "User name is empty");
+
+        uint256 numberOfCharacters;
+        bool nullSpace;
+        bool charAfterNullSpace;
+        for(uint256 i = 0; i < 15; i++) {
+            if(userName[i] == 0x00) nullSpace = true;
+            if(nullSpace && userName[i] != 0x00) charAfterNullSpace = true;
+
+            require(
+                userName[i] == 0x00 ||
+                userName[i] == 0x5F ||
+                (userName[i] >= 0x30 && userName[i] <= 0x39) ||
+                (userName[i] >= 0x61 && userName[i] <= 0x7A),
+                "Forbidden character in username"
+            );
+
+            if(userName[i] != 0x00) numberOfCharacters++;
+        }
+
+        require(numberOfCharacters > 3, "At least 4 characters");
+        require(!charAfterNullSpace, "Invalid null value in between username");
+
+        return true;
+    }
 }

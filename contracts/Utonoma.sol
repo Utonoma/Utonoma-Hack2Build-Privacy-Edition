@@ -6,9 +6,8 @@ import {ERC20} from "@openzeppelin/contracts/token/ERC20/ERC20.sol";
 import {ContentStorage} from "contracts/ContentStorage.sol";
 import {Users} from "contracts/Users.sol";
 import {Time} from "contracts/Time.sol";
-import {Utils} from "contracts/Utils.sol";
 
-contract Utonoma is ERC20, ContentStorage, Utils, Users, Time {
+contract Utonoma is ERC20, ContentStorage, Users, Time {
     constructor(uint256 initialSupply) ERC20("Omas", "OMA") {
         _mint(msg.sender, initialSupply);
     }

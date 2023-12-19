@@ -3,16 +3,27 @@
 pragma solidity 0.8.22;
 
 import {Context} from "@openzeppelin/contracts/utils/Context.sol";
+import {Utils} from "contracts/Utils.sol";
 
-contract Users is Context {
+contract Users is Context, Utils {
     struct UserProfile{
         uint256 latestInteraction;
+        bytes15 userName;
     }
     
     mapping(address account => UserProfile) internal _users;
+    mapping(bytes15 userName => address account) internal _userNames;
 
     //Each element from the array corresponds to one month
     uint256[] private _MAU;
+
+    function getUserProfile(address account) public view returns(UserProfile memory) {
+        return _users[account];
+    }
+
+    function getUserNameOwner(bytes15 userName) public view returns(address) {
+        return _userNames[userName];
+    }
 
     function getLatestInteractionTime(address account) public view returns(uint256) {
         return _users[account].latestInteraction;
@@ -33,6 +44,15 @@ contract Users is Context {
 
     function getMAUReport() public view returns(uint256[] memory) {
         return _MAU;
+    }
+
+    function createUserName(bytes15 proposedUserName) public {
+        isValidUserName(proposedUserName);
+        require(getUserProfile(_msgSender()).userName == 0x000000000000000000000000000000, "Account already have a username");
+        require(getUserNameOwner(proposedUserName) == address(0), "Username isn't available");
+
+        _userNames[proposedUserName] = _msgSender();
+        _users[_msgSender()].userName = proposedUserName;
     }
 
     function calculateMAU(
