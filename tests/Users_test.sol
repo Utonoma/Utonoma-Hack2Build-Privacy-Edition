@@ -189,5 +189,18 @@ contract Users_test is Users, Comparators {
         );
 
     }
+
+    /// #sender: account-0
+    function addStrikeSuccess() public {
+        uint256 strikesNumberBefore = getUserProfile(TestsAccounts.getAccount(0)).strikes;
+        addStrike(TestsAccounts.getAccount(0));
+        uint256 strikesNumberAfter = getUserProfile(TestsAccounts.getAccount(0)).strikes;
+
+        Assert.equal(
+            strikesNumberAfter,
+            strikesNumberBefore + 1,
+            "After using the addStrike method, the number of strikes in the user profile should be increased by one"
+        );
+    }
     
 }
