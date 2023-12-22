@@ -274,4 +274,40 @@ contract Utils_test {
         }
     }
 
+    function calculateFeeForUsersWithStrikes() public {
+        Assert.equal(
+            utils.calculateFeeForUsersWithStrikes(1, 5),
+            53333333333333333320, 
+            "calculateFeeForUsersWithStrikes method and receiving 1 strike and 5 users as parameters, should return 53333333333333333320"
+        );
+        Assert.equal(
+            utils.calculateFeeForUsersWithStrikes(2, 5),
+            2844444444444444443022222222222222222400, 
+            "calculateFeeForUsersWithStrikes method and receiving 2 strikes and 5 users as parameters, should return 2844444444444444443022222222222222222400"
+        );
+        Assert.equal(
+            utils.calculateFeeForUsersWithStrikes(1, 8000000000),
+            20, 
+            "calculateFeeForUsersWithStrikes method and receiving 1 strike and 8000000000 users as parameters, should return 20"
+        );
+        Assert.equal(
+            utils.calculateFeeForUsersWithStrikes(7, 300000),
+            156629510263508833460188787851818715685916665450859985057091605883103104, 
+            "calculateFeeForUsersWithStrikes method and receiving 7 strikes and 300000 users as parameters, should return 20"
+        );        
+    }
+
+    function calculateFeeForUsersWithStrikesShouldRevert() public {
+        try utils.calculateFeeForUsersWithStrikes(0, 15000) { //pass a zero in the numbero of strikes
+            Assert.ok(false, 'method execution should fail');
+        } catch Error(string memory reason) {
+            Assert.equal(
+                reason, 
+                "Number of strikes should be greater than zero", 
+                "When using the calculateFeeForUsersWithStrikes method, the number of strikes that it receives should be greater than zero");
+        } catch (bytes memory /*lowLevelData*/) {
+            Assert.ok(false, 'failed unexpected');
+        }
+    }
+
 }

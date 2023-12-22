@@ -9,6 +9,7 @@ contract Users is Context, Utils {
     struct UserProfile{
         uint256 latestInteraction;
         bytes15 userName;
+        uint64 strikes; 
     }
     
     mapping(address account => UserProfile) internal _users;
@@ -53,6 +54,10 @@ contract Users is Context, Utils {
 
         _userNames[proposedUserName] = _msgSender();
         _users[_msgSender()].userName = proposedUserName;
+    }
+
+    function addStrike(address contentCreator) internal {
+        _users[contentCreator].strikes++;        
     }
 
     function calculateMAU(
