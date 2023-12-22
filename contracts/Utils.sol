@@ -67,6 +67,11 @@ contract Utils {
         return _commissionByBaseReward / usersNumber**2;
     }
 
+    function calculateFeeForUsersWithStrikes(uint64 numberOfStrikes, uint256 usersNumber) public pure returns(uint256) {
+        require(numberOfStrikes > 0, "Number of strikes should be greater than zero");
+        return calculateFee(usersNumber) ** numberOfStrikes;
+    }
+
     function collectFee(uint256 fee) internal {
         require(IERC20(address(this)).balanceOf(msg.sender) >= fee, "Balance is not enough to pay the fee");
         require(IERC20(address(this)).allowance(msg.sender, address(this)) >= fee, 

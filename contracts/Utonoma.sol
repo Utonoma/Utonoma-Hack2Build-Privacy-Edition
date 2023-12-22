@@ -13,6 +13,10 @@ contract Utonoma is ERC20, ContentStorage, Users, Time {
     }
 
     function upload(bytes32 contentHash, bytes32 metadataHash, ContentTypes contentType) public returns(Identifier memory) {
+        uint64 strikes = getUserProfile(_msgSender()).strikes;
+        if(strikes > 0) { //if content creator has strikes it will have to pay the fee
+            collectFee(calculateFeeForUsersWithStrikes(strikes, getMAU()));
+        } 
         calculateMAU(block.timestamp, _startTimeOfTheNetwork);
         Content memory content = Content(
             _msgSender(),
