@@ -3,13 +3,18 @@
 pragma solidity 0.8.22;
 
 import {ERC20} from "@openzeppelin/contracts/token/ERC20/ERC20.sol";
+import {IERC20} from "@openzeppelin/contracts/token/ERC20/IERC20.sol";
 import {ContentStorage} from "contracts/ContentStorage.sol";
 import {Users} from "contracts/Users.sol";
 import {Time} from "contracts/Time.sol";
 
 contract Utonoma is ERC20, ContentStorage, Users, Time {
+    
+    address internal _owner;
+
     constructor(uint256 initialSupply) ERC20("Omas", "OMA") {
         _mint(msg.sender, initialSupply);
+        _owner = msg.sender;
     }
 
     function upload(bytes32 contentHash, bytes32 metadataHash, ContentTypes contentType) public returns(Identifier memory) {
@@ -79,6 +84,13 @@ contract Utonoma is ERC20, ContentStorage, Users, Time {
         require(_msgSender() == getContentById(replyId).contentOwner, "Only the owner of the content can use it as a reply");
         createReply(replyId, replyingToId);
         emit replied(replyId.index, uint256(replyId.contentType), replyingToId.index, uint256(replyingToId.contentType));
+    }
+
+    function withdraw() public {
+        require(msg.sender == _owner, "Only the owner can withdraw");
+        uint256 maxBalance = IERC20(address(this)).balanceOf(address(this));
+        require(maxBalance > 0, "Nothing to withdraw");
+        IERC20(address(this)).transfer(_owner, maxBalance);
     }
 
     event uploaded(address indexed contentCreator, uint256 index, uint256 contentType);
