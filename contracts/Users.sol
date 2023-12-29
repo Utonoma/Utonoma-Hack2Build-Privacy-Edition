@@ -26,7 +26,7 @@ contract Users is Context, Utils {
         return _userNames[userName];
     }
 
-    function getLatestInteractionTime(address account) public view returns(uint256) {
+    function getLatestInteractionTime(address account) external view returns(uint256) {
         return _users[account].latestInteraction;
     }
 
@@ -43,11 +43,11 @@ contract Users is Context, Utils {
         return _MAU[_MAU.length - 2];
     }
 
-    function getMAUReport() public view returns(uint256[] memory) {
+    function getMAUReport() external view returns(uint256[] memory) {
         return _MAU;
     }
 
-    function createUserName(bytes15 proposedUserName) public {
+    function createUserName(bytes15 proposedUserName) external {
         isValidUserName(proposedUserName);
         require(getUserProfile(_msgSender()).userName == 0x000000000000000000000000000000, "Account already have a username");
         require(getUserNameOwner(proposedUserName) == address(0), "Username isn't available");
@@ -63,7 +63,7 @@ contract Users is Context, Utils {
     function calculateMAU(
         uint256 currentTime, 
         uint256 startTimeOfNetwork
-    ) public {
+    ) internal {
         uint256 startTimeMinusCurrent = currentTime - startTimeOfNetwork;
         uint256 elapsedMonths = startTimeMinusCurrent / 30 days;
 
