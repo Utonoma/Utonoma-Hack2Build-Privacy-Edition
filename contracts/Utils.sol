@@ -8,20 +8,20 @@ import {IERC20} from "@openzeppelin/contracts/token/ERC20/IERC20.sol";
 contract Utils {
 
     uint256 private constant _baseReward = 1000;
-    //uint256 internal constant _commission = 1333333333333333333;
+    //uint256 internal constant _commission = 1333333333333333333; //1.3% of commission
     //If the values of the _baseReward or _commission changes, the next const should also be recalculated
     uint256 private constant _commissionByBaseReward = 1333333333333333333000;
     uint256 private constant _minimumQuorum = 5;
 
-    function baseReward() public pure returns (uint256) {
+    function baseReward() external pure returns (uint256) {
         return _baseReward;
     }
 
-    function commissionByBaseReward() public pure returns(uint256) {
+    function commissionByBaseReward() external pure returns(uint256) {
         return _commissionByBaseReward;
     }
 
-    function minimumQuorum() public pure returns(uint256) {
+    function minimumQuorum() external pure returns(uint256) {
         return _minimumQuorum;
     }
 
