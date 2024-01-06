@@ -46,7 +46,7 @@ contract ContentStorage {
         return uint256(type(ContentTypes).min);
     }
 
-    function getMaxContentTypes() external pure returns(uint256) {
+    function getMaxContentTypes() public pure returns(uint256) {
         return uint256(type(ContentTypes).max);
     }
 
@@ -58,7 +58,7 @@ contract ContentStorage {
         return _contentLibraries[uint256(id.contentType)][id.index];
     }
 
-    function getContentsRepliedByThis(Identifier memory id) contentShouldExists(id) external view returns(Identifier[] memory) {
+    function getContentsRepliedByThis(Identifier memory id) contentShouldExists(id) public view returns(Identifier[] memory) {
         uint256 replyingToLength = _contentLibraries[uint256(id.contentType)][id.index].replyingTo.length;
         Identifier[] memory contentsRepliedByThis = new Identifier[](replyingToLength);
         for(uint256 i = 0; i < replyingToLength; i++) {
@@ -70,7 +70,7 @@ contract ContentStorage {
         return contentsRepliedByThis;
     }
 
-    function getRepliesToThisContent(Identifier memory id) contentShouldExists(id) external view returns(Identifier[] memory) {
+    function getRepliesToThisContent(Identifier memory id) contentShouldExists(id) public view returns(Identifier[] memory) {
         uint256 repliedByLength = _contentLibraries[uint256(id.contentType)][id.index].repliedBy.length;
         Identifier[] memory repliesToThisContent = new Identifier[](repliedByLength);
         for(uint256 i = 0; i < repliedByLength; i++) {
