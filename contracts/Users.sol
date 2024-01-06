@@ -2,10 +2,9 @@
 
 pragma solidity 0.8.22;
 
-import {Context} from "@openzeppelin/contracts/utils/Context.sol";
 import {Utils} from "contracts/Utils.sol";
 
-contract Users is Context, Utils {
+contract Users is Utils {
     struct UserProfile{
         uint256 latestInteraction;
         bytes15 userName;
@@ -49,11 +48,11 @@ contract Users is Context, Utils {
 
     function createUserName(bytes15 proposedUserName) public {
         isValidUserName(proposedUserName);
-        require(getUserProfile(_msgSender()).userName == 0x000000000000000000000000000000, "Account already have a username");
+        require(getUserProfile(msg.sender).userName == 0x000000000000000000000000000000, "Account already have a username");
         require(getUserNameOwner(proposedUserName) == address(0), "Username isn't available");
 
-        _userNames[proposedUserName] = _msgSender();
-        _users[_msgSender()].userName = proposedUserName;
+        _userNames[proposedUserName] = msg.sender;
+        _users[msg.sender].userName = proposedUserName;
     }
 
     function addStrike(address contentCreator) internal {
@@ -75,7 +74,7 @@ contract Users is Context, Utils {
             }
         }
         
-        address account = _msgSender();
+        address account = msg.sender;
         uint256 latestUserInteraction = _users[account].latestInteraction;
         bool shouldCountAsNewInteraction;
 

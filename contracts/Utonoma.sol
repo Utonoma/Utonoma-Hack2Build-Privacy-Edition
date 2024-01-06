@@ -18,13 +18,13 @@ contract Utonoma is ERC20, ContentStorage, Users, Time {
     }
 
     function upload(bytes32 contentHash, bytes32 metadataHash, ContentTypes contentType) external returns(Identifier memory) {
-        uint64 strikes = getUserProfile(_msgSender()).strikes;
+        uint64 strikes = getUserProfile(msg.sender).strikes;
         if(strikes > 0) { //if content creator has strikes it will have to pay the fee
             collectFee(calculateFeeForUsersWithStrikes(strikes, getMAU()));
         } 
         logUserInteraction(block.timestamp, _startTimeOfTheNetwork);
         Content memory content = Content(
-            _msgSender(),
+            msg.sender,
             contentHash,
             metadataHash,
             0,
@@ -36,7 +36,7 @@ contract Utonoma is ERC20, ContentStorage, Users, Time {
             new uint8[](0)
         );
         Identifier memory id = createContent(content, contentType);
-        emit uploaded(_msgSender(), id.index, uint256(id.contentType));
+        emit uploaded(msg.sender, id.index, uint256(id.contentType));
         return id;
     }
 
@@ -81,7 +81,7 @@ contract Utonoma is ERC20, ContentStorage, Users, Time {
     }
 
     function reply(Identifier calldata replyId, Identifier calldata replyingToId) external {
-        require(_msgSender() == getContentById(replyId).contentOwner, "Only the owner of the content can use it as a reply");
+        require(msg.sender == getContentById(replyId).contentOwner, "Only the owner of the content can use it as a reply");
         createReply(replyId, replyingToId);
         emit replied(replyId.index, uint256(replyId.contentType), replyingToId.index, uint256(replyingToId.contentType));
     }
