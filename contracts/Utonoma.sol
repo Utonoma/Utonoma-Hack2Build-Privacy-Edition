@@ -22,7 +22,7 @@ contract Utonoma is ERC20, ContentStorage, Users, Time {
         if(strikes > 0) { //if content creator has strikes it will have to pay the fee
             collectFee(calculateFeeForUsersWithStrikes(strikes, getMAU()));
         } 
-        calculateMAU(block.timestamp, _startTimeOfTheNetwork);
+        logUserInteraction(block.timestamp, _startTimeOfTheNetwork);
         Content memory content = Content(
             _msgSender(),
             contentHash,
@@ -45,7 +45,7 @@ contract Utonoma is ERC20, ContentStorage, Users, Time {
         Content memory content = getContentById(id);
         content.likes++;
         updateContent(content, id);
-        calculateMAU(block.timestamp, _startTimeOfTheNetwork);
+        logUserInteraction(block.timestamp, _startTimeOfTheNetwork);
         emit liked(id.index, uint256(id.contentType));
     }
 
@@ -54,7 +54,7 @@ contract Utonoma is ERC20, ContentStorage, Users, Time {
         Content memory content = getContentById(id);
         content.dislikes++;
         updateContent(content, id);
-        calculateMAU(block.timestamp, _startTimeOfTheNetwork);
+        logUserInteraction(block.timestamp, _startTimeOfTheNetwork);
         emit disliked(id.index, uint256(id.contentType));
     }
 

@@ -60,7 +60,7 @@ contract Users is Context, Utils {
         _users[contentCreator].strikes++;        
     }
 
-    function calculateMAU(
+    function logUserInteraction(
         uint256 currentTime, 
         uint256 startTimeOfNetwork
     ) internal {
