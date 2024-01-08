@@ -29,7 +29,8 @@ contract Users is Utils {
         return _users[account].latestInteraction;
     }
 
-    /** @dev Gets the current MAU calculation. In case that there are no users (nobody has uploaded a content) 
+    /// @dev Gets the current period MAU calculation
+    /** @notice In case that there are no users (nobody has uploaded a content) 
     *   it will return 0. For the first month of work of the application, the return will be the current period
     *   calculation. For the rest of time, the return will be the MAU calculation of the previous period.
     */
@@ -42,6 +43,7 @@ contract Users is Utils {
         return _MAU[_MAU.length - 2];
     }
 
+    /// @dev Returns all the MAU historic data in an array, each element is one month
     function getMAUReport() public view returns(uint256[] memory) {
         return _MAU;
     }
