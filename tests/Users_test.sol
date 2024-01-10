@@ -13,26 +13,26 @@ contract Users_test is Users, Comparators {
     uint256 currentTime = 1673848800; //Mon Jan 16 2023 06:00:00 GMT+0000 (One day after start time)
     uint256[] MAUReport; 
 
-    function getMAUForNoUsers() public {
+    function currentPeriodMAUForNoUsers() public {
         Assert.equal(
-            getMAU(),
+            currentPeriodMAU(),
             0,
-            "When using the getMAU method at the initialization of the smart contract, the result should be 0 users"
+            "When using the currentPeriodMAU method at the initialization of the smart contract, the result should be 0 users"
         );
     }
 
     /// @dev Generate one interaction for the next test
     /// #sender: account-5
     function generateOneInteracionForTheNextTest() public {
-        calculateMAU(currentTime, startTime);
+        logUserInteraction(currentTime, startTime);
     }
     /// #sender: account-6
-    function getMAUForTheFirstMonth() public {
-        calculateMAU(currentTime, startTime);
+    function currentPeriodMAUForTheFirstMonth() public {
+        logUserInteraction(currentTime, startTime);
         Assert.equal(
-            getMAU(),
+            currentPeriodMAU(),
             2,
-            "When using the getMAU method in the first month, the result should be number of users of the current month (that is 2)"
+            "When using the currentPeriodMAU method in the first month, the result should be number of users of the current month (that is 2)"
         );
     }
 
@@ -49,129 +49,130 @@ contract Users_test is Users, Comparators {
     *   Nineth period: start = 1694498400, end = 1697090399.
     */   
     /// #sender: account-1
-    function calculateMAUForASingleUser() public {
+    function logUserInteractionForASingleUser() public {
         
-        calculateMAU(currentTime, startTime);
+        logUserInteraction(currentTime, startTime);
 
         MAUReport.push(3);//MAUReport should be [3] (two from the previous test and one from this)
         Assert.ok(
-            arrayComparator(getMAUReport(), MAUReport),
-            "When using the calculateMAU method from an account that interacts for the fisrt time with the contract, the MAU report should reflect one user"
+            arrayComparator(historicMAUData(), MAUReport),
+            "When using the logUserInteraction method from an account that interacts for the fisrt time with the contract, the MAU report should reflect one user"
         );
         
         currentTime = 1674280800; //Sat Jan 21 2023 06:00:00 GMT+0000 (five days after the first interaction)
-        calculateMAU(currentTime, startTime);
+        logUserInteraction(currentTime, startTime);
 
 
         Assert.ok(
-            arrayComparator(getMAUReport(), MAUReport),
-            "When using the calculateMAU method for the second time with the same account in the current period, the MAU report should only reflect one user"
+            arrayComparator(historicMAUData(), MAUReport),
+            "When using the logUserInteraction method for the second time with the same account in the current period, the MAU report should only reflect one user"
         );
         Assert.equal( 
             getLatestInteractionTime(TestsAccounts.getAccount(1)),
             currentTime,
-            "When using the calculateMAU method for the second time with the same account in the current period, the latest interaction time of the user should correspond to the time of the latest call to the method"
+            "When using the logUserInteraction method for the second time with the same account in the current period, the latest interaction time of the user should correspond to the time of the latest call to the method"
         );
 
 
         currentTime = 1676354400; //Tue Feb 14 2023 06:00:00 GMT+0000 (at the start of the second period)
-        calculateMAU(currentTime, startTime);
+        logUserInteraction(currentTime, startTime);
 
         MAUReport.push(1); //MAUReport should be [3,1]
         Assert.ok(
-            arrayComparator(getMAUReport(), MAUReport),
-            "When using the calculateMAU method for the first time since the start of the second period from an account that interacted in the pervious period, MAU report should count one user in the starting period"
+            arrayComparator(historicMAUData(), MAUReport),
+            "When using the logUserInteraction method for the first time since the start of the second period from an account that interacted in the pervious period, MAU report should count one user in the starting period"
         );
 
 
         currentTime = 1681538400; //Sat Apr 15 2023 06:00:00 GMT+0000 (in the fourth period after skipping the third one)
-        calculateMAU(currentTime, startTime);
+        logUserInteraction(currentTime, startTime);
 
         MAUReport.push(0);
         MAUReport.push(1); //MAUReport should be [3,1,0,1]
         Assert.ok( 
-            arrayComparator(getMAUReport(), MAUReport),
-            "When using the calculateMAU method for the first time after one period with no users, the MAU report of the period with no users should be in zero and the current one should be in one"
+            arrayComparator(historicMAUData(), MAUReport),
+            "When using the logUserInteraction method for the first time after one period with no users, the MAU report of the period with no users should be in zero and the current one should be in one"
         );
 
 
         currentTime = 1691906400; //Sun Aug 13 2023 06:00:00 GMT+0000 (Begining of the eigth period after three monts with no users)  
-        calculateMAU(currentTime, startTime);
+        logUserInteraction(currentTime, startTime);
 
         MAUReport.push(0);
         MAUReport.push(0);
         MAUReport.push(0);
         MAUReport.push(1); //MAUReport should be [3,1,0,1,0,0,0,1]
         Assert.ok( 
-            arrayComparator(getMAUReport(), MAUReport),
-            "When using the calculateMAU method for the first time after three periods with no users, the MAU report of the three periods with no users should be in zero and the current one should be in one"
+            arrayComparator(historicMAUData(), MAUReport),
+            "When using the logUserInteraction method for the first time after three periods with no users, the MAU report of the three periods with no users should be in zero and the current one should be in one"
         );
 
 
         currentTime = 1694498400; //Tue Sep 12 2023 06:00:00 GMT+0000 (Begining of the nineth period)          
-        calculateMAU(currentTime, startTime);
-        calculateMAU(currentTime, startTime);
+        logUserInteraction(currentTime, startTime);
+        logUserInteraction(currentTime, startTime);
 
         MAUReport.push(1); //MAUReport should be [3,1,0,1,0,0,0,1,1]
         Assert.ok(
-            arrayComparator(getMAUReport(), MAUReport),
-            "When using the calculateMAU method twice at the same exact time with the same account, the MAU report should only reflect one user and not two"
+            arrayComparator(historicMAUData(), MAUReport),
+            "When using the logUserInteraction method twice at the same exact time with the same account, the MAU report should only reflect one user and not two"
         );
     }
 
     /// #sender: account-2
-    function calculateMAUForTwoUsers() public {
+    function logUserInteractionForTwoUsers() public {
         currentTime = 1694498400; //Tue Sep 12 2023 06:00:00 GMT+0000 (Begining of the nineth period)
-        calculateMAU(currentTime, startTime);
+        logUserInteraction(currentTime, startTime);
 
         MAUReport[MAUReport.length - 1]++; //MAUReport should be [3,1,0,1,0,0,0,1,2]
         Assert.ok(
-            arrayComparator(getMAUReport(), MAUReport),
-            "When using the calculateMAU method twice in the same period from two different accounts, the MAU report should reflect two users for the current period"
+            arrayComparator(historicMAUData(), MAUReport),
+            "When using the logUserInteraction method twice in the same period from two different accounts, the MAU report should reflect two users for the current period"
         );
         
 
-        calculateMAU(currentTime, startTime);
+        logUserInteraction(currentTime, startTime);
         Assert.ok(
-            arrayComparator(getMAUReport(), MAUReport),
-            "When using the calculateMAU method three times in the same period from two different accounts, the MAU report should reflect only two users for the current period and not three"
+            arrayComparator(historicMAUData(), MAUReport),
+            "When using the logUserInteraction method three times in the same period from two different accounts, the MAU report should reflect only two users for the current period and not three"
         );
     }
 
     /// #sender: account-3
-    function calculateMAUForThreeUsers() public {
+    function logUserInteractionForThreeUsers() public {
         currentTime = 1694498400; //Tue Sep 12 2023 06:00:00 GMT+0000 (Begining of the nineth period)
-        calculateMAU(currentTime, startTime);
+        logUserInteraction(currentTime, startTime);
 
         MAUReport[MAUReport.length - 1]++; //MAUReport should be [3,1,0,1,0,0,0,1,3]
         Assert.ok(
-            arrayComparator(getMAUReport(), MAUReport),
-            "When using the calculateMAU method three times in the same period from three different accounts, the MAU report should reflect three users for the current period"
+            arrayComparator(historicMAUData(), MAUReport),
+            "When using the logUserInteraction method three times in the same period from three different accounts, the MAU report should reflect three users for the current period"
         );
         
 
-        calculateMAU(currentTime, startTime);
+        logUserInteraction(currentTime, startTime);
         Assert.ok(
-            arrayComparator(getMAUReport(), MAUReport),
-            "When using the calculateMAU method multiple times in the same period from three different accounts, the MAU report should reflect only three users for the current period"
+            arrayComparator(historicMAUData(), MAUReport),
+            "When using the logUserInteraction method multiple times in the same period from three different accounts, the MAU report should reflect only three users for the current period"
         );
     }
 
-    function getMAUForMoreThanAMonthOfExistanceOfTheApp() public {
+    function currentPeriodMAUForMoreThanAMonthOfExistanceOfTheApp() public {
         //Current time is: Tue Sep 12 2023 06:00:00 GMT+0000 (Begining of the nineth period)
         //Current period has 3 users if we get the MAU we should get the users of the previous
         //period (1)
         Assert.equal(
-            getMAU(),
+            currentPeriodMAU(),
             1,
-            "When using the getMAU method at the begining of the nineth period, the result should be the number of users of the eight period, that is 1"
+            "When using the currentPeriodMAU method at the begining of the nineth period, the result should be the number of users of the eight period, that is 1"
         );
     }    
 
     /// #sender: account-0
-    function createUserNameSuccess() public {
+    function createUserSuccess() public {
         bytes15 proposedUserName = bytes15(0x757365725f6e616d655f3100000000); //user_name_1
-        createUserName(proposedUserName);
+        bytes32 mockMetadata = bytes32(0x7465737400000000000000000000000000000000000000000000000000000000);
+        createUser(proposedUserName, mockMetadata);
 
         address nameOwner = getUserNameOwner(proposedUserName);
         UserProfile memory userProfile = getUserProfile(TestsAccounts.getAccount(0));
@@ -179,15 +180,35 @@ contract Users_test is Users, Comparators {
         Assert.equal(
             userProfile.userName,
             proposedUserName,
-            "After using the createUserName method, the username in the profile of the user should be the one that was passed as an argument to the method"
+            "After using the createUser method, the username in the profile of the user should be the one that was passed as an argument to the method"
+        );
+
+        Assert.equal(
+            userProfile.userMetadataHash,
+            mockMetadata,
+            "After using the createUser method, the userMetadataHash in the profile of the user should be the one that was passed as an argument to the method"
         );
 
         Assert.equal(
             nameOwner,
             TestsAccounts.getAccount(0),
-            "After using the createUserName method, the message sender should be the owner of the username"
+            "After using the createUser method, the message sender should be the owner of the username"
         );
 
+    }
+
+    /// #sender: account-0
+    function updateUserMetadataHashSuccess() public {
+        bytes32 newMetadata = bytes32(0x0000000000000000000000000000000000000000000000000000000000456123);
+        updateUserMetadataHash(newMetadata);
+
+        UserProfile memory userProfile = getUserProfile(TestsAccounts.getAccount(0));
+
+        Assert.equal(
+            newMetadata,
+            userProfile.userMetadataHash,
+            "After using the updateUserMetadataHash method, the userMetadataHash in the user profile that calls the method should be overwritten with the new information"
+        );
     }
 
     /// #sender: account-0

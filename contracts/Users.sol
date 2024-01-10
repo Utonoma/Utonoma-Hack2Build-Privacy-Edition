@@ -2,12 +2,18 @@
 
 pragma solidity 0.8.22;
 
-import {Context} from "@openzeppelin/contracts/utils/Context.sol";
 import {Utils} from "contracts/Utils.sol";
 
-contract Users is Context, Utils {
+contract Users is Utils {
+
+    /**
+    * @notice userMetadataHash is the hash of the content identifier in the ipfs network of a json file
+    * that contains information of CIDs in the IPFS network of the user metadata, like the profile picture,
+    * nickname, age and other
+    */ 
     struct UserProfile{
         uint256 latestInteraction;
+        bytes32 userMetadataHash;
         bytes15 userName;
         uint64 strikes; 
     }
@@ -30,11 +36,12 @@ contract Users is Context, Utils {
         return _users[account].latestInteraction;
     }
 
-    /** @dev Gets the current MAU calculation. In case that there are no users (nobody has uploaded a content) 
+    /// @dev Gets the current period MAU calculation
+    /** @notice In case that there are no users (nobody has uploaded a content) 
     *   it will return 0. For the first month of work of the application, the return will be the current period
     *   calculation. For the rest of time, the return will be the MAU calculation of the previous period.
     */
-    function getMAU() public view returns(uint256) {
+    function currentPeriodMAU() public view returns(uint256) {
         if(_MAU.length < 2){
             if(_MAU.length < 1) return 0;
             //for the first month the users number should be the current MAU calculation
@@ -43,27 +50,43 @@ contract Users is Context, Utils {
         return _MAU[_MAU.length - 2];
     }
 
-    function getMAUReport() public view returns(uint256[] memory) {
+    /// @dev Returns all the MAU historic data in an array, each element is one month
+    function historicMAUData() public view returns(uint256[] memory) {
         return _MAU;
     }
 
-    function createUserName(bytes15 proposedUserName) public {
+    /// @param proposedUserName it's the username that wants to be registered
+    /// @param metadata bytes32 of a CID containing the additional information of the user, set it to 0x0 to not incluide it
+    function createUser(bytes15 proposedUserName, bytes32 metadata) public {
         isValidUserName(proposedUserName);
-        require(getUserProfile(_msgSender()).userName == 0x000000000000000000000000000000, "Account already have a username");
+        require(getUserProfile(msg.sender).userName == 0x000000000000000000000000000000, "Account already have a username");
         require(getUserNameOwner(proposedUserName) == address(0), "Username isn't available");
 
-        _userNames[proposedUserName] = _msgSender();
-        _users[_msgSender()].userName = proposedUserName;
+        _userNames[proposedUserName] = msg.sender;
+        _users[msg.sender].userName = proposedUserName;
+
+        if(metadata != 0x0000000000000000000000000000000000000000000000000000000000000000) 
+            _users[msg.sender].userMetadataHash = metadata; 
+    }
+
+    /** 
+    * @notice this method can be used to change the profile picture or other information of the user. 
+    * Update the metadata hash to 0x0 to delete the previous information
+    */
+    /// @param metadata is the new metadata information that will overwrite the existing one
+    /// @dev overwrites the userMetadataHash of the msg sender in the _users mapping
+    function updateUserMetadataHash(bytes32 metadata) public {
+        _users[msg.sender].userMetadataHash = metadata;
     }
 
     function addStrike(address contentCreator) internal {
         _users[contentCreator].strikes++;        
     }
 
-    function calculateMAU(
+    function logUserInteraction(
         uint256 currentTime, 
         uint256 startTimeOfNetwork
-    ) public {
+    ) internal {
         uint256 startTimeMinusCurrent = currentTime - startTimeOfNetwork;
         uint256 elapsedMonths = startTimeMinusCurrent / 30 days;
 
@@ -75,7 +98,7 @@ contract Users is Context, Utils {
             }
         }
         
-        address account = _msgSender();
+        address account = msg.sender;
         uint256 latestUserInteraction = _users[account].latestInteraction;
         bool shouldCountAsNewInteraction;
 

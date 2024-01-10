@@ -3,7 +3,7 @@
 pragma solidity 0.8.22;
 
 abstract contract Time {
-    uint256 _startTimeOfTheNetwork;
+    uint256 internal _startTimeOfTheNetwork;
 
     constructor() {
         _startTimeOfTheNetwork = block.timestamp;

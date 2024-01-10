@@ -42,7 +42,7 @@ contract ContentStorage {
 
     Content[][15] internal _contentLibraries;
 
-    function getMinContentTypes() public pure returns(uint256) {
+    function getMinContentTypes() external pure returns(uint256) {
         return uint256(type(ContentTypes).min);
     }
 

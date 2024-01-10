@@ -17,14 +17,14 @@ contract Utonoma is ERC20, ContentStorage, Users, Time {
         _owner = msg.sender;
     }
 
-    function upload(bytes32 contentHash, bytes32 metadataHash, ContentTypes contentType) public returns(Identifier memory) {
-        uint64 strikes = getUserProfile(_msgSender()).strikes;
+    function upload(bytes32 contentHash, bytes32 metadataHash, ContentTypes contentType) external returns(Identifier memory) {
+        uint64 strikes = getUserProfile(msg.sender).strikes;
         if(strikes > 0) { //if content creator has strikes it will have to pay the fee
-            collectFee(calculateFeeForUsersWithStrikes(strikes, getMAU()));
+            collectFee(calculateFeeForUsersWithStrikes(strikes, currentPeriodMAU()));
         } 
-        calculateMAU(block.timestamp, _startTimeOfTheNetwork);
+        logUserInteraction(block.timestamp, _startTimeOfTheNetwork);
         Content memory content = Content(
-            _msgSender(),
+            msg.sender,
             contentHash,
             metadataHash,
             0,
@@ -36,29 +36,29 @@ contract Utonoma is ERC20, ContentStorage, Users, Time {
             new uint8[](0)
         );
         Identifier memory id = createContent(content, contentType);
-        emit uploaded(_msgSender(), id.index, uint256(id.contentType));
+        emit uploaded(msg.sender, id.index, uint256(id.contentType));
         return id;
     }
 
-    function like(Identifier calldata id) public {
-        collectFee(calculateFee(getMAU()));
+    function like(Identifier calldata id) external {
+        collectFee(calculateFee(currentPeriodMAU()));
         Content memory content = getContentById(id);
         content.likes++;
         updateContent(content, id);
-        calculateMAU(block.timestamp, _startTimeOfTheNetwork);
+        logUserInteraction(block.timestamp, _startTimeOfTheNetwork);
         emit liked(id.index, uint256(id.contentType));
     }
 
-    function dislike(Identifier calldata id) public {
-        collectFee(calculateFee(getMAU()));
+    function dislike(Identifier calldata id) external {
+        collectFee(calculateFee(currentPeriodMAU()));
         Content memory content = getContentById(id);
         content.dislikes++;
         updateContent(content, id);
-        calculateMAU(block.timestamp, _startTimeOfTheNetwork);
+        logUserInteraction(block.timestamp, _startTimeOfTheNetwork);
         emit disliked(id.index, uint256(id.contentType));
     }
 
-    function harvestLikes(Identifier calldata id) public {
+    function harvestLikes(Identifier calldata id) external {
         Content memory content = getContentById(id);
         require(content.likes > content.dislikes, "Likes should be greater than dislikes");
         require(shouldContentBeEliminated(content.likes, content.dislikes) == false, "Content should be eliminated");
@@ -67,12 +67,12 @@ contract Utonoma is ERC20, ContentStorage, Users, Time {
         uint64 likesToHarvest = content.likes - content.dislikes - content.harvestedLikes;
         content.harvestedLikes += likesToHarvest;
         updateContent(content, id);
-        uint256 reward = likesToHarvest * calculateReward(getMAU());
+        uint256 reward = likesToHarvest * calculateReward(currentPeriodMAU());
         _mint(content.contentOwner, reward);
         emit harvested(id.index, uint256(id.contentType), reward);
     }
 
-    function deletion(Identifier calldata id) public {
+    function deletion(Identifier calldata id) external {
         Content memory content = getContentById(id);
         require(shouldContentBeEliminated(content.likes, content.dislikes));
         deleteContent(id);
@@ -80,13 +80,13 @@ contract Utonoma is ERC20, ContentStorage, Users, Time {
         emit deleted(content.contentOwner, content.contentHash, content.metadataHash, id.index, uint8(id.contentType));
     }
 
-    function reply(Identifier calldata replyId, Identifier calldata replyingToId) public {
-        require(_msgSender() == getContentById(replyId).contentOwner, "Only the owner of the content can use it as a reply");
+    function reply(Identifier calldata replyId, Identifier calldata replyingToId) external {
+        require(msg.sender == getContentById(replyId).contentOwner, "Only the owner of the content can use it as a reply");
         createReply(replyId, replyingToId);
         emit replied(replyId.index, uint256(replyId.contentType), replyingToId.index, uint256(replyingToId.contentType));
     }
 
-    function withdraw() public {
+    function withdraw() external {
         require(msg.sender == _owner, "Only the owner can withdraw");
         uint256 maxBalance = IERC20(address(this)).balanceOf(address(this));
         require(maxBalance > 0, "Nothing to withdraw");
