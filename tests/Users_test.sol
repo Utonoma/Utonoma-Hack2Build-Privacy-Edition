@@ -171,7 +171,8 @@ contract Users_test is Users, Comparators {
     /// #sender: account-0
     function createUserSuccess() public {
         bytes15 proposedUserName = bytes15(0x757365725f6e616d655f3100000000); //user_name_1
-        createUser(proposedUserName);
+        bytes32 mockMetadata = bytes32(0x7465737400000000000000000000000000000000000000000000000000000000);
+        createUser(proposedUserName, mockMetadata);
 
         address nameOwner = getUserNameOwner(proposedUserName);
         UserProfile memory userProfile = getUserProfile(TestsAccounts.getAccount(0));
@@ -183,11 +184,31 @@ contract Users_test is Users, Comparators {
         );
 
         Assert.equal(
+            userProfile.userMetadataHash,
+            mockMetadata,
+            "After using the createUser method, the userMetadataHash in the profile of the user should be the one that was passed as an argument to the method"
+        );
+
+        Assert.equal(
             nameOwner,
             TestsAccounts.getAccount(0),
             "After using the createUser method, the message sender should be the owner of the username"
         );
 
+    }
+
+    /// #sender: account-0
+    function updateUserMetadataHashSuccess() public {
+        bytes32 newMetadata = bytes32(0x0000000000000000000000000000000000000000000000000000000000456123);
+        updateUserMetadataHash(newMetadata);
+
+        UserProfile memory userProfile = getUserProfile(TestsAccounts.getAccount(0));
+
+        Assert.equal(
+            newMetadata,
+            userProfile.userMetadataHash,
+            "After using the updateUserMetadataHash method, the userMetadataHash in the user profile that calls the method should be overwritten with the new information"
+        );
     }
 
     /// #sender: account-0
