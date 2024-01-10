@@ -20,7 +20,7 @@ contract Utonoma is ERC20, ContentStorage, Users, Time {
     function upload(bytes32 contentHash, bytes32 metadataHash, ContentTypes contentType) external returns(Identifier memory) {
         uint64 strikes = getUserProfile(msg.sender).strikes;
         if(strikes > 0) { //if content creator has strikes it will have to pay the fee
-            collectFee(calculateFeeForUsersWithStrikes(strikes, getMAU()));
+            collectFee(calculateFeeForUsersWithStrikes(strikes, currentPeriodMAU()));
         } 
         logUserInteraction(block.timestamp, _startTimeOfTheNetwork);
         Content memory content = Content(
@@ -41,7 +41,7 @@ contract Utonoma is ERC20, ContentStorage, Users, Time {
     }
 
     function like(Identifier calldata id) external {
-        collectFee(calculateFee(getMAU()));
+        collectFee(calculateFee(currentPeriodMAU()));
         Content memory content = getContentById(id);
         content.likes++;
         updateContent(content, id);
@@ -50,7 +50,7 @@ contract Utonoma is ERC20, ContentStorage, Users, Time {
     }
 
     function dislike(Identifier calldata id) external {
-        collectFee(calculateFee(getMAU()));
+        collectFee(calculateFee(currentPeriodMAU()));
         Content memory content = getContentById(id);
         content.dislikes++;
         updateContent(content, id);
@@ -67,7 +67,7 @@ contract Utonoma is ERC20, ContentStorage, Users, Time {
         uint64 likesToHarvest = content.likes - content.dislikes - content.harvestedLikes;
         content.harvestedLikes += likesToHarvest;
         updateContent(content, id);
-        uint256 reward = likesToHarvest * calculateReward(getMAU());
+        uint256 reward = likesToHarvest * calculateReward(currentPeriodMAU());
         _mint(content.contentOwner, reward);
         emit harvested(id.index, uint256(id.contentType), reward);
     }
