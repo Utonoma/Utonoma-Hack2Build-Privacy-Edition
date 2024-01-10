@@ -5,9 +5,16 @@ pragma solidity 0.8.22;
 import {Utils} from "contracts/Utils.sol";
 
 contract Users is Utils {
+
+    /**
+    * @notice userMetadataHash is the hash of the content identifier in the ipfs network of a json file
+    * that contains information of CIDs in the IPFS network of the user metadata, like the profile picture,
+    * nickname, age and other
+    */ 
     struct UserProfile{
         uint256 latestInteraction;
-                bytes15 userName;
+        bytes32 userMetadataHash;
+        bytes15 userName;
         uint64 strikes; 
     }
     
@@ -48,13 +55,28 @@ contract Users is Utils {
         return _MAU;
     }
 
-    function createUser(bytes15 proposedUserName) public {
+    /// @param proposedUserName it's the username that wants to be registered
+    /// @param metadata bytes32 of a CID containing the additional information of the user, set it to 0x0 to not incluide it
+    function createUser(bytes15 proposedUserName, bytes32 metadata) public {
         isValidUserName(proposedUserName);
         require(getUserProfile(msg.sender).userName == 0x000000000000000000000000000000, "Account already have a username");
         require(getUserNameOwner(proposedUserName) == address(0), "Username isn't available");
 
         _userNames[proposedUserName] = msg.sender;
         _users[msg.sender].userName = proposedUserName;
+
+        if(metadata != 0x0000000000000000000000000000000000000000000000000000000000000000) 
+            _users[msg.sender].userMetadataHash = metadata; 
+    }
+
+    /** 
+    * @notice this method can be used to change the profile picture or other information of the user. 
+    * Update the metadata hash to 0x0 to delete the previous information
+    */
+    /// @param metadata is the new metadata information that will overwrite the existing one
+    /// @dev overwrites the userMetadataHash of the msg sender in the _users mapping
+    function updateUserMetadataHash(bytes32 metadata) public {
+        _users[msg.sender].userMetadataHash = metadata;
     }
 
     function addStrike(address contentCreator) internal {
