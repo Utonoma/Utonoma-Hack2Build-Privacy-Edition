@@ -55,7 +55,7 @@ contract Users_test is Users, Comparators {
 
         MAUReport.push(3);//MAUReport should be [3] (two from the previous test and one from this)
         Assert.ok(
-            arrayComparator(currentPeriodMAUReport(), MAUReport),
+            arrayComparator(historicMAUData(), MAUReport),
             "When using the logUserInteraction method from an account that interacts for the fisrt time with the contract, the MAU report should reflect one user"
         );
         
@@ -64,7 +64,7 @@ contract Users_test is Users, Comparators {
 
 
         Assert.ok(
-            arrayComparator(currentPeriodMAUReport(), MAUReport),
+            arrayComparator(historicMAUData(), MAUReport),
             "When using the logUserInteraction method for the second time with the same account in the current period, the MAU report should only reflect one user"
         );
         Assert.equal( 
@@ -79,7 +79,7 @@ contract Users_test is Users, Comparators {
 
         MAUReport.push(1); //MAUReport should be [3,1]
         Assert.ok(
-            arrayComparator(currentPeriodMAUReport(), MAUReport),
+            arrayComparator(historicMAUData(), MAUReport),
             "When using the logUserInteraction method for the first time since the start of the second period from an account that interacted in the pervious period, MAU report should count one user in the starting period"
         );
 
@@ -90,7 +90,7 @@ contract Users_test is Users, Comparators {
         MAUReport.push(0);
         MAUReport.push(1); //MAUReport should be [3,1,0,1]
         Assert.ok( 
-            arrayComparator(currentPeriodMAUReport(), MAUReport),
+            arrayComparator(historicMAUData(), MAUReport),
             "When using the logUserInteraction method for the first time after one period with no users, the MAU report of the period with no users should be in zero and the current one should be in one"
         );
 
@@ -103,7 +103,7 @@ contract Users_test is Users, Comparators {
         MAUReport.push(0);
         MAUReport.push(1); //MAUReport should be [3,1,0,1,0,0,0,1]
         Assert.ok( 
-            arrayComparator(currentPeriodMAUReport(), MAUReport),
+            arrayComparator(historicMAUData(), MAUReport),
             "When using the logUserInteraction method for the first time after three periods with no users, the MAU report of the three periods with no users should be in zero and the current one should be in one"
         );
 
@@ -114,7 +114,7 @@ contract Users_test is Users, Comparators {
 
         MAUReport.push(1); //MAUReport should be [3,1,0,1,0,0,0,1,1]
         Assert.ok(
-            arrayComparator(currentPeriodMAUReport(), MAUReport),
+            arrayComparator(historicMAUData(), MAUReport),
             "When using the logUserInteraction method twice at the same exact time with the same account, the MAU report should only reflect one user and not two"
         );
     }
@@ -126,14 +126,14 @@ contract Users_test is Users, Comparators {
 
         MAUReport[MAUReport.length - 1]++; //MAUReport should be [3,1,0,1,0,0,0,1,2]
         Assert.ok(
-            arrayComparator(currentPeriodMAUReport(), MAUReport),
+            arrayComparator(historicMAUData(), MAUReport),
             "When using the logUserInteraction method twice in the same period from two different accounts, the MAU report should reflect two users for the current period"
         );
         
 
         logUserInteraction(currentTime, startTime);
         Assert.ok(
-            arrayComparator(currentPeriodMAUReport(), MAUReport),
+            arrayComparator(historicMAUData(), MAUReport),
             "When using the logUserInteraction method three times in the same period from two different accounts, the MAU report should reflect only two users for the current period and not three"
         );
     }
@@ -145,14 +145,14 @@ contract Users_test is Users, Comparators {
 
         MAUReport[MAUReport.length - 1]++; //MAUReport should be [3,1,0,1,0,0,0,1,3]
         Assert.ok(
-            arrayComparator(currentPeriodMAUReport(), MAUReport),
+            arrayComparator(historicMAUData(), MAUReport),
             "When using the logUserInteraction method three times in the same period from three different accounts, the MAU report should reflect three users for the current period"
         );
         
 
         logUserInteraction(currentTime, startTime);
         Assert.ok(
-            arrayComparator(currentPeriodMAUReport(), MAUReport),
+            arrayComparator(historicMAUData(), MAUReport),
             "When using the logUserInteraction method multiple times in the same period from three different accounts, the MAU report should reflect only three users for the current period"
         );
     }

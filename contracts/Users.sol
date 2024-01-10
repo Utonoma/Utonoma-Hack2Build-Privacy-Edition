@@ -44,7 +44,7 @@ contract Users is Utils {
     }
 
     /// @dev Returns all the MAU historic data in an array, each element is one month
-    function currentPeriodMAUReport() public view returns(uint256[] memory) {
+    function historicMAUData() public view returns(uint256[] memory) {
         return _MAU;
     }
 
