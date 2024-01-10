@@ -7,7 +7,7 @@ import {Utils} from "contracts/Utils.sol";
 contract Users is Utils {
     struct UserProfile{
         uint256 latestInteraction;
-        bytes15 userName;
+                bytes15 userName;
         uint64 strikes; 
     }
     
@@ -48,7 +48,7 @@ contract Users is Utils {
         return _MAU;
     }
 
-    function createUserName(bytes15 proposedUserName) public {
+    function createUser(bytes15 proposedUserName) public {
         isValidUserName(proposedUserName);
         require(getUserProfile(msg.sender).userName == 0x000000000000000000000000000000, "Account already have a username");
         require(getUserNameOwner(proposedUserName) == address(0), "Username isn't available");

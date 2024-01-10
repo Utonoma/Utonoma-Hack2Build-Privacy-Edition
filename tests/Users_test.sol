@@ -169,9 +169,9 @@ contract Users_test is Users, Comparators {
     }    
 
     /// #sender: account-0
-    function createUserNameSuccess() public {
+    function createUserSuccess() public {
         bytes15 proposedUserName = bytes15(0x757365725f6e616d655f3100000000); //user_name_1
-        createUserName(proposedUserName);
+        createUser(proposedUserName);
 
         address nameOwner = getUserNameOwner(proposedUserName);
         UserProfile memory userProfile = getUserProfile(TestsAccounts.getAccount(0));
@@ -179,13 +179,13 @@ contract Users_test is Users, Comparators {
         Assert.equal(
             userProfile.userName,
             proposedUserName,
-            "After using the createUserName method, the username in the profile of the user should be the one that was passed as an argument to the method"
+            "After using the createUser method, the username in the profile of the user should be the one that was passed as an argument to the method"
         );
 
         Assert.equal(
             nameOwner,
             TestsAccounts.getAccount(0),
-            "After using the createUserName method, the message sender should be the owner of the username"
+            "After using the createUser method, the message sender should be the owner of the username"
         );
 
     }
