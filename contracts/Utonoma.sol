@@ -80,6 +80,12 @@ contract Utonoma is ERC20, ContentStorage, Users, Time {
         emit deleted(content.contentOwner, content.contentHash, content.metadataHash, id.index, uint8(id.contentType));
     }
 
+    /// @notice This method allows the user to delete content that they uploaded
+    function voluntarilyDelete(Identifier calldata id) external {        
+        require(msg.sender == getContentById(id).contentOwner, "Only the content owner can voluntarily delete it");
+        deleteContent(id);
+    }
+
     function reply(Identifier calldata replyId, Identifier calldata replyingToId) external {
         require(msg.sender == getContentById(replyId).contentOwner, "Only the owner of the content can use it as a reply");
         createReply(replyId, replyingToId);
