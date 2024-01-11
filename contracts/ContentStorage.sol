@@ -58,6 +58,13 @@ contract ContentStorage {
         return _contentLibraries[uint256(id.contentType)][id.index];
     }
 
+    /**
+    * @dev Gets an array containing the ids from the contents that are being replied by this one. 
+    * As it's not possible to store a dynamic array of Identifier structs, we store the index and the 
+    * contentType by separate in the Content struct (by the names of replyingTo and replyingToContentType) 
+    * and we recreate the original Identifier struct of each reply, to later append all of them in an array
+    * by using the for loop
+    */
     function getContentsRepliedByThis(Identifier memory id) contentShouldExists(id) public view returns(Identifier[] memory) {
         uint256 replyingToLength = _contentLibraries[uint256(id.contentType)][id.index].replyingTo.length;
         Identifier[] memory contentsRepliedByThis = new Identifier[](replyingToLength);
@@ -70,6 +77,13 @@ contract ContentStorage {
         return contentsRepliedByThis;
     }
 
+    /**
+    * @dev Gets an array containing the ids from the contents that are replying this one. 
+    * As it's not possible to store a dynamic array of Identifier structs, we store the index and the 
+    * contentType by separate in the Content struct (by the names of repliedBy and repliedByContentType) 
+    * and we recreate the original Identifier struct of each reply, to later append all of them in an array
+    * by using the for loop
+    */
     function getRepliesToThisContent(Identifier memory id) contentShouldExists(id) public view returns(Identifier[] memory) {
         uint256 repliedByLength = _contentLibraries[uint256(id.contentType)][id.index].repliedBy.length;
         Identifier[] memory repliesToThisContent = new Identifier[](repliedByLength);
@@ -88,6 +102,14 @@ contract ContentStorage {
         return Identifier(getContentLibraryLength(contentType) - 1, contentType);
     }
 
+    /// @dev sets one content to be a reply of another one.
+    /// @param replyId is the content that is replying
+    /// @param replyingToId is the content that wants to be replied by the other
+    /**
+    * @notice identifier struct can't be stored like this, so it has to be separated in it's index and 
+    * content library components, original identifier can be restored and retrived by using their 
+    * respective getters (getContentsRepliedByThis and getRepliesToThisContent)
+    */
     function createReply(
         Identifier memory replyId, 
         Identifier memory replyingToId
@@ -97,7 +119,7 @@ contract ContentStorage {
 
         _contentLibraries[uint256(replyingToId.contentType)][replyingToId.index].repliedBy.push(replyId.index);
         _contentLibraries[uint256(replyingToId.contentType)][replyingToId.index].repliedByContentType.push(uint8(replyId.contentType));
-    }
+    }    
 
     function updateContent(Content memory content, Identifier memory id) contentShouldExists(id) internal {
         _contentLibraries[uint256(id.contentType)][id.index] = content;
