@@ -13,14 +13,17 @@ contract Utils {
     uint256 private constant _commissionByBaseReward = 1333333333333333333000;
     uint256 private constant _minimumQuorum = 5;
 
+    /// @notice please refer to the Utonoma paper to know what the base reward is
     function baseReward() external pure returns (uint256) {
         return _baseReward;
     }
 
+    /// @notice precomputed multiplication of the commision by the base reward stored to save calculations
     function commissionByBaseReward() external pure returns(uint256) {
         return _commissionByBaseReward;
     }
 
+    /// @notice minimum amount of votes (likes and dislikes) that should be emited to grant a reward
     function minimumQuorum() external pure returns(uint256) {
         return _minimumQuorum;
     }
@@ -57,16 +60,24 @@ contract Utils {
         return pMinusRootByZ > twoThirds;
     }
 
+    /// @notice calculates the reward that a content creator can receive for one like
+    /// @param usersNumber the current monthly active users (MAU) that the platform has
     function calculateReward(uint256 usersNumber) public pure returns(uint256) {
         require(usersNumber != 0, "Number of users can't be zero");
         return (10**18 * _baseReward) / usersNumber**2;
     }
 
+    /// @notice calculates the fee
+    /// @param usersNumber the current monthly active users (MAU) that the platform has
     function calculateFee(uint256 usersNumber) public pure returns(uint256) {
         require(usersNumber != 0, "Number of users can't be zero");
         return _commissionByBaseReward / usersNumber**2;
     }
 
+    /**
+    *  @notice calculates the fee for any particular number of strikes, result grows exponentialy based
+    *  in the strikes number
+    */ 
     function calculateFeeForUsersWithStrikes(uint64 numberOfStrikes, uint256 usersNumber) public pure returns(uint256) {
         require(numberOfStrikes > 0, "Number of strikes should be greater than zero");
         return calculateFee(usersNumber) ** numberOfStrikes;
@@ -79,6 +90,11 @@ contract Utils {
         IERC20(address(this)).transferFrom(msg.sender, address(this), fee);
     }
 
+    /**
+    *  @notice checks if a username it's valid (only lower case letters, numbers, and underscores, 
+    *  min 4 chars and less than 15)
+    */ 
+    /// @dev Validates by comparing the bytes32 with the ascii symbols they represent in hex
     function isValidUserName(bytes15 userName) public pure returns(bool) {
         require(userName != 0x0, "User name is empty");
 
