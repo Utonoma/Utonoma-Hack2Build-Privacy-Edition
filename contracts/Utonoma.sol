@@ -17,6 +17,11 @@ contract Utonoma is ERC20, ContentStorage, Users, Time {
         _owner = msg.sender;
     }
 
+    /// @dev uploads a content by using the createContent method
+    /**
+    * @notice in case that the user has strikes, it will have to pay the respective fee, this call 
+    * counts as a user interaction
+    */ 
     function upload(bytes32 contentHash, bytes32 metadataHash, ContentTypes contentType) external returns(Identifier memory) {
         uint64 strikes = getUserProfile(msg.sender).strikes;
         if(strikes > 0) { //if content creator has strikes it will have to pay the fee
@@ -40,6 +45,8 @@ contract Utonoma is ERC20, ContentStorage, Users, Time {
         return id;
     }
 
+    /// @dev adds one to the likes count of the content
+    /// @notice this call counts as a user interaction
     function like(Identifier calldata id) external {
         collectFee(calculateFee(currentPeriodMAU()));
         Content memory content = getContentById(id);
@@ -49,6 +56,8 @@ contract Utonoma is ERC20, ContentStorage, Users, Time {
         emit liked(id.index, uint256(id.contentType));
     }
 
+    /// @dev adds one to the likes count of the content
+    /// @notice this call counts as a user interaction
     function dislike(Identifier calldata id) external {
         collectFee(calculateFee(currentPeriodMAU()));
         Content memory content = getContentById(id);
@@ -58,6 +67,12 @@ contract Utonoma is ERC20, ContentStorage, Users, Time {
         emit disliked(id.index, uint256(id.contentType));
     }
 
+    /**
+    * @dev mints new tokens and assing them to the content creator, calculation of the amount is based on the 
+    * return of the calculate reward method by the number of likes - dislikes - harvested likes
+    * harvested likes it's the number of likes that where already cashed
+    */
+    /// @notice if a content gets a dislike, lesser the amount of the granted tokens will be
     function harvestLikes(Identifier calldata id) external {
         Content memory content = getContentById(id);
         require(content.likes > content.dislikes, "Likes should be greater than dislikes");
@@ -72,6 +87,8 @@ contract Utonoma is ERC20, ContentStorage, Users, Time {
         emit harvested(id.index, uint256(id.contentType), reward);
     }
 
+    /// @dev validates and deletes a content from the content library and adds a strike to the creator's user profile
+    /// @notice this call counts as a user interaction
     function deletion(Identifier calldata id) external {
         Content memory content = getContentById(id);
         require(shouldContentBeEliminated(content.likes, content.dislikes));
@@ -96,6 +113,7 @@ contract Utonoma is ERC20, ContentStorage, Users, Time {
         emit replied(replyId.index, uint256(replyId.contentType), replyingToId.index, uint256(replyingToId.contentType));
     }
 
+    /// @dev allows the contract's owner to withdraw all the gathered fees
     function withdraw() external {
         require(msg.sender == _owner, "Only the owner can withdraw");
         uint256 maxBalance = IERC20(address(this)).balanceOf(address(this));
