@@ -42,18 +42,25 @@ contract ContentStorage {
 
     Content[][15] internal _contentLibraries;
 
+    /// @notice gets the min value of the ContentTypes struct (return will be 0)
     function getMinContentTypes() external pure returns(uint256) {
         return uint256(type(ContentTypes).min);
     }
 
+    /// @notice gets the highest value (as integer) that the ContentTypes struct can take
     function getMaxContentTypes() public pure returns(uint256) {
         return uint256(type(ContentTypes).max);
     }
 
+    /** 
+    * @notice gets how many contents has been uploaded to a content library 
+    * (each content type it's a different library)
+    */
     function getContentLibraryLength(ContentTypes contentType) public view returns(uint256){
         return _contentLibraries[uint256(contentType)].length;
     }
 
+    /// @notice gets all the information of a content, searching by it's Identifier
     function getContentById(Identifier memory id) contentShouldExists(id) public view returns(Content memory){
         return _contentLibraries[uint256(id.contentType)][id.index];
     }
@@ -97,6 +104,7 @@ contract ContentStorage {
     }
     
     /// @dev Creates a new content in the specified content library. Returns the id of this new content
+    /// @return Identifier in wich the content was stored
     function createContent(Content memory content, ContentTypes contentType) internal returns(Identifier memory) {
         _contentLibraries[uint256(contentType)].push(content);
         return Identifier(getContentLibraryLength(contentType) - 1, contentType);
