@@ -88,7 +88,6 @@ contract Utonoma is ERC20, ContentStorage, Users, Time {
     }
 
     /// @dev validates and deletes a content from the content library and adds a strike to the creator's user profile
-    /// @notice this call counts as a user interaction
     function deletion(Identifier calldata id) external {
         Content memory content = getContentById(id);
         require(shouldContentBeEliminated(content.likes, content.dislikes));
