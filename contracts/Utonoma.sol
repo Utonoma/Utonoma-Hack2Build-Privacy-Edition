@@ -120,16 +120,47 @@ contract Utonoma is ERC20, ContentStorage, Users, Time {
         IERC20(address(this)).transfer(_owner, maxBalance);
     }
 
+    /**
+    * @notice filtering by contentCreator can be used as a way of knowing if an author that a user follows  
+    * uploaded something new
+    */
+    /// @param contentCreator it's the address of the user that uploaded the content
+    /// @param index of the Identifier struct where the content is stored
+    /// @param contentType of the Identifier struct where the content is stored
     event uploaded(address indexed contentCreator, uint256 index, uint256 contentType);
 
+    /// @param index of the Identifier struct where the content is stored
+    /// @param contentType of the Identifier struct where the content is stored
     event liked(uint256 indexed index, uint256 indexed contentType);
 
+    /// @param index of the Identifier struct where the content is stored
+    /// @param contentType of the Identifier struct where the content is stored
     event disliked(uint256 indexed index, uint256 indexed contentType);
 
+    /// @param index of the Identifier struct where the content is stored
+    /// @param contentType of the Identifier struct where the content is stored
+    /// @param amount of minted tokens that were granted to the creator of the content
     event harvested(uint256 indexed index, uint256 indexed contentType, uint256 amount);
 
+    /**
+    * @notice filtering by the owner can inform to an author if it's content was deleted
+    */
+    /// @param owner of the deleted content
+    /// @param content, it's the hash of the deleted content
+    /// @param metadata, it's the metadata hash of the deleted content
+    /// @param index of the Identifier struct where the content is stored
+    /// @param contentType of the Identifier struct where the content is stored
     event deleted(address indexed owner, bytes32 content, bytes32 metadata, uint256 index, uint8 contentType);
 
+    /// @dev informs that a content was replied by other
+    /** 
+    * @notice filtering by a combination of the replyingToIndex and the replyingToContentType can be used to 
+    * inform to an author that one of it's content was replied
+    */
+    /// @param replyIndex index from the Identifier struct of the content that works as a reply
+    /// @param replyContentType contentType from the Identifier struct of the content that works as a reply
+    /// @param replyingToIndex index from the Identifier struct of the content that it's being replied
+    /// @param replyingToContentType contentType from the Identifier struct of the content that it's being replied
     event replied(uint256 replyIndex, uint256 replyContentType, uint256 indexed replyingToIndex, uint256 indexed replyingToContentType);
 
 }
