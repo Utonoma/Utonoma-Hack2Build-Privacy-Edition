@@ -144,13 +144,14 @@ contract Utonoma is ERC20, ContentStorage, Users, Time {
 
     /**
     * @notice filtering by the owner can inform to an author if it's content was deleted
+    * or to users if a content they disliked was deleted from the platform 
     */
     /// @param owner of the deleted content
     /// @param content, it's the hash of the deleted content
     /// @param metadata, it's the metadata hash of the deleted content
     /// @param index of the Identifier struct where the content is stored
     /// @param contentType of the Identifier struct where the content is stored
-    event deleted(address indexed owner, bytes32 content, bytes32 metadata, uint256 index, uint8 contentType);
+    event deleted(address indexed owner, bytes32 content, bytes32 metadata, uint256 indexed index, uint8 indexed contentType);
 
     /// @dev informs that a content was replied by other
     /** 
