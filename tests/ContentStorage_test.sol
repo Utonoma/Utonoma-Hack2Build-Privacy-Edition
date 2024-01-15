@@ -176,7 +176,7 @@ contract ContentStorage_test is ContentStorage, Comparators {
             new uint8[](0)
         );
 
-        updateContent(content2, targetContentIdentifier);
+        _updateContent(content2, targetContentIdentifier);
 
         Content memory modifiedContent = getContentById(targetContentIdentifier);
 

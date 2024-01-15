@@ -51,7 +51,7 @@ contract Utonoma is ERC20, ContentStorage, Users, Time {
         _collectFee(calculateFee(currentPeriodMAU()));
         Content memory content = getContentById(id);
         content.likes++;
-        updateContent(content, id);
+        _updateContent(content, id);
         _logUserInteraction(block.timestamp, _startTimeOfTheNetwork);
         emit liked(id.index, uint256(id.contentType));
     }
@@ -62,7 +62,7 @@ contract Utonoma is ERC20, ContentStorage, Users, Time {
         _collectFee(calculateFee(currentPeriodMAU()));
         Content memory content = getContentById(id);
         content.dislikes++;
-        updateContent(content, id);
+        _updateContent(content, id);
         _logUserInteraction(block.timestamp, _startTimeOfTheNetwork);
         emit disliked(id.index, uint256(id.contentType));
     }
@@ -81,7 +81,7 @@ contract Utonoma is ERC20, ContentStorage, Users, Time {
         
         uint64 likesToHarvest = content.likes - content.dislikes - content.harvestedLikes;
         content.harvestedLikes += likesToHarvest;
-        updateContent(content, id);
+        _updateContent(content, id);
         uint256 reward = likesToHarvest * calculateReward(currentPeriodMAU());
         _mint(content.contentOwner, reward);
         emit harvested(id.index, uint256(id.contentType), reward);

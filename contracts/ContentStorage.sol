@@ -129,7 +129,7 @@ contract ContentStorage {
         _contentLibraries[uint256(replyingToId.contentType)][replyingToId.index].repliedByContentType.push(uint8(replyId.contentType));
     }    
 
-    function updateContent(Content memory content, Identifier memory id) contentShouldExists(id) internal {
+    function _updateContent(Content memory content, Identifier memory id) contentShouldExists(id) internal {
         _contentLibraries[uint256(id.contentType)][id.index] = content;
     }
 
