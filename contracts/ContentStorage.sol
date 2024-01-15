@@ -105,7 +105,7 @@ contract ContentStorage {
     
     /// @dev Creates a new content in the specified content library. Returns the id of this new content
     /// @return Identifier in wich the content was stored
-    function createContent(Content memory content, ContentTypes contentType) internal returns(Identifier memory) {
+    function _createContent(Content memory content, ContentTypes contentType) internal returns(Identifier memory) {
         _contentLibraries[uint256(contentType)].push(content);
         return Identifier(getContentLibraryLength(contentType) - 1, contentType);
     }
@@ -118,7 +118,7 @@ contract ContentStorage {
     * content library components, original identifier can be restored and retrived by using their 
     * respective getters (getContentsRepliedByThis and getRepliesToThisContent)
     */
-    function createReply(
+    function _createReply(
         Identifier memory replyId, 
         Identifier memory replyingToId
     ) contentShouldExists(replyId) contentShouldExists(replyingToId) internal {
@@ -129,11 +129,11 @@ contract ContentStorage {
         _contentLibraries[uint256(replyingToId.contentType)][replyingToId.index].repliedByContentType.push(uint8(replyId.contentType));
     }    
 
-    function updateContent(Content memory content, Identifier memory id) contentShouldExists(id) internal {
+    function _updateContent(Content memory content, Identifier memory id) contentShouldExists(id) internal {
         _contentLibraries[uint256(id.contentType)][id.index] = content;
     }
 
-    function deleteContent(Identifier memory id) contentShouldExists(id) internal {
+    function _deleteContent(Identifier memory id) contentShouldExists(id) internal {
         delete(_contentLibraries[uint256(id.contentType)][id.index]);
     }
 

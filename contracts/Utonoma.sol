@@ -25,9 +25,9 @@ contract Utonoma is ERC20, ContentStorage, Users, Time {
     function upload(bytes32 contentHash, bytes32 metadataHash, ContentTypes contentType) external returns(Identifier memory) {
         uint64 strikes = getUserProfile(msg.sender).strikes;
         if(strikes > 0) { //if content creator has strikes it will have to pay the fee
-            collectFee(calculateFeeForUsersWithStrikes(strikes, currentPeriodMAU()));
+            _collectFee(calculateFeeForUsersWithStrikes(strikes, currentPeriodMAU()));
         } 
-        logUserInteraction(block.timestamp, _startTimeOfTheNetwork);
+        _logUserInteraction(block.timestamp, _startTimeOfTheNetwork);
         Content memory content = Content(
             msg.sender,
             contentHash,
@@ -40,7 +40,7 @@ contract Utonoma is ERC20, ContentStorage, Users, Time {
             new uint256[](0),
             new uint8[](0)
         );
-        Identifier memory id = createContent(content, contentType);
+        Identifier memory id = _createContent(content, contentType);
         emit uploaded(msg.sender, id.index, uint256(id.contentType));
         return id;
     }
@@ -48,22 +48,22 @@ contract Utonoma is ERC20, ContentStorage, Users, Time {
     /// @dev adds one to the likes count of the content
     /// @notice this call counts as a user interaction
     function like(Identifier calldata id) external {
-        collectFee(calculateFee(currentPeriodMAU()));
+        _collectFee(calculateFee(currentPeriodMAU()));
         Content memory content = getContentById(id);
         content.likes++;
-        updateContent(content, id);
-        logUserInteraction(block.timestamp, _startTimeOfTheNetwork);
+        _updateContent(content, id);
+        _logUserInteraction(block.timestamp, _startTimeOfTheNetwork);
         emit liked(id.index, uint256(id.contentType));
     }
 
     /// @dev adds one to the likes count of the content
     /// @notice this call counts as a user interaction
     function dislike(Identifier calldata id) external {
-        collectFee(calculateFee(currentPeriodMAU()));
+        _collectFee(calculateFee(currentPeriodMAU()));
         Content memory content = getContentById(id);
         content.dislikes++;
-        updateContent(content, id);
-        logUserInteraction(block.timestamp, _startTimeOfTheNetwork);
+        _updateContent(content, id);
+        _logUserInteraction(block.timestamp, _startTimeOfTheNetwork);
         emit disliked(id.index, uint256(id.contentType));
     }
 
@@ -81,7 +81,7 @@ contract Utonoma is ERC20, ContentStorage, Users, Time {
         
         uint64 likesToHarvest = content.likes - content.dislikes - content.harvestedLikes;
         content.harvestedLikes += likesToHarvest;
-        updateContent(content, id);
+        _updateContent(content, id);
         uint256 reward = likesToHarvest * calculateReward(currentPeriodMAU());
         _mint(content.contentOwner, reward);
         emit harvested(id.index, uint256(id.contentType), reward);
@@ -91,8 +91,8 @@ contract Utonoma is ERC20, ContentStorage, Users, Time {
     function deletion(Identifier calldata id) external {
         Content memory content = getContentById(id);
         require(shouldContentBeEliminated(content.likes, content.dislikes));
-        deleteContent(id);
-        addStrike(content.contentOwner);
+        _deleteContent(id);
+        _addStrike(content.contentOwner);
         emit deleted(content.contentOwner, content.contentHash, content.metadataHash, id.index, uint8(id.contentType));
     }
 
@@ -100,7 +100,7 @@ contract Utonoma is ERC20, ContentStorage, Users, Time {
     /// @notice only the creator can delete it
     function voluntarilyDelete(Identifier calldata id) external {        
         require(msg.sender == getContentById(id).contentOwner, "Only the content owner can voluntarily delete it");
-        deleteContent(id);
+        _deleteContent(id);
     }
 
     /// @dev adds a content to the reply list of other content
@@ -108,7 +108,7 @@ contract Utonoma is ERC20, ContentStorage, Users, Time {
     /// @param replyingToId it is the id of the content that is being replied
     function reply(Identifier calldata replyId, Identifier calldata replyingToId) external {
         require(msg.sender == getContentById(replyId).contentOwner, "Only the owner of the content can use it as a reply");
-        createReply(replyId, replyingToId);
+        _createReply(replyId, replyingToId);
         emit replied(replyId.index, uint256(replyId.contentType), replyingToId.index, uint256(replyingToId.contentType));
     }
 

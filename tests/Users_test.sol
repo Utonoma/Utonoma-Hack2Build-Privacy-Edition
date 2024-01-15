@@ -24,11 +24,11 @@ contract Users_test is Users, Comparators {
     /// @dev Generate one interaction for the next test
     /// #sender: account-5
     function generateOneInteracionForTheNextTest() public {
-        logUserInteraction(currentTime, startTime);
+        _logUserInteraction(currentTime, startTime);
     }
     /// #sender: account-6
     function currentPeriodMAUForTheFirstMonth() public {
-        logUserInteraction(currentTime, startTime);
+        _logUserInteraction(currentTime, startTime);
         Assert.equal(
             currentPeriodMAU(),
             2,
@@ -51,7 +51,7 @@ contract Users_test is Users, Comparators {
     /// #sender: account-1
     function logUserInteractionForASingleUser() public {
         
-        logUserInteraction(currentTime, startTime);
+        _logUserInteraction(currentTime, startTime);
 
         MAUReport.push(3);//MAUReport should be [3] (two from the previous test and one from this)
         Assert.ok(
@@ -60,7 +60,7 @@ contract Users_test is Users, Comparators {
         );
         
         currentTime = 1674280800; //Sat Jan 21 2023 06:00:00 GMT+0000 (five days after the first interaction)
-        logUserInteraction(currentTime, startTime);
+        _logUserInteraction(currentTime, startTime);
 
 
         Assert.ok(
@@ -75,7 +75,7 @@ contract Users_test is Users, Comparators {
 
 
         currentTime = 1676354400; //Tue Feb 14 2023 06:00:00 GMT+0000 (at the start of the second period)
-        logUserInteraction(currentTime, startTime);
+        _logUserInteraction(currentTime, startTime);
 
         MAUReport.push(1); //MAUReport should be [3,1]
         Assert.ok(
@@ -85,7 +85,7 @@ contract Users_test is Users, Comparators {
 
 
         currentTime = 1681538400; //Sat Apr 15 2023 06:00:00 GMT+0000 (in the fourth period after skipping the third one)
-        logUserInteraction(currentTime, startTime);
+        _logUserInteraction(currentTime, startTime);
 
         MAUReport.push(0);
         MAUReport.push(1); //MAUReport should be [3,1,0,1]
@@ -96,7 +96,7 @@ contract Users_test is Users, Comparators {
 
 
         currentTime = 1691906400; //Sun Aug 13 2023 06:00:00 GMT+0000 (Begining of the eigth period after three monts with no users)  
-        logUserInteraction(currentTime, startTime);
+        _logUserInteraction(currentTime, startTime);
 
         MAUReport.push(0);
         MAUReport.push(0);
@@ -109,8 +109,8 @@ contract Users_test is Users, Comparators {
 
 
         currentTime = 1694498400; //Tue Sep 12 2023 06:00:00 GMT+0000 (Begining of the nineth period)          
-        logUserInteraction(currentTime, startTime);
-        logUserInteraction(currentTime, startTime);
+        _logUserInteraction(currentTime, startTime);
+        _logUserInteraction(currentTime, startTime);
 
         MAUReport.push(1); //MAUReport should be [3,1,0,1,0,0,0,1,1]
         Assert.ok(
@@ -122,7 +122,7 @@ contract Users_test is Users, Comparators {
     /// #sender: account-2
     function logUserInteractionForTwoUsers() public {
         currentTime = 1694498400; //Tue Sep 12 2023 06:00:00 GMT+0000 (Begining of the nineth period)
-        logUserInteraction(currentTime, startTime);
+        _logUserInteraction(currentTime, startTime);
 
         MAUReport[MAUReport.length - 1]++; //MAUReport should be [3,1,0,1,0,0,0,1,2]
         Assert.ok(
@@ -131,7 +131,7 @@ contract Users_test is Users, Comparators {
         );
         
 
-        logUserInteraction(currentTime, startTime);
+        _logUserInteraction(currentTime, startTime);
         Assert.ok(
             arrayComparator(historicMAUData(), MAUReport),
             "When using the logUserInteraction method three times in the same period from two different accounts, the MAU report should reflect only two users for the current period and not three"
@@ -141,7 +141,7 @@ contract Users_test is Users, Comparators {
     /// #sender: account-3
     function logUserInteractionForThreeUsers() public {
         currentTime = 1694498400; //Tue Sep 12 2023 06:00:00 GMT+0000 (Begining of the nineth period)
-        logUserInteraction(currentTime, startTime);
+        _logUserInteraction(currentTime, startTime);
 
         MAUReport[MAUReport.length - 1]++; //MAUReport should be [3,1,0,1,0,0,0,1,3]
         Assert.ok(
@@ -150,7 +150,7 @@ contract Users_test is Users, Comparators {
         );
         
 
-        logUserInteraction(currentTime, startTime);
+        _logUserInteraction(currentTime, startTime);
         Assert.ok(
             arrayComparator(historicMAUData(), MAUReport),
             "When using the logUserInteraction method multiple times in the same period from three different accounts, the MAU report should reflect only three users for the current period"
@@ -214,7 +214,7 @@ contract Users_test is Users, Comparators {
     /// #sender: account-0
     function addStrikeSuccess() public {
         uint256 strikesNumberBefore = getUserProfile(TestsAccounts.getAccount(0)).strikes;
-        addStrike(TestsAccounts.getAccount(0));
+        _addStrike(TestsAccounts.getAccount(0));
         uint256 strikesNumberAfter = getUserProfile(TestsAccounts.getAccount(0)).strikes;
 
         Assert.equal(

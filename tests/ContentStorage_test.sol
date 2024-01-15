@@ -39,7 +39,7 @@ contract ContentStorage_test is ContentStorage, Comparators {
     function createContentSuccess() public {
         for(uint256 i = 0; i < getMaxContentTypes(); i++) { 
             uint256 originalLibraryLength = getContentLibraryLength(ContentTypes(i));
-            Identifier memory createdContentId = createContent(sampleContent, ContentTypes(i));
+            Identifier memory createdContentId = _createContent(sampleContent, ContentTypes(i));
             
             uint256 modifiedLibraryLength = getContentLibraryLength(ContentTypes(i));
             Content memory insertedContent = getContentById(Identifier(modifiedLibraryLength - 1, ContentTypes(i)));
@@ -94,16 +94,16 @@ contract ContentStorage_test is ContentStorage, Comparators {
     function createReplySuccess() public {
 
         //Create 3 contents
-        Identifier memory contentId1 = createContent(sampleContent, ContentTypes(6));
-        Identifier memory contentId2 = createContent(sampleContent, ContentTypes(11));
-        Identifier memory contentId3 = createContent(sampleContent, ContentTypes(10));
+        Identifier memory contentId1 = _createContent(sampleContent, ContentTypes(6));
+        Identifier memory contentId2 = _createContent(sampleContent, ContentTypes(11));
+        Identifier memory contentId3 = _createContent(sampleContent, ContentTypes(10));
 
         uint256 originalRepliesToContent1Length = getRepliesToThisContent(contentId1).length;
 
         //Content 2 should reply to 1
-        createReply(contentId2, contentId1);
+        _createReply(contentId2, contentId1);
         //Content 3 should reply to 1
-        createReply(contentId3, contentId1);
+        _createReply(contentId3, contentId1);
         Identifier[] memory repliesToContent1 = getRepliesToThisContent(contentId1);
         //Check that content 2 is in the list of replies of content 1
         bool is2InTheListOfReplies = false;
@@ -124,14 +124,14 @@ contract ContentStorage_test is ContentStorage, Comparators {
             "When using the method createReply to reply two times to content 1, the length of the array of replies to content 1 should increase by 2"
         );
 
-        Identifier memory contentId4 = createContent(sampleContent, ContentTypes(8));
+        Identifier memory contentId4 = _createContent(sampleContent, ContentTypes(8));
 
         uint256 originalContentsRepliedBy4Length = getContentsRepliedByThis(contentId4).length;
 
         //Content 4 replies to 1, 2 and 3
-        createReply(contentId4, contentId1);
-        createReply(contentId4, contentId2);
-        createReply(contentId4, contentId3);
+        _createReply(contentId4, contentId1);
+        _createReply(contentId4, contentId2);
+        _createReply(contentId4, contentId3);
 
         Identifier[] memory contentsRepliedBy4 = getContentsRepliedByThis(contentId4);
         
@@ -176,7 +176,7 @@ contract ContentStorage_test is ContentStorage, Comparators {
             new uint8[](0)
         );
 
-        updateContent(content2, targetContentIdentifier);
+        _updateContent(content2, targetContentIdentifier);
 
         Content memory modifiedContent = getContentById(targetContentIdentifier);
 
@@ -241,7 +241,7 @@ contract ContentStorage_test is ContentStorage, Comparators {
         Content memory originalContent = getContentById(targetIdentifier);
         uint256 originalContentLength = getContentLibraryLength(targetIdentifier.contentType);
 
-        deleteContent(targetIdentifier);
+        _deleteContent(targetIdentifier);
         Content memory storageSpaceAfterDeletion = getContentById(targetIdentifier);
 
         Assert.notEqual(

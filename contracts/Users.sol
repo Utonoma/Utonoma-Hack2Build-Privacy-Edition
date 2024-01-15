@@ -87,11 +87,11 @@ contract Users is Utils {
         _users[msg.sender].userMetadataHash = metadata;
     }
 
-    function addStrike(address contentCreator) internal {
+    function _addStrike(address contentCreator) internal {
         _users[contentCreator].strikes++;        
     }
 
-    function logUserInteraction(
+    function _logUserInteraction(
         uint256 currentTime, 
         uint256 startTimeOfNetwork
     ) internal {
