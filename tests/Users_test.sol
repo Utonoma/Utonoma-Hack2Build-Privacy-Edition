@@ -214,7 +214,7 @@ contract Users_test is Users, Comparators {
     /// #sender: account-0
     function addStrikeSuccess() public {
         uint256 strikesNumberBefore = getUserProfile(TestsAccounts.getAccount(0)).strikes;
-        addStrike(TestsAccounts.getAccount(0));
+        _addStrike(TestsAccounts.getAccount(0));
         uint256 strikesNumberAfter = getUserProfile(TestsAccounts.getAccount(0)).strikes;
 
         Assert.equal(

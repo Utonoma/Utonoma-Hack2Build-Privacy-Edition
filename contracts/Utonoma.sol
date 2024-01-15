@@ -92,7 +92,7 @@ contract Utonoma is ERC20, ContentStorage, Users, Time {
         Content memory content = getContentById(id);
         require(shouldContentBeEliminated(content.likes, content.dislikes));
         deleteContent(id);
-        addStrike(content.contentOwner);
+        _addStrike(content.contentOwner);
         emit deleted(content.contentOwner, content.contentHash, content.metadataHash, id.index, uint8(id.contentType));
     }
 
