@@ -17,6 +17,11 @@ contract Utonoma is ERC20, ContentStorage, Users, Time {
         _owner = msg.sender;
     }
 
+    /// @dev uploads a content by using the createContent method
+    /**
+    * @notice in case that the user has strikes, it will have to pay the respective fee, this call 
+    * counts as a user interaction
+    */ 
     function upload(bytes32 contentHash, bytes32 metadataHash, ContentTypes contentType) external returns(Identifier memory) {
         uint64 strikes = getUserProfile(msg.sender).strikes;
         if(strikes > 0) { //if content creator has strikes it will have to pay the fee
@@ -40,6 +45,8 @@ contract Utonoma is ERC20, ContentStorage, Users, Time {
         return id;
     }
 
+    /// @dev adds one to the likes count of the content
+    /// @notice this call counts as a user interaction
     function like(Identifier calldata id) external {
         collectFee(calculateFee(currentPeriodMAU()));
         Content memory content = getContentById(id);
@@ -49,6 +56,8 @@ contract Utonoma is ERC20, ContentStorage, Users, Time {
         emit liked(id.index, uint256(id.contentType));
     }
 
+    /// @dev adds one to the likes count of the content
+    /// @notice this call counts as a user interaction
     function dislike(Identifier calldata id) external {
         collectFee(calculateFee(currentPeriodMAU()));
         Content memory content = getContentById(id);
@@ -58,6 +67,12 @@ contract Utonoma is ERC20, ContentStorage, Users, Time {
         emit disliked(id.index, uint256(id.contentType));
     }
 
+    /**
+    * @dev mints new tokens and assing them to the content creator, calculation of the amount is based on the 
+    * return of the calculate reward method by the number of likes - dislikes - harvested likes
+    * harvested likes it's the number of likes that where already cashed
+    */
+    /// @notice if a content gets a dislike, lesser the amount of the granted tokens will be
     function harvestLikes(Identifier calldata id) external {
         Content memory content = getContentById(id);
         require(content.likes > content.dislikes, "Likes should be greater than dislikes");
@@ -72,6 +87,7 @@ contract Utonoma is ERC20, ContentStorage, Users, Time {
         emit harvested(id.index, uint256(id.contentType), reward);
     }
 
+    /// @dev validates and deletes a content from the content library and adds a strike to the creator's user profile
     function deletion(Identifier calldata id) external {
         Content memory content = getContentById(id);
         require(shouldContentBeEliminated(content.likes, content.dislikes));
@@ -80,12 +96,23 @@ contract Utonoma is ERC20, ContentStorage, Users, Time {
         emit deleted(content.contentOwner, content.contentHash, content.metadataHash, id.index, uint8(id.contentType));
     }
 
+    /// @dev This method allows the user to delete content that they uploaded
+    /// @notice only the creator can delete it
+    function voluntarilyDelete(Identifier calldata id) external {        
+        require(msg.sender == getContentById(id).contentOwner, "Only the content owner can voluntarily delete it");
+        deleteContent(id);
+    }
+
+    /// @dev adds a content to the reply list of other content
+    /// @param replyId it is the id of the content that works as a reply to other content
+    /// @param replyingToId it is the id of the content that is being replied
     function reply(Identifier calldata replyId, Identifier calldata replyingToId) external {
         require(msg.sender == getContentById(replyId).contentOwner, "Only the owner of the content can use it as a reply");
         createReply(replyId, replyingToId);
         emit replied(replyId.index, uint256(replyId.contentType), replyingToId.index, uint256(replyingToId.contentType));
     }
 
+    /// @dev allows the contract's owner to withdraw all the gathered fees
     function withdraw() external {
         require(msg.sender == _owner, "Only the owner can withdraw");
         uint256 maxBalance = IERC20(address(this)).balanceOf(address(this));
@@ -93,16 +120,48 @@ contract Utonoma is ERC20, ContentStorage, Users, Time {
         IERC20(address(this)).transfer(_owner, maxBalance);
     }
 
+    /**
+    * @notice filtering by contentCreator can be used as a way of knowing if an author that a user follows  
+    * uploaded something new
+    */
+    /// @param contentCreator it's the address of the user that uploaded the content
+    /// @param index of the Identifier struct where the content is stored
+    /// @param contentType of the Identifier struct where the content is stored
     event uploaded(address indexed contentCreator, uint256 index, uint256 contentType);
 
+    /// @param index of the Identifier struct where the content is stored
+    /// @param contentType of the Identifier struct where the content is stored
     event liked(uint256 indexed index, uint256 indexed contentType);
 
+    /// @param index of the Identifier struct where the content is stored
+    /// @param contentType of the Identifier struct where the content is stored
     event disliked(uint256 indexed index, uint256 indexed contentType);
 
+    /// @param index of the Identifier struct where the content is stored
+    /// @param contentType of the Identifier struct where the content is stored
+    /// @param amount of minted tokens that were granted to the creator of the content
     event harvested(uint256 indexed index, uint256 indexed contentType, uint256 amount);
 
-    event deleted(address indexed owner, bytes32 content, bytes32 metadata, uint256 index, uint8 contentType);
+    /**
+    * @notice filtering by the owner can inform to an author if it's content was deleted
+    * or to users if a content they disliked was deleted from the platform 
+    */
+    /// @param owner of the deleted content
+    /// @param content, it's the hash of the deleted content
+    /// @param metadata, it's the metadata hash of the deleted content
+    /// @param index of the Identifier struct where the content is stored
+    /// @param contentType of the Identifier struct where the content is stored
+    event deleted(address indexed owner, bytes32 content, bytes32 metadata, uint256 indexed index, uint8 indexed contentType);
 
+    /// @dev informs that a content was replied by other
+    /** 
+    * @notice filtering by a combination of the replyingToIndex and the replyingToContentType can be used to 
+    * inform to an author that one of it's content was replied
+    */
+    /// @param replyIndex index from the Identifier struct of the content that works as a reply
+    /// @param replyContentType contentType from the Identifier struct of the content that works as a reply
+    /// @param replyingToIndex index from the Identifier struct of the content that it's being replied
+    /// @param replyingToContentType contentType from the Identifier struct of the content that it's being replied
     event replied(uint256 replyIndex, uint256 replyContentType, uint256 indexed replyingToIndex, uint256 indexed replyingToContentType);
 
 }

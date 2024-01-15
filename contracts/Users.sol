@@ -21,17 +21,21 @@ contract Users is Utils {
     mapping(address account => UserProfile) internal _users;
     mapping(bytes15 userName => address account) internal _userNames;
 
-    //Each element from the array corresponds to one month
+    /// @notice each element from the array corresponds to one month
     uint256[] private _MAU;
 
+    /// @notice gets the user profile of the account
     function getUserProfile(address account) public view returns(UserProfile memory) {
         return _users[account];
     }
 
+    /// @notice gets the account of the owner of a username
+    /// @param userName is the username from wich wants to know the owner's account
     function getUserNameOwner(bytes15 userName) public view returns(address) {
         return _userNames[userName];
     }
 
+    /// @notice gets the account of the owner of a user name
     function getLatestInteractionTime(address account) public view returns(uint256) {
         return _users[account].latestInteraction;
     }
@@ -55,6 +59,10 @@ contract Users is Utils {
         return _MAU;
     }
 
+    /**
+    * @notice allows a user to create a unique username, only can contain lower case letters, numbers, and underscores, 
+    * min 4 chars and less than 15
+    */
     /// @param proposedUserName it's the username that wants to be registered
     /// @param metadata bytes32 of a CID containing the additional information of the user, set it to 0x0 to not incluide it
     function createUser(bytes15 proposedUserName, bytes32 metadata) public {
