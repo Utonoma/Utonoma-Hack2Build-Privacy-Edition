@@ -25,7 +25,7 @@ contract Utonoma is ERC20, ContentStorage, Users, Time {
     function upload(bytes32 contentHash, bytes32 metadataHash, ContentTypes contentType) external returns(Identifier memory) {
         uint64 strikes = getUserProfile(msg.sender).strikes;
         if(strikes > 0) { //if content creator has strikes it will have to pay the fee
-            collectFee(calculateFeeForUsersWithStrikes(strikes, currentPeriodMAU()));
+            _collectFee(calculateFeeForUsersWithStrikes(strikes, currentPeriodMAU()));
         } 
         logUserInteraction(block.timestamp, _startTimeOfTheNetwork);
         Content memory content = Content(
@@ -48,7 +48,7 @@ contract Utonoma is ERC20, ContentStorage, Users, Time {
     /// @dev adds one to the likes count of the content
     /// @notice this call counts as a user interaction
     function like(Identifier calldata id) external {
-        collectFee(calculateFee(currentPeriodMAU()));
+        _collectFee(calculateFee(currentPeriodMAU()));
         Content memory content = getContentById(id);
         content.likes++;
         updateContent(content, id);
@@ -59,7 +59,7 @@ contract Utonoma is ERC20, ContentStorage, Users, Time {
     /// @dev adds one to the likes count of the content
     /// @notice this call counts as a user interaction
     function dislike(Identifier calldata id) external {
-        collectFee(calculateFee(currentPeriodMAU()));
+        _collectFee(calculateFee(currentPeriodMAU()));
         Content memory content = getContentById(id);
         content.dislikes++;
         updateContent(content, id);
