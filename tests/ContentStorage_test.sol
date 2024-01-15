@@ -101,9 +101,9 @@ contract ContentStorage_test is ContentStorage, Comparators {
         uint256 originalRepliesToContent1Length = getRepliesToThisContent(contentId1).length;
 
         //Content 2 should reply to 1
-        createReply(contentId2, contentId1);
+        _createReply(contentId2, contentId1);
         //Content 3 should reply to 1
-        createReply(contentId3, contentId1);
+        _createReply(contentId3, contentId1);
         Identifier[] memory repliesToContent1 = getRepliesToThisContent(contentId1);
         //Check that content 2 is in the list of replies of content 1
         bool is2InTheListOfReplies = false;
@@ -129,9 +129,9 @@ contract ContentStorage_test is ContentStorage, Comparators {
         uint256 originalContentsRepliedBy4Length = getContentsRepliedByThis(contentId4).length;
 
         //Content 4 replies to 1, 2 and 3
-        createReply(contentId4, contentId1);
-        createReply(contentId4, contentId2);
-        createReply(contentId4, contentId3);
+        _createReply(contentId4, contentId1);
+        _createReply(contentId4, contentId2);
+        _createReply(contentId4, contentId3);
 
         Identifier[] memory contentsRepliedBy4 = getContentsRepliedByThis(contentId4);
         

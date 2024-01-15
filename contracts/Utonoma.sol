@@ -108,7 +108,7 @@ contract Utonoma is ERC20, ContentStorage, Users, Time {
     /// @param replyingToId it is the id of the content that is being replied
     function reply(Identifier calldata replyId, Identifier calldata replyingToId) external {
         require(msg.sender == getContentById(replyId).contentOwner, "Only the owner of the content can use it as a reply");
-        createReply(replyId, replyingToId);
+        _createReply(replyId, replyingToId);
         emit replied(replyId.index, uint256(replyId.contentType), replyingToId.index, uint256(replyingToId.contentType));
     }
 

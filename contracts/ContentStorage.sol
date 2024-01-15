@@ -118,7 +118,7 @@ contract ContentStorage {
     * content library components, original identifier can be restored and retrived by using their 
     * respective getters (getContentsRepliedByThis and getRepliesToThisContent)
     */
-    function createReply(
+    function _createReply(
         Identifier memory replyId, 
         Identifier memory replyingToId
     ) contentShouldExists(replyId) contentShouldExists(replyingToId) internal {
