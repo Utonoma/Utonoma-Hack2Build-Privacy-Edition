@@ -241,7 +241,7 @@ contract ContentStorage_test is ContentStorage, Comparators {
         Content memory originalContent = getContentById(targetIdentifier);
         uint256 originalContentLength = getContentLibraryLength(targetIdentifier.contentType);
 
-        deleteContent(targetIdentifier);
+        _deleteContent(targetIdentifier);
         Content memory storageSpaceAfterDeletion = getContentById(targetIdentifier);
 
         Assert.notEqual(

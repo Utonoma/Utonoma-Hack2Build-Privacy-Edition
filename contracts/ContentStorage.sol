@@ -133,7 +133,7 @@ contract ContentStorage {
         _contentLibraries[uint256(id.contentType)][id.index] = content;
     }
 
-    function deleteContent(Identifier memory id) contentShouldExists(id) internal {
+    function _deleteContent(Identifier memory id) contentShouldExists(id) internal {
         delete(_contentLibraries[uint256(id.contentType)][id.index]);
     }
 
