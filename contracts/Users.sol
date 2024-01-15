@@ -91,7 +91,7 @@ contract Users is Utils {
         _users[contentCreator].strikes++;        
     }
 
-    function logUserInteraction(
+    function _logUserInteraction(
         uint256 currentTime, 
         uint256 startTimeOfNetwork
     ) internal {
