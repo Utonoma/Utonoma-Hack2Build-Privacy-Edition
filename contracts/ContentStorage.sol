@@ -105,7 +105,7 @@ contract ContentStorage {
     
     /// @dev Creates a new content in the specified content library. Returns the id of this new content
     /// @return Identifier in wich the content was stored
-    function createContent(Content memory content, ContentTypes contentType) internal returns(Identifier memory) {
+    function _createContent(Content memory content, ContentTypes contentType) internal returns(Identifier memory) {
         _contentLibraries[uint256(contentType)].push(content);
         return Identifier(getContentLibraryLength(contentType) - 1, contentType);
     }

@@ -39,7 +39,7 @@ contract ContentStorage_test is ContentStorage, Comparators {
     function createContentSuccess() public {
         for(uint256 i = 0; i < getMaxContentTypes(); i++) { 
             uint256 originalLibraryLength = getContentLibraryLength(ContentTypes(i));
-            Identifier memory createdContentId = createContent(sampleContent, ContentTypes(i));
+            Identifier memory createdContentId = _createContent(sampleContent, ContentTypes(i));
             
             uint256 modifiedLibraryLength = getContentLibraryLength(ContentTypes(i));
             Content memory insertedContent = getContentById(Identifier(modifiedLibraryLength - 1, ContentTypes(i)));
@@ -94,9 +94,9 @@ contract ContentStorage_test is ContentStorage, Comparators {
     function createReplySuccess() public {
 
         //Create 3 contents
-        Identifier memory contentId1 = createContent(sampleContent, ContentTypes(6));
-        Identifier memory contentId2 = createContent(sampleContent, ContentTypes(11));
-        Identifier memory contentId3 = createContent(sampleContent, ContentTypes(10));
+        Identifier memory contentId1 = _createContent(sampleContent, ContentTypes(6));
+        Identifier memory contentId2 = _createContent(sampleContent, ContentTypes(11));
+        Identifier memory contentId3 = _createContent(sampleContent, ContentTypes(10));
 
         uint256 originalRepliesToContent1Length = getRepliesToThisContent(contentId1).length;
 
@@ -124,7 +124,7 @@ contract ContentStorage_test is ContentStorage, Comparators {
             "When using the method createReply to reply two times to content 1, the length of the array of replies to content 1 should increase by 2"
         );
 
-        Identifier memory contentId4 = createContent(sampleContent, ContentTypes(8));
+        Identifier memory contentId4 = _createContent(sampleContent, ContentTypes(8));
 
         uint256 originalContentsRepliedBy4Length = getContentsRepliedByThis(contentId4).length;
 

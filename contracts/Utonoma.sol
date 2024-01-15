@@ -40,7 +40,7 @@ contract Utonoma is ERC20, ContentStorage, Users, Time {
             new uint256[](0),
             new uint8[](0)
         );
-        Identifier memory id = createContent(content, contentType);
+        Identifier memory id = _createContent(content, contentType);
         emit uploaded(msg.sender, id.index, uint256(id.contentType));
         return id;
     }
