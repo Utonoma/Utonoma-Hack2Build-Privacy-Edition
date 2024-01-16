@@ -8,6 +8,16 @@ import {ContentStorage} from "contracts/ContentStorage.sol";
 import {Users} from "contracts/Users.sol";
 import {Time} from "contracts/Time.sol";
 
+/**
+* @title The main contract (it's the only one that should be deployed). Contains all the logic that involves the 
+* interaction with other contracts that doesn't (and sometimes can't) inherit one of the other. 
+* Use other contracts to create methods that can work on their own and can be unit tested, leave this one for 
+* complex interactions that would require a more intricate inheritance tree. 
+* 
+* For instance, the like content functionality requires to add a fee in tokens, but the ContentStorage
+* contract is not aware of the ERC20 logic. Use other contracts to create a separation of concerns and use 
+* this contract to build the wanted business logic from all the different modules in the other contracts.
+*/
 contract Utonoma is ERC20, ContentStorage, Users, Time {
     
     address internal _owner;
