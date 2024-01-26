@@ -75,12 +75,12 @@ contract Utils {
     }
 
     /**
-    *  @notice calculates the fee for any particular number of strikes, result grows exponentialy based
+    *  @notice calculates the fee for any particular number of strikes, result grows based
     *  in the strikes number
     */ 
     function calculateFeeForUsersWithStrikes(uint64 numberOfStrikes, uint256 usersNumber) public pure returns(uint256) {
-        require(numberOfStrikes > 0, "Number of strikes should be greater than zero");
-        return calculateFee(usersNumber) ** numberOfStrikes;
+        require(numberOfStrikes > 0, "Number of strikes should be greater than zero"); 
+        return 3 * calculateFee(usersNumber) * numberOfStrikes;
     }
 
     function _collectFee(uint256 fee) internal {

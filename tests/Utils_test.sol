@@ -277,23 +277,23 @@ contract Utils_test {
     function calculateFeeForUsersWithStrikes() public {
         Assert.equal(
             utils.calculateFeeForUsersWithStrikes(1, 5),
-            53333333333333333320, 
-            "calculateFeeForUsersWithStrikes method and receiving 1 strike and 5 users as parameters, should return 53333333333333333320"
+            159999999999999999960, 
+            "calculateFeeForUsersWithStrikes method and receiving 1 strike and 5 users as parameters, should return 159999999999999999960"
         );
         Assert.equal(
             utils.calculateFeeForUsersWithStrikes(2, 5),
-            2844444444444444443022222222222222222400, 
-            "calculateFeeForUsersWithStrikes method and receiving 2 strikes and 5 users as parameters, should return 2844444444444444443022222222222222222400"
+            319999999999999999920, 
+            "calculateFeeForUsersWithStrikes method and receiving 2 strikes and 5 users as parameters, should return 319999999999999999920"
         );
         Assert.equal(
             utils.calculateFeeForUsersWithStrikes(1, 8000000000),
-            20, 
-            "calculateFeeForUsersWithStrikes method and receiving 1 strike and 8000000000 users as parameters, should return 20"
+            60, 
+            "calculateFeeForUsersWithStrikes method and receiving 1 strike and 8000000000 users as parameters, should return 60"
         );
         Assert.equal(
             utils.calculateFeeForUsersWithStrikes(7, 300000),
-            156629510263508833460188787851818715685916665450859985057091605883103104, 
-            "calculateFeeForUsersWithStrikes method and receiving 7 strikes and 300000 users as parameters, should return 20"
+            311111111094, 
+            "calculateFeeForUsersWithStrikes method and receiving 7 strikes and 300000 users as parameters, should return 311111111094"
         );        
     }
 
