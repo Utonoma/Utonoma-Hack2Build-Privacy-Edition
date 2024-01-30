@@ -55,9 +55,9 @@ contract Utils {
             pMinusRootByZ = p - rootByZ;
         }
         if(pMinusRootByZ > p) return false;
-        uint256 twoThirds = 666666666700000000;
+        uint256 oneHalf = 500000000000000000;
         
-        return pMinusRootByZ > twoThirds;
+        return pMinusRootByZ > oneHalf;
     }
 
     /// @notice calculates the reward that a content creator can receive for one like
