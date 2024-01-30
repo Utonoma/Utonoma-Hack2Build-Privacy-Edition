@@ -19,12 +19,12 @@ contract Utils_test {
         Assert.equal(
             utils.shouldContentBeEliminated(24, 76),
             true, 
-            "shouldContentBeEliminated method, when receiving 24 likes and 76 dislikes, should return true (0.6763 is higher than 0.66666666666)"
+            "shouldContentBeEliminated method, when receiving 24 likes and 76 dislikes, should return true (0.6763 is higher than 0.5)"
         );
         Assert.equal(
             utils.shouldContentBeEliminated(1, 8),
             true, 
-            "shouldContentBeEliminated method, when receiving 1 likes and 8 dislikes, should return true (0.6836 is higher than 0.66666666666)"
+            "shouldContentBeEliminated method, when receiving 1 likes and 8 dislikes, should return true (0.6836 is higher than 0.5)"
         );
         Assert.equal(
             utils.shouldContentBeEliminated(0, 6),
@@ -34,22 +34,32 @@ contract Utils_test {
         Assert.equal(
             utils.shouldContentBeEliminated(13, 47),
             true, 
-            "shouldContentBeEliminated method, when receiving 13 likes and 47 dislikes, should return true (0.6791 is higher than 0.66666666666)"
+            "shouldContentBeEliminated method, when receiving 13 likes and 47 dislikes, should return true (0.6791 is higher than 0.5)"
         );
         Assert.equal(
             utils.shouldContentBeEliminated(43310, 98100),
             true, 
-            "shouldContentBeEliminated method, when receiving 13 likes and 47 dislikes, should return true (0.6791 is higher than 0.66666666666)"
+            "shouldContentBeEliminated method, when receiving 13 likes and 47 dislikes, should return true (0.6791 is higher than 0.5)"
         );
         Assert.equal(
             utils.shouldContentBeEliminated(43310, 98100),
             true, 
-            "shouldContentBeEliminated method, when receiving 13 likes and 47 dislikes, should return true (0.6791 is higher than 0.66666666666)"
+            "shouldContentBeEliminated method, when receiving 13 likes and 47 dislikes, should return true (0.6791 is higher than 0.5)"
         );
         Assert.equal(
             utils.shouldContentBeEliminated(4950000000, 10050000000),
             true, 
-            "shouldContentBeEliminated method, when receiving 4950000000 likes and 10050000000 dislikes, should return true (0.67 is higher than 0.66666666666)"
+            "shouldContentBeEliminated method, when receiving 4950000000 likes and 10050000000 dislikes, should return true (0.67 is higher than 0.5)"
+        );
+        Assert.equal(
+            utils.shouldContentBeEliminated(25, 75),
+            true, 
+            "shouldContentBeEliminated method, when receiving 25 likes and 75 dislikes, should return true (0.6651 is higher than 0.5)"
+        );
+        Assert.equal(
+            utils.shouldContentBeEliminated(80,107),
+            true, 
+            "shouldContentBeEliminated method, when receiving 80 likes and 107 dislikes, should return true (0.501 is higher than 0.5)"
         );
 
         //false cases
@@ -66,17 +76,17 @@ contract Utils_test {
         Assert.equal(
             utils.shouldContentBeEliminated(10, 8),
             false, 
-            "shouldContentBeEliminated method, when receiving 10 likes and 8 dislikes, should return false (0.2148865106 is lesser than 0.66666666666)"
+            "shouldContentBeEliminated method, when receiving 10 likes and 8 dislikes, should return false (0.2148865106 is lesser than 0.5)"
         );
         Assert.equal(
             utils.shouldContentBeEliminated(20, 5),
             false, 
-            "shouldContentBeEliminated method, when receiving 20 likes and 5 dislikes, should return false (0.0432 is lesser than 0.66666666666)"
+            "shouldContentBeEliminated method, when receiving 20 likes and 5 dislikes, should return false (0.0432 is lesser than 0.5)"
         );
         Assert.equal(
             utils.shouldContentBeEliminated(420, 280),
             false, 
-            "shouldContentBeEliminated method, when receiving 420 likes and 280 dislikes, should return false (0.36 is lesser than 0.66666666666)"
+            "shouldContentBeEliminated method, when receiving 420 likes and 280 dislikes, should return false (0.36 is lesser than 0.5)"
         );
         Assert.equal(
             utils.shouldContentBeEliminated(8, 0),
@@ -86,17 +96,17 @@ contract Utils_test {
         Assert.equal(
             utils.shouldContentBeEliminated(44, 56),
             false, 
-            "shouldContentBeEliminated method, when receiving 44 likes and 56 dislikes, should return false (0.4627 is lesser than 0.66666666666)"
-        );
-        Assert.equal(
-            utils.shouldContentBeEliminated(25, 75),
-            false, 
-            "shouldContentBeEliminated method, when receiving 25 likes and 75 dislikes, should return false (0.6651 is lesser than 0.66666666666)"
+            "shouldContentBeEliminated method, when receiving 44 likes and 56 dislikes, should return false (0.4627 is lesser than 0.5)"
         );
         Assert.equal(
             utils.shouldContentBeEliminated(9759000000, 5241000000),
             false, 
-            "shouldContentBeEliminated method, when receiving 5241000000 likes and 9759000000 dislikes, should return false (0.3494 is lesser than 0.66666666666)"
+            "shouldContentBeEliminated method, when receiving 5241000000 likes and 9759000000 dislikes, should return false (0.3494 is lesser than 0.5)"
+        );
+        Assert.equal(
+            utils.shouldContentBeEliminated(80, 106),
+            false, 
+            "shouldContentBeEliminated method, when receiving 80 likes and 106 dislikes, should return false (0.498738 is lesser than 0.5)"
         );
     }
 
