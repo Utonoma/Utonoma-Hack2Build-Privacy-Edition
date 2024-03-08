@@ -27,6 +27,7 @@ The smart contract, being public on the blockchain, allows you â€“ yeah, you! â€
 
 ## White Paper
 English: http://utonoma.com/paper/utonoma_en.pdf
+
 Spanish (original): http://utonoma.com/paper/utonoma_es.pdf 
 
 ## License
