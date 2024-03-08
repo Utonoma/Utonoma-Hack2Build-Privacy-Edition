@@ -25,6 +25,10 @@ This github repository covers only the “back-end” of the project, the smart 
 
 The smart contract, being public on the blockchain, allows you – yeah, you! – to create your own social network with all the functionalities that the system offers (user names, content libraries, awards, punishments, etc.) by just calling the methods from the deployed contract.
 
+## White Paper
+English: http://utonoma.com/paper/utonoma_en.pdf
+Spanish (original): http://utonoma.com/paper/utonoma_es.pdf 
+
 ## License
 Utonoma Contracts is released under the [MIT License](https://github.com/OpenZeppelin/openzeppelin-contracts/blob/master/LICENSE).
 
