@@ -1,6 +1,7 @@
 # Utonoma
 
 [![License: MIT](https://img.shields.io/badge/License-MIT-yellow.svg)](https://opensource.org/licenses/MIT)
+[![License: MIT](https://img.shields.io/badge/License-Apache_2.0-blue.svg)](https://opensource.org/license/apache-2-0)
 
 Utonoma is a social network like no other. It works on the blockchain and allows content creators to earn cryptocurrencies for each like. Only one condition: if a content has too many dislikes it will be removed from the platform. This small change in the rules allows content moderation in a democratic and decentralized way, contributing to the creation of the freer internet we all dream of.
 
@@ -31,7 +32,7 @@ English: http://utonoma.com/paper/utonoma_en.pdf
 Spanish (original): http://utonoma.com/paper/utonoma_es.pdf 
 
 ## License
-Utonoma Contracts is released under the [MIT License](https://github.com/OpenZeppelin/openzeppelin-contracts/blob/master/LICENSE).
+Dual-licensed: MIT, Apache Software License v2
 
 ## 🚀 Quick Start
 
