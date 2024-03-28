@@ -1,5 +1,18 @@
 <!DOCTYPE html>
-<html lang="en">
+<html id="html-tag" lang="en">
+  <script>
+    //Script for multilingual support 
+    const $htmlTag = document.querySelector("#html-tag")
+    switch(navigator.language.substring(0,2)) {
+      case "es":
+        $htmlTag.lang = "es"
+        $htmlTag.classList.add("spanishLang")
+        break
+      default:
+        $htmlTag.classList.add("englishLang")
+        break
+    }
+  </script>
 <head>
   <meta charset="UTF-8">
   <meta name="viewport" content="width=device-width, initial-scale=1.0">
@@ -18,6 +31,21 @@
       --headline6: normal 1.19rem/normal var(--baseFontFamily)
     }
 
+    /*Start of selectors for multilingual support*/ 
+    body [lang=en], 
+    body [lang=es] {
+      display: none;
+    }
+
+    .spanishLang [lang=es] {
+      display: inline;
+    }
+
+    .englishLang [lang=en] {
+      display: inline;
+    }
+    /*End of selectors for multilingual support*/
+
     body {
       background-color: var(--snow);
       color: var(--pirateBlack);
@@ -27,6 +55,12 @@
 </head>
 <body>
   <img src="./assets/icons/utonoma-full-logo.svg" alt="">
-  <h1 style="font: var(--headline6);">Touch to start</h1>
+  <button class="Button--horizontalText" type="button">
+    <h1 style="font: var(--headline6);">
+      <span lang="en">Touch to start</span>
+      <span lang="es">Toque para iniciar</span>
+    </h1>
+    <img src="./assets/icons/continue-active-icon.svg" alt="">
+  </button>
 </body>
 </html>
