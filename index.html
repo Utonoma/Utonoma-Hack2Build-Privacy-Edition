@@ -50,17 +50,39 @@
       background-color: var(--snow);
       color: var(--pirateBlack);
       font-family: var(--baseFontFamily);
+      margin: 0;
     }
+
+    .Button--horizontalText {
+      background-color: transparent;
+      align-items: center;
+      gap: 16px;
+      border: none;
+      display: flex;
+    }
+
   </style>
 </head>
 <body>
-  <img src="./assets/icons/utonoma-full-logo.svg" alt="">
-  <button class="Button--horizontalText" type="button">
-    <h1 style="font: var(--headline6);">
-      <span lang="en">Touch to start</span>
-      <span lang="es">Toque para iniciar</span>
-    </h1>
-    <img src="./assets/icons/continue-active-icon.svg" alt="">
-  </button>
+  <header 
+    style="display: flex; 
+    height: 100vh;  
+    align-items: center;"
+  >
+    <div style="text-align: center;">
+      <img src="./assets/icons/utonoma-full-logo.svg" style="width: 80vw;" alt="">
+      <button 
+        class="Button--horizontalText" 
+        style="float: right; margin: 32px 16px 0 0;" 
+        type="button"
+      >
+        <h1 style="font: var(--headline6);">
+          <span lang="en">Touch to start</span>
+          <span lang="es">Toque para iniciar</span>
+        </h1>
+        <img src="./assets/icons/continue-active-icon.svg" alt="">
+      </button>
+    </div>
+  </header>
 </body>
 </html>
