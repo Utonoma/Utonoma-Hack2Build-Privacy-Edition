@@ -2,6 +2,7 @@ import './style.css'
 import './utilities.css'
 import './button.css'
 import './icon.css'
+import './text.css'
 
 const $splashScreen = document.querySelector('#splashScreen')
 const $buttonTouchToStart = document.querySelector('#buttonTouchToStart')
