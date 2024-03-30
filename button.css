@@ -1,0 +1,8 @@
+.Button--verticalText {
+  background-color: transparent;
+  border: none;
+  display: flex;
+  flex-direction: column;
+  justify-content: center;
+  align-items: center;      
+}

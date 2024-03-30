@@ -1,0 +1,12 @@
+.u-flipElement {
+  -webkit-transform: scaleX(-1); 
+  transform: scaleX(-1);
+}
+
+.u-floatingTextShadow {
+  text-shadow: 
+    6px 0 8px var(--pirateBlack), 
+    0 6px 8px var(--pirateBlack), 
+    -6px 0 8px var(--pirateBlack)
+  ;  
+}
