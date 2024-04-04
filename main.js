@@ -1,7 +1,4 @@
-import './utilities.css'
-import './button.css'
-import './icon.css'
-import './text.css'
+import './utonoma_styles_library/index.css'
 
 const $splashScreen = document.querySelector('#splashScreen')
 const $buttonTouchToStart = document.querySelector('#buttonTouchToStart')
