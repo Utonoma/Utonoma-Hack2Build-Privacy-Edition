@@ -1,0 +1,1 @@
+export const filecoinTestnetEndpoint = "https://rpc.ankr.com/filecoin_testnet"
