@@ -36,6 +36,7 @@
     "webpack-dev-server": "^5.0.4"
   },
   "dependencies": {
+    "bops": "^1.0.1",
     "bs58": "^5.0.0",
     "ethers": "^6.11.1"
   }
