@@ -49,3 +49,6 @@ Before doing your contributions, we suggest you take a look at the [user stories
 
 * Gerardo Pedrizco - Initial work - https://github.com/MarxMad
 * Adrián Sequeira - Initial work - https://github.com/AstroSamus
+
+![image](https://blog.utonoma.com/wp-content/uploads/utonoma1x.jpg)
+
