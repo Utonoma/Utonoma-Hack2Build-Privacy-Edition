@@ -1,12 +1,16 @@
 {
   "name": "utonoma-pwa",
   "version": "0.0.1",
+  "type": "module",
   "description": "Utonoma, the blockchain social network",
   "main": "index.js",
   "scripts": {
-    "test": "jest",
+    "test": "node --experimental-vm-modules node_modules/jest/bin/jest.js",
     "build": "webpack",
     "start": "webpack serve --open"
+  },
+  "jest": {
+    "transform": {}
   },
   "repository": {
     "type": "git",
