@@ -1,4 +1,4 @@
-import { useReadOnlyProvider } from "../web3_providers/readOnlyProvider"
+import { useReadOnlyProvider } from "../web3_providers/readOnlyProvider.js"
 import { formatUnits } from 'ethers'
 
 export async function getShortVideo() {

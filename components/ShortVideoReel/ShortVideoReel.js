@@ -1,5 +1,5 @@
-import { getShortVideo } from "../../services/contentProvider"
-import { getIpfsHashFromBytes32, getUrlFromIpfsHash } from "../../utils/encodingUtils"
+import { getShortVideo } from "../../services/contentProvider.js"
+import { getIpfsHashFromBytes32, getUrlFromIpfsHash } from "../../utils/encodingUtils.js"
 
 const $shortVideoPlayer = document.querySelector('#shortVideoPlayer')
 
