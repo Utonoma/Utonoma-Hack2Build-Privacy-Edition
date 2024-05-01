@@ -1,1 +1,1 @@
-export const filecoinTestnetEndpoint = "https://rpc.ankr.com/filecoin_testnet"
+export const sepoliaEndpoint = "https://sepolia.infura.io/v3/a8b7f3c03367496183ae6e32ad962ee5"
