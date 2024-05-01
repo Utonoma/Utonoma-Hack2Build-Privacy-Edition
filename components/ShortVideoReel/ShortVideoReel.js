@@ -17,10 +17,15 @@ document.querySelector('#buttonPreviousShortVideo').addEventListener('click', ()
 })
 
 async function nextShortVideo() {
+  //Add a case for when there are no videos in the network
+  const getShortVideoResp = await getShortVideo()
+  /*Later you can catch exceptions from getShortVideo with this code 
+  if (Object.keys(myEmptyObj).length === 0) {
+    getShortVideoResp
+  }*/
+  const { authorAddress, contentId, metadata, likes } = getShortVideoResp
+  $shortVideoPlayer.src = getUrlFromIpfsHash(getIpfsHashFromBytes32(contentId))
   try {
-    //Add a case for when there are no videos in the network
-    const { authorAddress, contentId, metadata, likes } = await getShortVideo()
-    $shortVideoPlayer.src = getUrlFromIpfsHash(getIpfsHashFromBytes32(contentId))
     $shortVideoPlayer.load()
   } catch(error) {
     console.log("Error when loading the short video", error)
