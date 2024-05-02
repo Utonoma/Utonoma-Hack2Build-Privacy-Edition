@@ -1,5 +1,5 @@
 import { getShortVideo } from "../../services/contentProvider.js"
-import { getIpfsHashFromBytes32, getUrlFromIpfsHash } from "../../utils/encodingUtils.js"
+import { getUrlFromIpfsHash } from "../../utils/encodingUtils.js"
 
 let numberOfRetriesToGetShortVideo = 0 
 const $shortVideoPlayer = document.querySelector('#shortVideoPlayer')
@@ -24,8 +24,8 @@ async function nextShortVideo() {
     getShortVideoResp
   }*/
   const { authorAddress, contentId, metadata, likes } = getShortVideoResp
-  $shortVideoPlayer.src = getUrlFromIpfsHash(getIpfsHashFromBytes32(contentId))
   try {
+    $shortVideoPlayer.src = getUrlFromIpfsHash(contentId)
     $shortVideoPlayer.load()
   } catch(error) {
     console.log("Error when loading the short video", error)
