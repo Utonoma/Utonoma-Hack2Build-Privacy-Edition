@@ -6,6 +6,7 @@ export function getIpfsHashFromBytes32(bytes32Hex) {
   // Add our default ipfs values for first 2 bytes:
   // f¡unction:0x12=sha2, size:0x20=256 bits
   // and cut off leading "0x"
+  if(!bytes32Hex) throw 'no input received'
   const hashHex = "1220" + bytes32Hex.slice(2)
   const hashBytes = bops.from(hashHex, 'hex')
   const hashStr = bs58.encode(hashBytes)
