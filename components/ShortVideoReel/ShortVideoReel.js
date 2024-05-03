@@ -1,4 +1,4 @@
-import { getShortVideo } from "../../services/contentProvider.js"
+import { getShortVideo, addShortVideoToHistory } from "../../services/contentProvider.js"
 import { getUrlFromIpfsHash } from "../../utils/encodingUtils.js"
 
 let numberOfRetriesToGetShortVideo = 0 
@@ -37,6 +37,7 @@ async function nextShortVideo() {
   if (playPromise !== undefined) {
     playPromise.then(() => {
       numberOfRetriesToGetShortVideo = 0
+      addShortVideoToHistory(getShortVideoResp)
     }).catch((error) => {
       console.log(`Error when playing the short video. The message is: ${error}. Retry number ${numberOfRetriesToGetShortVideo}`)
       if(numberOfRetriesToGetShortVideo < 5) {

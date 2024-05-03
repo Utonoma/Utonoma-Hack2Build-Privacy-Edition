@@ -2,6 +2,9 @@ import { useReadOnlyProvider } from "../web3_providers/readOnlyProvider.js"
 import { formatUnits } from 'ethers'
 import { getIpfsHashFromBytes32 } from "../utils/encodingUtils.js"
 
+let shortVideoHistory = []
+let currentVideo = -1;
+
 export async function getShortVideo() {
   const { provider, utonomaContract } = useReadOnlyProvider()
   //throw exception if the content id is 0
@@ -27,3 +30,13 @@ export async function getShortVideo() {
     return {}
   }
 }
+
+export function addShortVideoToHistory(shortVideoInfo) {
+  shortVideoHistory.push(shortVideoInfo)
+  updateCurrentShortVideo(shortVideoHistory.length - 1)
+}
+
+function updateCurrentShortVideo(index) {
+  currentVideo = index
+}
+
