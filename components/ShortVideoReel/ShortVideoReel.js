@@ -1,5 +1,8 @@
-import { getShortVideo, addShortVideoToHistory } from "../../services/contentProvider.js"
+import { getShortVideo } from "../../services/contentProvider.js"
 import { getUrlFromIpfsHash } from "../../utils/encodingUtils.js"
+
+let shortVideoHistory = []
+let currentVideo = -1;
 
 let numberOfRetriesToGetShortVideo = 0 
 const $shortVideoPlayer = document.querySelector('#shortVideoPlayer')
@@ -53,3 +56,13 @@ async function nextShortVideo() {
 
 //Gets a short video as soon as loading
 nextShortVideo()
+
+function addShortVideoToHistory(shortVideoInfo) {
+  debugger
+  shortVideoHistory.push(shortVideoInfo)
+  updateCurrentShortVideo(shortVideoHistory.length - 1)
+}
+
+function updateCurrentShortVideo(index) {
+  currentVideo = index
+}
