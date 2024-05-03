@@ -4,12 +4,15 @@ import { getUrlFromIpfsHash } from "../../utils/encodingUtils.js"
 let numberOfRetriesToGetShortVideo = 0 
 const $shortVideoPlayer = document.querySelector('#shortVideoPlayer')
 const $buttonNextShortVideo = document.querySelector('#buttonNextShortVideo')
+const $buttonPreviousShortVideo = document.querySelector('#buttonPreviousShortVideo')
 
 
 $buttonNextShortVideo.addEventListener('click', async() => {
   $buttonNextShortVideo.disabled = true
+  $buttonPreviousShortVideo.disabled = true
   await nextShortVideo()
   $buttonNextShortVideo.disabled = false
+  $buttonPreviousShortVideo.disabled = false
 })
 
 document.querySelector('#buttonPreviousShortVideo').addEventListener('click', () => {
