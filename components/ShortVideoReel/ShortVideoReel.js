@@ -12,7 +12,11 @@ const $buttonNextShortVideo = document.querySelector('#buttonNextShortVideo')
 const $buttonPreviousShortVideo = document.querySelector('#buttonPreviousShortVideo')
 
 
-$buttonNextShortVideo.addEventListener('click', async function thisFunction() {
+$buttonNextShortVideo.addEventListener('click', async() => {
+  await next()
+})
+
+async function next() {
   $buttonNextShortVideo.disabled = true
   $buttonPreviousShortVideo.disabled = true
 
@@ -33,7 +37,7 @@ $buttonNextShortVideo.addEventListener('click', async function thisFunction() {
       console.log(`Error when playing the short video. The message is: ${error}. Retry number ${numberOfRetriesToGetShortVideo}`)
       numberOfRetriesToGetShortVideo++
       if(numberOfRetriesToGetShortVideo < 5) {
-        thisFunction(getShortVideo)
+        next(getShortVideo)
       }
       else {
         console.log('Next short video method was not able to find valid content after all retries')
@@ -43,7 +47,8 @@ $buttonNextShortVideo.addEventListener('click', async function thisFunction() {
 
   $buttonNextShortVideo.disabled = false
   $buttonPreviousShortVideo.disabled = false
-})
+}
+next()
 
 document.querySelector('#buttonPreviousShortVideo').addEventListener('click', async() => {
   $buttonNextShortVideo.disabled = true
