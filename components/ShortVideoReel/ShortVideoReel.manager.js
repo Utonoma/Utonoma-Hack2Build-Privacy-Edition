@@ -2,8 +2,11 @@ let shortVideoHistory = []
 let currentVideo = -1;
 let detachedHead = false
 
+export function getShortVideoHistory() { return shortVideoHistory }
+export function getCurrentVideo() { return currentVideo }
+export function getDetachedHead() { return detachedHead }
+
 export async function nextShortVideo(apiCall) {
-  console.log(apiCall)
   if(detachedHead) {
     updateCurrentShortVideo(currentVideo + 1)
     return shortVideoHistory[currentVideo]
