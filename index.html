@@ -62,6 +62,33 @@
       padding: 0;
     }
 
+    .Layout--splashScreen {
+      width: 80vw;
+      text-align: center;
+    }
+
+    .Layout--shortVideoReel {
+      height: 100vh; 
+      background-color: var(--pirateBlack);
+      display: flex;
+      align-content: center;
+      justify-content: center;
+      position: relative;
+    }
+
+    @media screen and (min-width: 700px) {
+      .Layout--splashScreen {
+        width: 50vw;
+      }
+
+      .Layout--shortVideoReel {
+        padding: 0 8.333vw; 
+      }
+
+      .Layout--shortVideoReel > div {
+        right: 12vw !important;
+      }
+    }
   </style>
 </head>
 <body>
@@ -72,35 +99,31 @@
     align-items: center;
     justify-content: center;"
   >
-    <div style="display: flex; flex-wrap: wrap; justify-content: flex-end; width: 80vw;">
-      <img src="./assets/icons/utonoma-full-logo.svg" style="width: 100%;" alt="">
-      <button 
-        id="buttonTouchToStart"
-        class="Button--horizontalText" 
-        style="margin-top: 32px;" 
-        type="button"
-      >
-        <h1 style="font: var(--headline6);">
-          <span lang="en">Touch to start</span>
-          <span lang="es">Toque para iniciar</span>
-        </h1>
-        <img src="./assets/icons/continue-active-icon.svg" alt="">
-      </button>
+    <div class="Layout--splashScreen">
+      <img src="./assets/icons/utonoma-full-logo.svg" alt="" style="width: auto; max-height: 70vh;">
+      <div style="display: flex; justify-content: flex-end;">
+        <button 
+          id="buttonTouchToStart"
+          class="Button--horizontalText" 
+          style="margin-top: 32px;" 
+          type="button"
+        >
+          <h1 style="font: var(--headline6);">
+            <span lang="en">Touch to start</span>
+            <span lang="es">Toque para iniciar</span>
+          </h1>
+          <img src="./assets/icons/continue-active-icon.svg" alt="">
+        </button>
+      </div>
     </div>
   </header>
   <div 
     id="shortVideoReel" 
     style="display: none;"
   >
-    <div 
-      style="height: 100vh; 
-      background-color: var(--pirateBlack);
-      display: flex;
-      align-content: center;
-      justify-content: center;
-      position: relative;"
+    <div class="Layout--shortVideoReel"
     >
-      <video id="shortVideoPlayer" src="" type="video/*" loop style="max-width: 100vw;"></video>
+      <video id="shortVideoPlayer" src="" type="video/*" loop style="max-width: 100%;"></video>
       <div 
         style="  position: absolute;
         bottom: 25%;
