@@ -113,6 +113,9 @@
       min-inline-size: 100vw;
       scroll-snap-align: center;
       content-visibility: auto;
+      display: flex;
+      justify-content: center;
+      align-items: end;
     }
 
     @media screen and (min-width: 700px) {
@@ -198,7 +201,9 @@
       </div>
     </div>
     <div class="Layout--settingsContainer" id="settings">
-      
+      <button style="margin-bottom: 10%;" id="buttonConnectWallet">
+        Connect your wallet
+      </button>
     </div>
   </div>
 </body>
