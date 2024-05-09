@@ -1,4 +1,5 @@
 import './utonoma_styles_library/index.css'
+import './components/ConnectWallet/ConnectWallet.js'
 
 const $splashScreen = document.querySelector('#splashScreen')
 const $buttonTouchToStart = document.querySelector('#buttonTouchToStart')
