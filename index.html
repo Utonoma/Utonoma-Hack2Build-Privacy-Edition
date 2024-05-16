@@ -118,10 +118,24 @@
       justify-content: center;
       align-items: end;
     }
+    
+    .Layout--splashScreenToSettings, .Layout--settingsToSplashScreen {
+      display: none;
+    }
+
+    .Image--utonomaBackgroundPoster {
+      width: auto; 
+      max-height: 70vh;
+    }
 
     @media screen and (min-width: 700px) {
       .Layout--splashScreen {
         width: 50vw;
+        flex-basis: 91.666%;
+      }
+      
+      .Layout--splashScreen > div {
+        width: 70%;
       }
 
       .Layout--shortVideoReel {
@@ -131,12 +145,24 @@
       .Layout--shortVideoReel > div {
         right: 12vw !important;
       }
+
+      .Layout--splashScreenToSettings, .Layout--settingsToSplashScreen {
+        display: block;
+        align-self: flex-start; 
+        flex-basis: 8.333%;
+        text-align: center;
+      }
+
+      .Image--utonomaBackgroundPoster {
+        width: auto; 
+        object-fit: cover;
+      }
     }
   </style>
 </head>
 <body>
   <div class="Layout--mainContainer">
-    <div class="Layout--shortVideoReelConteiner">
+    <div class="Layout--shortVideoReelConteiner" id="shortVideoReelConteiner">
       <header 
         id="splashScreen"
         style="display: flex; 
@@ -160,6 +186,18 @@
               <img src="./assets/icons/continue-active-icon.svg" alt="">
             </button>
           </div>
+        </div>
+        <div class="Layout--splashScreenToSettings">
+          <button 
+            id="buttonSplashScreenToSettings"
+            class="Button--horizontalText" 
+            style="margin-top: 7rem; transform: rotate(90deg);" 
+            type="button"
+          >
+            <img style="transform: rotate(-90deg);" src="./assets/icons/arrow.svg" alt="">
+            <span style="font: var(--headline6);" lang="en">SETTINGS</span>
+            <span style="font: var(--headline6);" lang="es">CONFIG.</span>
+          </button>
         </div>
       </header>
       <div 
@@ -202,16 +240,28 @@
       </div>
     </div>
     <div class="Layout--settingsContainer" id="settings">
+      <div class="Layout--settingsToSplashScreen">
+        <button 
+          id="buttonSettingsToSplashScreen"
+          class="Button--horizontalText" 
+          style="margin-top: 7rem; transform: rotate(-90deg);" 
+          type="button"
+        >
+          <span style="font: var(--headline6);" lang="en">BACK</span>
+          <span style="font: var(--headline6);" lang="es">ATRAS</span>
+          <img style="transform: rotate(-90deg);" src="./assets/icons/arrow.svg" alt="">
+        </button>
+      </div>
       <div 
         style="display: flex; 
         flex-direction: column;
         width: 100%;"
       >
-        <img src="./assets/icons/utonoma-background.svg" alt="" style="width: auto; max-height: 70vh;">
+        <img src="./assets/icons/utonoma-background.svg" alt="" class="Image--utonomaBackgroundPoster">
         <button 
           id="buttonConnectWallet"
           class="Button--horizontalText" 
-          style="margin: 32px 32px; justify-content: space-between; margin-bottom: 64px;" 
+          style="margin: 32px 32px; justify-content: space-between; margin-bottom: 64px; max-width: 21rem;" 
           type="button"
         >
           <div style="text-align: start;">

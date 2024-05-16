@@ -8,3 +8,13 @@ $buttonTouchToStart.addEventListener('click', async () => {
   document.querySelector('#shortVideoReel').style.display = ''
   await import('./components/ShortVideoReel/ShortVideoReel.js')
 })
+
+document.querySelector('#buttonSplashScreenToSettings').addEventListener('click', async()=> {
+  location.hash = 'settings'
+  setTimeout(() => location.hash = '', 100)
+})
+
+document.querySelector('#buttonSettingsToSplashScreen').addEventListener('click', async()=> {
+  location.hash = 'shortVideoReelConteiner'
+  setTimeout(() => location.hash = '', 100)
+})
