@@ -14,6 +14,11 @@ document.querySelector('#buttonSplashScreenToSettings').addEventListener('click'
   setTimeout(() => location.hash = '', 100)
 })
 
+document.querySelector('#buttonShortVideoReelToSettings').addEventListener('click', async() => {
+  location.hash = 'settings'
+  setTimeout(() => location.hash = '', 100)
+})
+
 document.querySelector('#buttonSettingsToSplashScreen').addEventListener('click', async()=> {
   location.hash = 'shortVideoReelConteiner'
   setTimeout(() => location.hash = '', 100)
