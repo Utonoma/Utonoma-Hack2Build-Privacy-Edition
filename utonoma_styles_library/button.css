@@ -6,3 +6,29 @@
   justify-content: center;
   align-items: center;      
 }
+
+.Button--textBetweenTwoIcons {
+  background-color: transparent;
+  border: 1px solid var(--pirateBlack);
+  display: flex;
+  justify-content: space-between;
+  align-items: center;
+  flex-wrap: wrap;
+  margin: 12px 32px;
+  font: var(--headline6);
+  padding: 14px 18px;
+}
+
+.Button--textBetweenTwoIcons > div {
+  display: flex;
+  align-items: center;
+}
+
+.Button--textBetweenTwoIcons img {
+  height: 1.7rem;  
+  width: auto;
+}
+
+.Button--textBetweenTwoIcons > div > img {
+  margin-right: 8px;
+}
