@@ -1,6 +1,8 @@
 import './utonoma_styles_library/index.css'
-import './components/ConnectWallet/ConnectWallet.js'
+import { getIsLoggedIn } from './services/userManager/userManager.js'
 
+const $settings = document.querySelector('#settings')
+const $connectWallet = document.querySelector('#connectWallet')
 const $splashScreen = document.querySelector('#splashScreen')
 const $buttonTouchToStart = document.querySelector('#buttonTouchToStart')
 $buttonTouchToStart.addEventListener('click', async () => {
@@ -23,3 +25,18 @@ document.querySelector('#buttonRightPanelToCenterPanel').addEventListener('click
   location.hash = 'centerPanelContainer'
   setTimeout(() => location.hash = '', 100)
 })
+
+async function switchSettingsOrConnectWallet() {
+  console.log("settings value is:", $settings )
+  console.log("connect wallet value is:", $connectWallet )
+  if(getIsLoggedIn()) {
+    $connectWallet.style.display = 'none'
+    $settings.style.display = 'flex'
+    await import('./components/Settings/Settings.js')
+  } else {
+    $settings.style.display = 'none'
+    $connectWallet.style.display = 'flex'
+    await import('./components/ConnectWallet/ConnectWallet.js')
+  }
+}
+switchSettingsOrConnectWallet()
