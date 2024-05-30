@@ -92,7 +92,7 @@
       display: none;
     }
 
-    .Layout--shortVideoReelConteiner {
+    .Layout--centerPanelContainer {
       block-size: 100vh;
       min-inline-size: 100vw;
       scroll-snap-align: center;
@@ -105,11 +105,11 @@
     }
 
     /*Hide scrollbar for Chrome, Safari and Opera*/
-    .Layout--shortVideoReelConteiner::-webkit-scrollbar {
+    .Layout--centerPanelContainer::-webkit-scrollbar {
       display: none;
     }
 
-    .Layout--settingsContainer {
+    .Layout--rightPanelContainer {
       block-size: 100vh;
       min-inline-size: 100vw;
       scroll-snap-align: center;
@@ -117,7 +117,7 @@
       display: flex;
     }
     
-    .Layout--splashScreenToSettings, .Layout--settingsToSplashScreen, .Layout--shortVideoReelToSettings {
+    .Layout--splashScreenToRightPanel, .Layout--rightPanelToCenterPanel, .Layout--shortVideoReelToRightPanel {
       display: none;
     }
 
@@ -143,7 +143,7 @@
         right: 2vw !important;
       }
 
-      .Layout--splashScreenToSettings, .Layout--settingsToSplashScreen, .Layout--shortVideoReelToSettings {
+      .Layout--splashScreenToRightPanel, .Layout--rightPanelToCenterPanel, .Layout--shortVideoReelToRightPanel {
         display: flex;
         align-self: flex-start; 
         width: 8.333%;
@@ -159,9 +159,8 @@
 </head>
 <body>
   <div class="Layout--mainContainer">
-    <div class="Layout--shortVideoReelConteiner" id="shortVideoReelConteiner">
-      <header 
-        id="splashScreen"
+    <div class="Layout--centerPanelContainer" id="centerPanelContainer">
+      <header id="splashScreen"
         style="display: flex; 
         height: 100vh;  
         align-items: center;
@@ -184,9 +183,9 @@
             </button>
           </div>
         </div>
-        <div class="Layout--splashScreenToSettings">
+        <div class="Layout--splashScreenToRightPanel">
           <button 
-            id="buttonSplashScreenToSettings"
+            id="buttonSplashScreenToRightPanel"
             class="Button--horizontalText" 
             style="margin-top: 7rem; transform: rotate(90deg);" 
             type="button"
@@ -197,8 +196,7 @@
           </button>
         </div>
       </header>
-      <div 
-        id="shortVideoReel" 
+      <div id="shortVideoReel" 
         style="display: none; background-color: var(--pirateBlack);"
       >
         <div style="display: flex;">
@@ -235,9 +233,9 @@
               </button>
             </div>
           </div>
-          <div class="Layout--shortVideoReelToSettings">
+          <div class="Layout--shortVideoReelToRightPanel">
             <button 
-              id="buttonShortVideoReelToSettings"
+              id="buttonShortVideoReelToRightPanel"
               class="Button--horizontalText" 
               style="margin-top: 7rem; transform: rotate(90deg); color: var(--snow);" 
               type="button"
@@ -259,10 +257,10 @@
         </div>
       </div>
     </div>
-    <div class="Layout--settingsContainer" id="settings">
-      <div class="Layout--settingsToSplashScreen">
+    <div class="Layout--rightPanelContainer" id="rightPanelContainer">
+      <div class="Layout--rightPanelToCenterPanel">
         <button 
-          id="buttonSettingsToSplashScreen"
+          id="buttonRightPanelToCenterPanel"
           class="Button--horizontalText" 
           style="margin-top: 7rem; transform: rotate(-90deg);" 
           type="button"

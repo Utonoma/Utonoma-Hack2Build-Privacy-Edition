@@ -9,17 +9,17 @@ $buttonTouchToStart.addEventListener('click', async () => {
   await import('./components/ShortVideoReel/ShortVideoReel.js')
 })
 
-document.querySelector('#buttonSplashScreenToSettings').addEventListener('click', async()=> {
-  location.hash = 'settings'
+document.querySelector('#buttonSplashScreenToRightPanel').addEventListener('click', async()=> {
+  location.hash = 'rightPanelContainer'
   setTimeout(() => location.hash = '', 100)
 })
 
-document.querySelector('#buttonShortVideoReelToSettings').addEventListener('click', async() => {
-  location.hash = 'settings'
+document.querySelector('#buttonShortVideoReelToRightPanel').addEventListener('click', async() => {
+  location.hash = 'rightPanelContainer'
   setTimeout(() => location.hash = '', 100)
 })
 
-document.querySelector('#buttonSettingsToSplashScreen').addEventListener('click', async()=> {
-  location.hash = 'shortVideoReelConteiner'
+document.querySelector('#buttonRightPanelToCenterPanel').addEventListener('click', async()=> {
+  location.hash = 'centerPanelContainer'
   setTimeout(() => location.hash = '', 100)
 })
