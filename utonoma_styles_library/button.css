@@ -17,6 +17,7 @@
   margin: 12px 32px;
   font: var(--headline6);
   padding: 14px 18px;
+  max-width: 23rem;
 }
 
 .Button--textBetweenTwoIcons > div {
