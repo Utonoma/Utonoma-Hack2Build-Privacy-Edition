@@ -27,8 +27,6 @@ document.querySelector('#buttonRightPanelToCenterPanel').addEventListener('click
 })
 
 async function switchSettingsOrConnectWallet() {
-  console.log("settings value is:", $settings )
-  console.log("connect wallet value is:", $connectWallet )
   if(getIsLoggedIn()) {
     $connectWallet.style.display = 'none'
     $settings.style.display = 'flex'

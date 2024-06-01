@@ -3,6 +3,8 @@ import {
   setAddress
 } from '../../services/userManager/userManager.js'
 import { useUtonomaContractForSignedTransactions, useSignedProvider } from '../../web3_providers/signedProvider.js'
+import { utonomaSepoliaAddress } from '../../utonomaSmartContract.js'
+import { parseUnits } from 'ethers'
 
 const $settings = document.querySelector('#settings')
 const $connectWallet = document.querySelector('#connectWallet')
@@ -34,7 +36,9 @@ $buttonManageAccount.addEventListener('click', async () => {
 $buttonActivateForVoting.addEventListener('click', async() => {
   try {
     const utonomaContractForSignedTransactions = await useUtonomaContractForSignedTransactions()
-    console.log(utonomaContractForSignedTransactions)
+    const approveResult = await utonomaContractForSignedTransactions.approve(utonomaSepoliaAddress, parseUnits("100000.0", 18))
+    const transactionResp = await approveResult.wait()
+    console.log(transactionResp)
   }
   catch(error) {
     console.log('Error message: ', error)
