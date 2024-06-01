@@ -10,7 +10,7 @@ const $connectWallet = document.querySelector('#connectWallet')
 const $buttonConnectWallet = document.querySelector('#buttonConnectWallet')
 $buttonConnectWallet.addEventListener('click', async () => {
   const { useSignedProvider } = await import('../../web3_providers/signedProvider.js')
-  const { modal } = useSignedProvider()
+  const { modal } = await useSignedProvider()
   modal.subscribeState(async(newState) => {
     if(modal.getIsConnected()) {
       //switch to the other screen and unsubscribe
@@ -24,10 +24,5 @@ $buttonConnectWallet.addEventListener('click', async () => {
       setAddress('')
     }
   })
-  //Give two seconds before opening the modal, as there are wrong lectures on the getIsConnected method when
-  //we call it immediately
-  setTimeout(() => modal.open(), 2000)
+  modal.open()
 })
-
-console.log('isConnected ', getIsLoggedIn())
-console.log('address ', getUserAddress())

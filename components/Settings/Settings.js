@@ -14,10 +14,8 @@ const $buttonManageAccount = document.querySelector('#buttonManageAccount')
 $buttonManageAccount.addEventListener('click', async () => {
   $buttonManageAccount.disabled = true
   const { useSignedProvider } = await import('../../web3_providers/signedProvider.js')
-  const { modal } = useSignedProvider()
-  //Give two seconds before opening the modal, as there are wrong lectures on the getIsConnected method when
-  //we call it immediately
-  setTimeout(() => modal.open(), 2000)
+  const { modal } = await useSignedProvider()
+  modal.open()
   modal.subscribeState(async(newState) => {
     if(modal.getIsConnected()) {
       setIsLoggedIn(true)
@@ -35,7 +33,7 @@ $buttonManageAccount.addEventListener('click', async () => {
 
 $buttonActivateForVoting.addEventListener('click', async() => {
   try {
-    const utonomaContractForSignedTransactions = await useUtonomaContractForSignedTransactions()
+    const { utonomaContractForSignedTransactions } = await useUtonomaContractForSignedTransactions()
     const approveResult = await utonomaContractForSignedTransactions.approve(utonomaSepoliaAddress, parseUnits("100000.0", 18))
     const transactionResp = await approveResult.wait()
     console.log(transactionResp)

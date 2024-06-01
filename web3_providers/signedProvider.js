@@ -37,37 +37,34 @@ const ethersConfig = defaultConfig({
   defaultChainId: 1, // used for the Coinbase SDK
 })
 
-export function useSignedProvider() {
-  if(!modal) {
-    modal = createWeb3Modal({
-      ethersConfig,
-      chains: [sepolia],
-      tokens: {
-        1: { address: '0x1AdaA27C9890c97D605778c2C7B9ff846B8e3352' }
-      },
-      projectId,
-      enableAnalytics: true, // Optional - defaults to your Cloud configuration
-      enableOnramp: true // Optional - false as default
-    })
-  }
-  return {
-    modal,
-    //return an instance of the modal
-    //return the boolean isConnected
-    //return an instance of the contract ready to be used
-  } 
+export async function useSignedProvider() {
+  return new Promise((resolve) => {
+    //Give two seconds before returning the modal, as there are wrong lectures on the getIsConnected method when
+    //we return it immediately
+    if(!modal) {
+      modal = createWeb3Modal({
+        ethersConfig,
+        chains: [sepolia],
+        tokens: {
+          1: { address: '0x1AdaA27C9890c97D605778c2C7B9ff846B8e3352' }
+        },
+        projectId,
+        enableAnalytics: true, // Optional - defaults to your Cloud configuration
+        enableOnramp: true // Optional - false as default
+      })
+    }
+    setTimeout(() => {
+      resolve({ modal })
+    }, 2000)
+  }) 
 }
 
-export function useUtonomaContractForSignedTransactions() {
-  return new Promise((resolve, reject) => {
-    const { modal } = useSignedProvider()
-    setTimeout(async() => {
-      if(!modal.getIsConnected()) reject(new Error('User disconnected'))
-      const walletProvider = modal.getWalletProvider()
-      const ethersProvider = new BrowserProvider(walletProvider)
-      const signer = await ethersProvider.getSigner()
-      const utonomaContractForSignedTransactions = new Contract(utonomaSepoliaAddress, utonomaABI, signer)
-      resolve(utonomaContractForSignedTransactions)
-    }, 2000)
-  })
+export async function useUtonomaContractForSignedTransactions() {
+  let { modal } = await useSignedProvider()
+  if(!modal.getIsConnected()) throw(new Error('User disconnected'))
+  const walletProvider = modal.getWalletProvider()
+  const ethersProvider = new BrowserProvider(walletProvider)
+  const signer = await ethersProvider.getSigner()
+  const utonomaContractForSignedTransactions = new Contract(utonomaSepoliaAddress, utonomaABI, signer)
+  return { utonomaContractForSignedTransactions }
 }
