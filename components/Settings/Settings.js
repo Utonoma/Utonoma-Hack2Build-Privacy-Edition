@@ -2,10 +2,13 @@ import {
   setIsLoggedIn,
   setAddress
 } from '../../services/userManager/userManager.js'
+import { useUtonomaContractForSignedTransactions, useSignedProvider } from '../../web3_providers/signedProvider.js'
 
 const $settings = document.querySelector('#settings')
 const $connectWallet = document.querySelector('#connectWallet')
+const $buttonActivateForVoting = document.querySelector('#buttonActivateForVoting')
 const $buttonManageAccount = document.querySelector('#buttonManageAccount')
+
 $buttonManageAccount.addEventListener('click', async () => {
   $buttonManageAccount.disabled = true
   const { useSignedProvider } = await import('../../web3_providers/signedProvider.js')
@@ -26,4 +29,14 @@ $buttonManageAccount.addEventListener('click', async () => {
     }
   })
   $buttonManageAccount.disabled = false
+})
+
+$buttonActivateForVoting.addEventListener('click', async() => {
+  try {
+    const utonomaContractForSignedTransactions = await useUtonomaContractForSignedTransactions()
+    console.log(utonomaContractForSignedTransactions)
+  }
+  catch(error) {
+    console.log('Error message: ', error)
+  }
 })

@@ -1,4 +1,6 @@
 import { createWeb3Modal, defaultConfig } from '@web3modal/ethers'
+import { BrowserProvider, Contract } from 'ethers'
+import { utonomaSepoliaAddress, utonomaABI } from '../utonomaSmartContract.js'
 
 let modal
 
@@ -54,4 +56,18 @@ export function useSignedProvider() {
     //return the boolean isConnected
     //return an instance of the contract ready to be used
   } 
+}
+
+export function useUtonomaContractForSignedTransactions() {
+  return new Promise((resolve, reject) => {
+    const { modal } = useSignedProvider()
+    setTimeout(async() => {
+      if(!modal.getIsConnected()) reject(new Error('User disconnected'))
+      const walletProvider = modal.getWalletProvider()
+      const ethersProvider = new BrowserProvider(walletProvider)
+      const signer = await ethersProvider.getSigner()
+      const utonomaContractForSignedTransactions = new Contract(utonomaSepoliaAddress, utonomaABI, signer)
+      resolve(utonomaContractForSignedTransactions)
+    }, 2000)
+  })
 }
