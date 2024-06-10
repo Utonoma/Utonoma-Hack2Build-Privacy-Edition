@@ -1,5 +1,5 @@
-import './utonoma_styles_library/index.css'
-import { getIsLoggedIn } from './services/userManager/userManager.js'
+import '../utonoma_styles_library/index.css'
+import { getIsLoggedIn } from '../services/userManager/userManager.js'
 
 const $settings = document.querySelector('#settings')
 const $connectWallet = document.querySelector('#connectWallet')
