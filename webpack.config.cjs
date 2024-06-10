@@ -16,7 +16,7 @@ module.exports = {
     new HtmlWebpackPlugin({
       template: "./Main/index.html",
       chunks: ["main"],
-      filename: "./Main/index.html",
+      filename: "./index.html",
     }),
     new HtmlWebpackPlugin({
       template: "./UploadContent/index.html",
