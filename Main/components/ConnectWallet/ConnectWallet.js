@@ -3,13 +3,13 @@ import {
   getUserAddress, 
   setIsLoggedIn, 
   setAddress 
-} from '../../services/userManager/userManager.js'
+} from '../../../services/userManager/userManager.js'
 
 const $settings = document.querySelector('#settings')
 const $connectWallet = document.querySelector('#connectWallet')
 const $buttonConnectWallet = document.querySelector('#buttonConnectWallet')
 $buttonConnectWallet.addEventListener('click', async () => {
-  const { useSignedProvider } = await import('../../web3_providers/signedProvider.js')
+  const { useSignedProvider } = await import('../../../web3_providers/signedProvider.js')
   const { modal } = await useSignedProvider()
   modal.subscribeState(async(newState) => {
     if(modal.getIsConnected()) {

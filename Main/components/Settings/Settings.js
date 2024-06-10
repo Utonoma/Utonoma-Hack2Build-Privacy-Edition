@@ -1,9 +1,9 @@
 import { 
   setIsLoggedIn,
   setAddress
-} from '../../services/userManager/userManager.js'
-import { useUtonomaContractForSignedTransactions, useSignedProvider } from '../../web3_providers/signedProvider.js'
-import { utonomaSepoliaAddress } from '../../utonomaSmartContract.js'
+} from '../../../services/userManager/userManager.js'
+import { useUtonomaContractForSignedTransactions, useSignedProvider } from '../../../web3_providers/signedProvider.js'
+import { utonomaSepoliaAddress } from '../../../utonomaSmartContract.js'
 import { parseUnits } from 'ethers'
 
 const $settings = document.querySelector('#settings')
@@ -17,7 +17,7 @@ const $buttonManageAccount = document.querySelector('#buttonManageAccount')
 
 $buttonManageAccount.addEventListener('click', async () => {
   $buttonManageAccount.disabled = true
-  const { useSignedProvider } = await import('../../web3_providers/signedProvider.js')
+  const { useSignedProvider } = await import('../../../web3_providers/signedProvider.js')
   const { modal } = await useSignedProvider()
   modal.open()
   modal.subscribeState(async(newState) => {
