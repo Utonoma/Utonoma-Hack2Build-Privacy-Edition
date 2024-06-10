@@ -1,4 +1,4 @@
-import { getIpfsHashFromBytes32, getUrlFromIpfsHash } from "./encodingUtils.js"
+import { getIpfsHashFromBytes32, getUrlFromIpfsHash } from './encodingUtils.js'
 
 /*
 A sample list of valid CIDs:

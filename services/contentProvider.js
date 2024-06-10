@@ -1,6 +1,6 @@
-import { useReadOnlyProvider } from "../web3_providers/readOnlyProvider.js"
+import { useReadOnlyProvider } from '../web3_providers/readOnlyProvider.js'
 import { formatUnits } from 'ethers'
-import { getIpfsHashFromBytes32 } from "../utils/encodingUtils.js"
+import { getIpfsHashFromBytes32 } from '../utils/encodingUtils.js'
 
 
 export async function getShortVideo() {
@@ -24,7 +24,7 @@ export async function getShortVideo() {
       likes
     }
   } catch(error) {
-    console.log("Error in getContentLibrary getContentById: ", error)
+    console.log('Error in getContentLibrary getContentById: ', error)
     return {}
   }
 }

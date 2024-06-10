@@ -1,4 +1,4 @@
-import { useReadOnlyProvider } from "../web3_providers/readOnlyProvider"
+import { useReadOnlyProvider } from '../web3_providers/readOnlyProvider'
 const { provider, utonomaContract } = useReadOnlyProvider()
 
 test('useReadOnlyProvider should return two not null objects: provider and utonomaContract', () => {
