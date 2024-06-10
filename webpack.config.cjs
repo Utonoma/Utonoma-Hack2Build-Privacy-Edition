@@ -4,7 +4,10 @@ const CopyPlugin = require("copy-webpack-plugin");
 
 module.exports = {
   mode: 'development',
-  entry: './main.js',
+  entry: {
+    main: "./main.js",
+    uploadContent: "./UploadContent/main.js"
+  }, 
   devtool: 'inline-source-map',
   devServer: {
     static: './dist',
@@ -12,6 +15,12 @@ module.exports = {
   plugins: [
     new HtmlWebpackPlugin({
       template: "./index.html",
+      chunks: ["main"],
+    }),
+    new HtmlWebpackPlugin({
+      template: "./UploadContent/index.html",
+      chunks: ["uploadContent"],
+      filename: "./UploadContent/index.html",
     }),
     new CopyPlugin({
       patterns: [
@@ -23,7 +32,7 @@ module.exports = {
     }),
   ],
   output: {
-    filename: 'build.js',
+    filename: "[name].[contenthash].js",
     path: path.resolve(__dirname, 'dist'),
     clean: true,
   },
