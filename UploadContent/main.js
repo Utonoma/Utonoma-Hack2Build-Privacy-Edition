@@ -1,1 +1,1 @@
-console.log("hello world from upload content")
+import './components/UploadContentForm/UploadContentForm.js'
