@@ -5,6 +5,7 @@ const [$inputShortVideo, $textAreaShortVideoTitle, $textAreaVideoDescription] = 
 const $videoPreview = document.querySelector('#videoPreview')
 const $dialogWrongVideoFileError = document.querySelector('#dialogWrongVideoFileError')
 const $dialogVideoTooLongError = document.querySelector('#dialogVideoTooLongError')
+const $dialogUploadingDataToIpfsError = document.querySelector('#dialogUploadingDataToIpfsError')
 
 $formUploadContent.addEventListener('submit', async(event) => {
   event.preventDefault()
