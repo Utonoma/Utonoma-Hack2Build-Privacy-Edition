@@ -1,5 +1,6 @@
 import bops from 'bops'
 import bs58 from 'bs58'
+import { Buffer } from 'buffer'
 
 
 export function getIpfsHashFromBytes32(bytes32Hex) {
@@ -15,4 +16,11 @@ export function getIpfsHashFromBytes32(bytes32Hex) {
 
 export function getUrlFromIpfsHash(cid) {
   return `https://copper-urban-gorilla-864.mypinata.cloud/ipfs/${cid}?pinataGatewayToken=WmR3tEcyNtxE6vjc4lPPIrY0Hzp3Dc9AYf2X4Bl-8o6JYBzTx9aY_u3OlpL1wGra`
+}
+
+export function convertIPFSHashToBytes32(CID){
+  const arrayBase8 = bs58.decode(CID)
+  const reducedTo32Bytes = arrayBase8.slice(2)
+  const res = "0x" + Buffer.from(reducedTo32Bytes).toString('hex')
+  return res
 }

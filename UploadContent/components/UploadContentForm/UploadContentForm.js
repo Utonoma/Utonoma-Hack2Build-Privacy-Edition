@@ -1,4 +1,5 @@
-import { ShortVideoMetadata } from '../../../services/models.js';
+import { ShortVideoMetadata } from '../../../services/models.js'
+import { convertIPFSHashToBytes32 } from '../../../utils/encodingUtils.js'
 
 const $formUploadContent = document.forms['formUploadContent'];
 const [$inputShortVideo, $textAreaShortVideoTitle, $textAreaVideoDescription] = $formUploadContent.elements
@@ -74,6 +75,10 @@ $formUploadContent.addEventListener('submit', async(event) => {
     $dialogUploadingDataToIpfsError.show()
     setTimeout(() => $dialogUploadingDataToIpfsError.close(), 5000)
   }
+
+  console.log('ipfs metadata to bytes32: ', convertIPFSHashToBytes32(metadataHash.IpfsHash))
+  console.log('ipfs video to bytes32: ', convertIPFSHashToBytes32(shortVideoHash.IpfsHash))
+
 });
 
 async function validateVideoDuration($videoDomElement, file, maxDuration) {
