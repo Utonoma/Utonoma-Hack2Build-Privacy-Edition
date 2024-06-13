@@ -8,9 +8,11 @@ const $dialogVideoTooLongError = document.querySelector('#dialogVideoTooLongErro
 
 $formUploadContent.addEventListener('submit', async(event) => {
   event.preventDefault()
+  const shortVideoFile = $inputShortVideo.files[0]
+
   //validate that the video is no longer than 60 seconds
   try{
-    const shortVideoDuration = await validateVideoDuration($videoPreview, $inputShortVideo.files[0], 60)
+    const shortVideoDuration = await validateVideoDuration($videoPreview, shortVideoFile, 60)
     if(!shortVideoDuration) {
       $dialogVideoTooLongError.show()
       setTimeout(() => $dialogVideoTooLongError.close(), 5000)
