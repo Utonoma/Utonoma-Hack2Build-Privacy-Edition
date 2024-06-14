@@ -1,5 +1,6 @@
 import { ShortVideoMetadata } from '../../../services/models.js'
 import { convertIPFSHashToBytes32 } from '../../../utils/encodingUtils.js'
+import { useUtonomaContractForSignedTransactions } from '../../../web3_providers/signedProvider.js';
 
 const $formUploadContent = document.forms['formUploadContent'];
 const [$inputShortVideo, $textAreaShortVideoTitle, $textAreaVideoDescription] = $formUploadContent.elements
@@ -78,6 +79,28 @@ $formUploadContent.addEventListener('submit', async(event) => {
 
   console.log('ipfs metadata to bytes32: ', convertIPFSHashToBytes32(metadataHash.IpfsHash))
   console.log('ipfs video to bytes32: ', convertIPFSHashToBytes32(shortVideoHash.IpfsHash))
+
+  console.log('Sending transaction to the blockchain, please use your wallet to sign')
+  let uploadResponse
+  try {
+    const { utonomaContractForSignedTransactions } = await useUtonomaContractForSignedTransactions()
+    uploadResponse = await utonomaContractForSignedTransactions.upload(
+      convertIPFSHashToBytes32(shortVideoHash.IpfsHash), 
+      convertIPFSHashToBytes32(metadataHash.IpfsHash), 
+      5
+    )
+  } catch (error) {
+    console.log(error)
+    return 
+  }
+
+
+  try {
+    const transactionResp = await uploadResponse.wait()
+    console.log(transactionResp)
+  } catch (error) {
+    console.log(error)
+  }
 
 });
 
