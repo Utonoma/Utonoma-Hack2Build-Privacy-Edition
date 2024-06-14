@@ -1,6 +1,6 @@
 import { useReadOnlyProvider } from '../web3_providers/readOnlyProvider.js'
 import { formatUnits } from 'ethers'
-import { getIpfsHashFromBytes32 } from '../utils/encodingUtils.js'
+import { getIpfsHashFromBytes32 } from '../utils/encodingUtils/encodingUtils.js'
 
 
 export async function getShortVideo() {

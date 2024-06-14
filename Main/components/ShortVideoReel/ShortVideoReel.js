@@ -1,5 +1,5 @@
 import { getShortVideo } from '../../../services/contentProvider.js'
-import { getUrlFromIpfsHash } from '../../../utils/encodingUtils.js'
+import { getUrlFromIpfsHash } from '../../../utils/encodingUtils/encodingUtils.js'
 import {
   nextShortVideo,
   getPreviousShortVideo,

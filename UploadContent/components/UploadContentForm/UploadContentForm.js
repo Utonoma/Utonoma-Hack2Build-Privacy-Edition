@@ -1,5 +1,5 @@
 import { ShortVideoMetadata } from '../../../services/models.js'
-import { convertIPFSHashToBytes32 } from '../../../utils/encodingUtils.js'
+import { convertIPFSHashToBytes32 } from '../../../utils/encodingUtils/encodingUtils.js'
 import { useUtonomaContractForSignedTransactions } from '../../../web3_providers/signedProvider.js';
 
 const $formUploadContent = document.forms['formUploadContent'];
