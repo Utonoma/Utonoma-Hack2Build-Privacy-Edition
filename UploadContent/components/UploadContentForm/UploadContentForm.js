@@ -1,6 +1,7 @@
 import { ShortVideoMetadata } from '../../../services/models.js'
 import { convertIPFSHashToBytes32 } from '../../../utils/encodingUtils/encodingUtils.js'
 import { useUtonomaContractForSignedTransactions } from '../../../web3_providers/signedProvider.js';
+import { validateVideoDuration } from '../../../utils/validationUtils/validationUtils.js'
 
 const $formUploadContent = document.forms['formUploadContent'];
 const [$inputShortVideo, $textAreaShortVideoTitle, $textAreaVideoDescription] = $formUploadContent.elements
@@ -103,26 +104,3 @@ $formUploadContent.addEventListener('submit', async(event) => {
   }
 
 });
-
-async function validateVideoDuration($videoDomElement, file, maxDuration) {
-  return new Promise((resolve) => {
-    var reader = new FileReader();
-
-    reader.onload = function(e) {
-      if(!$videoDomElement.src) throw new Error('Invalid video tag')
-      $videoDomElement.src = e.target.result
-      $videoDomElement.load()
-      $videoDomElement.onloadedmetadata = function() {
-        console.log(this.duration)
-        if(this.duration <= maxDuration) resolve(true) 
-        else resolve(false)
-      };
-    }.bind(this)
-    try{
-      reader.readAsDataURL(file);
-    }
-    catch(error) {
-      throw new Error('invalid file object provided')
-    }
-  }) 
-}
