@@ -2,6 +2,7 @@ import { ShortVideoMetadata } from '../../../services/models.js'
 import { convertIPFSHashToBytes32 } from '../../../utils/encodingUtils/encodingUtils.js'
 import { useUtonomaContractForSignedTransactions } from '../../../web3_providers/signedProvider.js';
 import { validateVideoDuration } from '../../../utils/validationUtils/validationUtils.js'
+import { pinJsonToIpfs, pinFileToIPFS } from '../../../services/ipfsService/ipfsService.js';
 
 const $formUploadContent = document.forms['formUploadContent'];
 const [$inputShortVideo, $textAreaShortVideoTitle, $textAreaVideoDescription] = $formUploadContent.elements
@@ -37,43 +38,11 @@ $formUploadContent.addEventListener('submit', async(event) => {
   metadata.shortVideoDescription = $textAreaVideoDescription.value
   
   let metadataHash
-  try {
-    const res = await fetch('https://api.pinata.cloud/pinning/pinJSONToIPFS', {
-      method: 'POST',
-      headers: {
-        Authorization: 'Bearer eyJhbGciOiJIUzI1NiIsInR5cCI6IkpXVCJ9.eyJ1c2VySW5mb3JtYXRpb24iOnsiaWQiOiIzYmJlNTYxOS1hM2VmLTRjNzgtYWZjMi04N2E2ZjAzYTg4NTEiLCJlbWFpbCI6ImFkcmlhbi5zZXF1ZWlyYUBvdXRsb29rLmNvbSIsImVtYWlsX3ZlcmlmaWVkIjp0cnVlLCJwaW5fcG9saWN5Ijp7InJlZ2lvbnMiOlt7ImlkIjoiRlJBMSIsImRlc2lyZWRSZXBsaWNhdGlvbkNvdW50IjoxfSx7ImlkIjoiTllDMSIsImRlc2lyZWRSZXBsaWNhdGlvbkNvdW50IjoxfV0sInZlcnNpb24iOjF9LCJtZmFfZW5hYmxlZCI6ZmFsc2UsInN0YXR1cyI6IkFDVElWRSJ9LCJhdXRoZW50aWNhdGlvblR5cGUiOiJzY29wZWRLZXkiLCJzY29wZWRLZXlLZXkiOiJjMmJjYjVmYTA5YzVhMjY4ODViYSIsInNjb3BlZEtleVNlY3JldCI6ImIyM2ZlYTM0NGJiMTY1Zjg2M2M1ZGQ2NjA4NDExYjFkZTk5OWEwY2Y1MmMwODg0MmRiMzJjNzMyZDljMTg2YmEiLCJpYXQiOjE3MDg2NTMxMjh9.2l4FvQow4eqchALGkxMcdhVTvSjFOxWMtU_ZIVfj2fg', 
-        'Content-Type': 'application/json'
-      },
-      body: `{"pinataContent":${JSON.stringify(metadata)},"pinataMetadata":{"name":"metadata.json"},"pinataOptions":{"cidVersion":0}}`
-    })
-    const jsonResp = await res.json()
-    if(jsonResp.error) throw new Error('Error in the request to upload metadata to IPFS network')
-    metadataHash = jsonResp
-    console.log(jsonResp)
-  } catch (error) {
-    $dialogUploadingDataToIpfsError.show()
-    setTimeout(() => $dialogUploadingDataToIpfsError.close(), 5000)
-  }
-
-  //upload the short video to ipfs
   let shortVideoHash
-
-  const form = new FormData();
-  form.append("file", shortVideoFile);
-  form.append("pinataOptions", "{\n  \"cidVersion\": 0\n}");
-
   try {
-    const fileUploadResp =  await fetch('https://api.pinata.cloud/pinning/pinFileToIPFS', {
-      method: 'POST',
-      headers: {
-        Authorization: 'Bearer eyJhbGciOiJIUzI1NiIsInR5cCI6IkpXVCJ9.eyJ1c2VySW5mb3JtYXRpb24iOnsiaWQiOiIzYmJlNTYxOS1hM2VmLTRjNzgtYWZjMi04N2E2ZjAzYTg4NTEiLCJlbWFpbCI6ImFkcmlhbi5zZXF1ZWlyYUBvdXRsb29rLmNvbSIsImVtYWlsX3ZlcmlmaWVkIjp0cnVlLCJwaW5fcG9saWN5Ijp7InJlZ2lvbnMiOlt7ImlkIjoiRlJBMSIsImRlc2lyZWRSZXBsaWNhdGlvbkNvdW50IjoxfSx7ImlkIjoiTllDMSIsImRlc2lyZWRSZXBsaWNhdGlvbkNvdW50IjoxfV0sInZlcnNpb24iOjF9LCJtZmFfZW5hYmxlZCI6ZmFsc2UsInN0YXR1cyI6IkFDVElWRSJ9LCJhdXRoZW50aWNhdGlvblR5cGUiOiJzY29wZWRLZXkiLCJzY29wZWRLZXlLZXkiOiJjMmJjYjVmYTA5YzVhMjY4ODViYSIsInNjb3BlZEtleVNlY3JldCI6ImIyM2ZlYTM0NGJiMTY1Zjg2M2M1ZGQ2NjA4NDExYjFkZTk5OWEwY2Y1MmMwODg0MmRiMzJjNzMyZDljMTg2YmEiLCJpYXQiOjE3MDg2NTMxMjh9.2l4FvQow4eqchALGkxMcdhVTvSjFOxWMtU_ZIVfj2fg', 
-      },
-      body: form
-    })
-    shortVideoHash = await fileUploadResp.json()
-    if(shortVideoHash.error) throw new Error('Error in the request to upload a short video to IPFS network')
-    console.log("short video uploaded: ", shortVideoHash)
-  } catch (err) {
+    metadataHash = await pinJsonToIpfs(metadata)
+    shortVideoHash = await pinFileToIPFS(shortVideoFile)
+  } catch (error) {
     $dialogUploadingDataToIpfsError.show()
     setTimeout(() => $dialogUploadingDataToIpfsError.close(), 5000)
   }
@@ -81,7 +50,6 @@ $formUploadContent.addEventListener('submit', async(event) => {
   console.log('ipfs metadata to bytes32: ', convertIPFSHashToBytes32(metadataHash.IpfsHash))
   console.log('ipfs video to bytes32: ', convertIPFSHashToBytes32(shortVideoHash.IpfsHash))
 
-  console.log('Sending transaction to the blockchain, please use your wallet to sign')
   let uploadResponse
   try {
     const { utonomaContractForSignedTransactions } = await useUtonomaContractForSignedTransactions()
@@ -90,6 +58,7 @@ $formUploadContent.addEventListener('submit', async(event) => {
       convertIPFSHashToBytes32(metadataHash.IpfsHash), 
       5
     )
+    console.log('Sending transaction to the blockchain, please use your wallet to sign')
   } catch (error) {
     console.log(error)
     return 
@@ -103,4 +72,4 @@ $formUploadContent.addEventListener('submit', async(event) => {
     console.log(error)
   }
 
-});
+})
