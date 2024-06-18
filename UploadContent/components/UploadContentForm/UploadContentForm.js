@@ -10,6 +10,9 @@ const $videoPreview = document.querySelector('#videoPreview')
 const $dialogWrongVideoFileError = document.querySelector('#dialogWrongVideoFileError')
 const $dialogVideoTooLongError = document.querySelector('#dialogVideoTooLongError')
 const $dialogUploadingDataToIpfsError = document.querySelector('#dialogUploadingDataToIpfsError')
+const $dialogCheckWalletToApprove = document.querySelector('#dialogCheckWalletToApprove')
+const $dialogUploadContentTransactionSent = document.querySelector('#dialogUploadContentTransactionSent')
+const $dialogUploadContentError = document.querySelector('#dialogUploadContentError')
 
 $formUploadContent.addEventListener('submit', async(event) => {
   event.preventDefault()
@@ -29,8 +32,6 @@ $formUploadContent.addEventListener('submit', async(event) => {
     setTimeout(() => $dialogWrongVideoFileError.close(), 5000)
     return
   }
-
-  //validate that the user's wallet is connected
   
   //upload metadata to ipfs
   const metadata = new ShortVideoMetadata()
@@ -47,23 +48,30 @@ $formUploadContent.addEventListener('submit', async(event) => {
     setTimeout(() => $dialogUploadingDataToIpfsError.close(), 5000)
   }
 
-  console.log('ipfs metadata to bytes32: ', convertIPFSHashToBytes32(metadataHash.IpfsHash))
-  console.log('ipfs video to bytes32: ', convertIPFSHashToBytes32(shortVideoHash.IpfsHash))
-
   let uploadResponse
   try {
+    $dialogCheckWalletToApprove.show()
+    setTimeout(() => $dialogCheckWalletToApprove.close(), 5000)
     const { utonomaContractForSignedTransactions } = await useUtonomaContractForSignedTransactions()
     uploadResponse = await utonomaContractForSignedTransactions.upload(
       convertIPFSHashToBytes32(shortVideoHash.IpfsHash), 
       convertIPFSHashToBytes32(metadataHash.IpfsHash), 
       5
     )
-    console.log('Sending transaction to the blockchain, please use your wallet to sign')
+    $dialogUploadContentTransactionSent.show()
+    setTimeout(() => { 
+      $dialogUploadContentTransactionSent.close() 
+      window.location.replace('/')
+    }, 5000)
   } catch (error) {
     console.log(error)
+    $dialogUploadContentError.show()
+    setTimeout(() => { 
+      $dialogUploadContentError.close() 
+      window.location.replace('/#rightPanelContainer')
+    }, 8000)
     return 
   }
-
 
   try {
     const transactionResp = await uploadResponse.wait()
