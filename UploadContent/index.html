@@ -48,10 +48,19 @@
     /*End of selectors for multilingual support*/
 
     body {
-      background-color: var(--snow);
-      color: var(--pirateBlack);
+      background-color: var(--pirateBlack);
+      color: var(--snow);
       font-family: var(--baseFontFamily);
       margin: 0;
+    }
+
+    .Button--horizontalText {
+      background-color: transparent;
+      align-items: center;
+      gap: 16px;
+      border: none;
+      display: flex;
+      padding: 16px;
     }
 
     @media screen and (min-width: 700px) {
@@ -60,46 +69,61 @@
   </style>
 </head>
 <body>
-  <form name="formUploadContent">
-    <div>
-      <h2>
-        Pick a short video
-      </h2>
-      <label for="inputShortVideo">
-        Upload a short video of maximum 60 seconds, in WebM or MP4 format 
-      </label>
-      <input type="file" id="inputShortVideo" required accept="video/MP4, video/WebM">
-    </div>
-    <div>
-      <h2>
-        Give your short video a title
-      </h2>
-      <label for="textAreaShortVideoTitle">
-        Up to 100 characters
-      </label>
-      <textarea id="textAreaShortVideoTitle" required maxlength="100" rows="5" cols="33"></textarea>
-    </div>
-    <div>
-      <h2>
-        Now, a description
-      </h2>
-      <label for="textAreaVideoDescription">
-        Up to 2000 characters
-      </label>
-      <textarea id="textAreaVideoDescription" required maxlength="2000" rows="5" cols="33"></textarea>
-    </div>
-    <div>
-      <h2>
-        Upload to IPFS
-      </h2>
-      <label>
-        IPFS network provide a storage for files that later can be referenced in the Utonoma smart contract 
-      </label>
-      <button type="submit" id="formUploadContent">Upload</button>
-    </div>
-  </form>
-  <div style="display: none;">
-    <video id="videoPreview" src="" type="video/MP4, video/WebM"></video>
+  <div style="margin: 24px; text-align: center;">
+    <img style="width: 80%; margin: 100px 0;" src="../assets/icons/utonoma-small-logo.svg" alt="">
+    <form name="formUploadContent">
+      <div style="text-align: left">
+        <h2 style="font: var(--headline1); margin-bottom: 21px;">
+          Pick a short video
+        </h2>
+        <label for="inputShortVideo" style="font: var(--headline6);">
+          Upload a short video of maximum 60 seconds, in WebM or MP4 format 
+        </label>
+        <div style="text-align: center; margin-top: 21px;">
+          <input type="file" id="inputShortVideo" required accept="video/MP4, video/WebM" style="text-align: center;">
+        </div>
+      </div>
+      <div style="text-align: left">
+        <h2 style="font: var(--headline1); margin-bottom: 21px;">
+          Give your short video a title
+        </h2>
+        <label for="textAreaShortVideoTitle" style="font: var(--headline6);">
+          Up to 100 characters
+        </label>
+        <textarea style="width: 100%; margin-top: 21px;" id="textAreaShortVideoTitle" required maxlength="100" rows="10"></textarea>
+      </div>
+      <div style="text-align: left">
+        <h2 style="font: var(--headline1); margin-bottom: 21px;">
+          Now, a description
+        </h2>
+        <label for="textAreaVideoDescription" style="font: var(--headline6);">
+          Up to 2000 characters
+        </label>
+        <textarea style="width: 100%; margin-top: 21px;" id="textAreaVideoDescription" required maxlength="2000" rows="10"></textarea>
+      </div>
+      <div style="text-align: left">
+        <h2 style="font: var(--headline1); margin-bottom: 21px;">
+          Upload to IPFS
+        </h2>
+        <label for="formUploadContent" style="font: var(--headline6);">
+          IPFS network provide a storage for files that later can be referenced in the Utonoma smart contract 
+        </label>
+        <div style="display: flex; justify-content: center;"> 
+          <button 
+            type="submit" 
+            id="formUploadContent"
+            class="Button--horizontalText" 
+            style="margin: 21px 0; background-color: var(--cyberYellow);"
+          >
+            <h1 style="font: var(--headline6); margin: 0;">
+              <span lang="en">Upload</span>
+              <span lang="es">Toque para iniciar</span>
+            </h1>
+            <img src="../assets/icons/continue-active-icon.svg" style="width: 1.5rem; transform: rotate(-90deg);" alt="">
+          </button>
+        </div>
+      </div>
+    </form>
   </div>
   <dialog id="dialogVideoTooLongError">
     <p style="font: var(--headline6)">
@@ -153,5 +177,8 @@
       </span>
     </p>
   </dialog>
+  <div style="display: none;">
+    <video id="videoPreview" src="" type="video/MP4, video/WebM"></video>
+  </div>
 </body>
 </html>
