@@ -69,75 +69,77 @@
   </style>
 </head>
 <body>
-  <div style="margin: 24px; text-align: center;">
-    <img style="width: 80%; margin: 100px 0;" src="../assets/icons/utonoma-small-logo.svg" alt="">
-    <form name="formUploadContent">
-      <div style="text-align: left">
-        <h2 style="font: var(--headline1); margin-bottom: 21px;">
-          <span lang="en">Pick a short video</span>
-          <span lang="es">Elige un vídeo corto</span>
-        </h2>
-        <label for="inputShortVideo" style="font: var(--headline6);">
-          <span lang="en">Upload a short video of maximum 60 seconds, in WebM or MP4 format </span>
-          <span lang="es">Sube un vídeo corto de 60 segundos como máximo, en formato WebM o MP4 </span>
-        </label>
-        <div style="text-align: center; margin-top: 21px;">
-          <input type="file" id="inputShortVideo" required accept="video/MP4, video/WebM" style="text-align: center;">
+  <div style="display: flex; justify-content: center;">
+    <div style="margin: 24px; text-align: center; max-width: 500px;">
+      <img style="width: 80%; margin: 100px 0;" src="../assets/icons/utonoma-small-logo.svg" alt="">
+      <form name="formUploadContent">
+        <div style="text-align: left">
+          <h2 style="font: var(--headline1); margin-bottom: 21px;">
+            <span lang="en">Pick a short video</span>
+            <span lang="es">Elige un vídeo corto</span>
+          </h2>
+          <label for="inputShortVideo" style="font: var(--headline6);">
+            <span lang="en">Upload a short video of maximum 60 seconds, in WebM or MP4 format </span>
+            <span lang="es">Sube un vídeo corto de 60 segundos como máximo, en formato WebM o MP4 </span>
+          </label>
+          <div style="text-align: center; margin-top: 21px;">
+            <input type="file" id="inputShortVideo" required accept="video/MP4, video/WebM" style="text-align: center;">
+          </div>
         </div>
-      </div>
-      <div style="text-align: left">
-        <h2 style="font: var(--headline1); margin-bottom: 21px;">
-          <span lang="en">Give your short video a title</span>
-          <span lang="es">Ponle un título a tu vídeo corto</span>
-        </h2>
-        <label for="textAreaShortVideoTitle" style="font: var(--headline6);">
-          <span lang="en">Up to 100 characters</span>
-          <span lang="es">Hasta 100 caracteres</span>
-        </label>
-        <textarea style="width: 100%; margin-top: 21px;" id="textAreaShortVideoTitle" required maxlength="100" rows="10"></textarea>
-      </div>
-      <div style="text-align: left">
-        <h2 style="font: var(--headline1); margin-bottom: 21px;">
-          <span lang="en">Now, a description</span>
-          <span lang="es">Ahora, una descripción</span>
-        </h2>
-        <label for="textAreaVideoDescription" style="font: var(--headline6);">
-          <span lang="en">Up to 2000 characters</span>
-          <span lang="es">Hasta 2000 caracteres</span>
-        </label>
-        <textarea style="width: 100%; margin-top: 21px;" id="textAreaVideoDescription" required maxlength="2000" rows="10"></textarea>
-      </div>
-      <div style="text-align: left">
-        <h2 style="font: var(--headline1); margin-bottom: 21px;">
-          <span lang="en">Upload to Utonoma</span>
-          <span lang="es">Subir a Utonoma</span>
-        </h2>
-        <label for="formUploadContent" style="font: var(--headline6);">
-          <span lang="en">
-            Your content will be uploaded to the IPFS network and then to the Utonoma smart contract, have your wallet ready to 
-            sign the transaction
-          </span>
-          <span lang="es">
-            Tu contenido se subirá a la red IPFS y posteriormente al contrato inteligente de Utonoma, ten a la mano tu cartera para 
-            poder firmar la transacción
-          </span>
-        </label>
-        <div style="display: flex; justify-content: center;"> 
-          <button 
-            type="submit" 
-            id="formUploadContent"
-            class="Button--horizontalText" 
-            style="margin: 21px 0; background-color: var(--cyberYellow);"
-          >
-            <h1 style="font: var(--headline6); margin: 0;">
-              <span lang="en">Upload</span>
-              <span lang="es">Subir</span>
-            </h1>
-            <img src="../assets/icons/continue-active-icon.svg" style="width: 1.5rem; transform: rotate(-90deg);" alt="">
-          </button>
+        <div style="text-align: left">
+          <h2 style="font: var(--headline1); margin-bottom: 21px;">
+            <span lang="en">Give your short video a title</span>
+            <span lang="es">Ponle un título a tu vídeo corto</span>
+          </h2>
+          <label for="textAreaShortVideoTitle" style="font: var(--headline6);">
+            <span lang="en">Up to 100 characters</span>
+            <span lang="es">Hasta 100 caracteres</span>
+          </label>
+          <textarea style="width: 100%; margin-top: 21px;" id="textAreaShortVideoTitle" required maxlength="100" rows="10"></textarea>
         </div>
-      </div>
-    </form>
+        <div style="text-align: left">
+          <h2 style="font: var(--headline1); margin-bottom: 21px;">
+            <span lang="en">Now, a description</span>
+            <span lang="es">Ahora, una descripción</span>
+          </h2>
+          <label for="textAreaVideoDescription" style="font: var(--headline6);">
+            <span lang="en">Up to 2000 characters</span>
+            <span lang="es">Hasta 2000 caracteres</span>
+          </label>
+          <textarea style="width: 100%; margin-top: 21px;" id="textAreaVideoDescription" required maxlength="2000" rows="10"></textarea>
+        </div>
+        <div style="text-align: left">
+          <h2 style="font: var(--headline1); margin-bottom: 21px;">
+            <span lang="en">Upload to Utonoma</span>
+            <span lang="es">Subir a Utonoma</span>
+          </h2>
+          <label for="formUploadContent" style="font: var(--headline6);">
+            <span lang="en">
+              Your content will be uploaded to the IPFS network and then to the Utonoma smart contract, have your wallet ready to 
+              sign the transaction
+            </span>
+            <span lang="es">
+              Tu contenido se subirá a la red IPFS y posteriormente al contrato inteligente de Utonoma, ten a la mano tu cartera para 
+              poder firmar la transacción
+            </span>
+          </label>
+          <div style="display: flex; justify-content: center;"> 
+            <button 
+              type="submit" 
+              id="formUploadContent"
+              class="Button--horizontalText" 
+              style="margin: 21px 0; background-color: var(--cyberYellow);"
+            >
+              <h1 style="font: var(--headline6); margin: 0;">
+                <span lang="en">Upload</span>
+                <span lang="es">Subir</span>
+              </h1>
+              <img src="../assets/icons/continue-active-icon.svg" style="width: 1.5rem; transform: rotate(-90deg);" alt="">
+            </button>
+          </div>
+        </div>
+      </form>
+    </div>
   </div>
   <dialog id="dialogVideoTooLongError">
     <p style="font: var(--headline6)">
