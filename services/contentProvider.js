@@ -21,7 +21,8 @@ export async function getShortVideo() {
       authorAddress,
       contentId,
       metadata,
-      likes
+      likes,
+      utonomaIdentifier: { index: identifier, contentType: 5 }
     }
   } catch(error) {
     console.log('Error in getContentLibrary getContentById: ', error)
