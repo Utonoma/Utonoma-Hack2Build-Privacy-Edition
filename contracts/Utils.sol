@@ -60,17 +60,17 @@ contract Utils {
         return pMinusRootByZ > oneHalf;
     }
 
-    /// @notice calculates the reward that a content creator can receive for one like
+    /// @notice calculates the reward that a content creator can receive for one like, if the users number is 0, will return 10**18 * _baseReward
     /// @param usersNumber the current monthly active users (MAU) that the platform has
     function calculateReward(uint256 usersNumber) public pure returns(uint256) {
-        require(usersNumber != 0, "Number of users can't be zero");
+        if(usersNumber == 0) return (10**18 * _baseReward);
         return (10**18 * _baseReward) / usersNumber**2;
     }
 
-    /// @notice calculates the fee
+    /// @notice calculates the fee, if the number of users is 0, will return _commissionByBaseReward
     /// @param usersNumber the current monthly active users (MAU) that the platform has
     function calculateFee(uint256 usersNumber) public pure returns(uint256) {
-        require(usersNumber != 0, "Number of users can't be zero");
+        if(usersNumber == 0) return (_commissionByBaseReward);
         return _commissionByBaseReward / usersNumber**2;
     }
 

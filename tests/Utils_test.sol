@@ -140,20 +140,16 @@ contract Utils_test {
             9416507,
             "calculateFee method, when receiving 10,305,168 users as parameter, should return 0.000000000009416507"
         );
-    }
-
-    function calculateRewardShouldRevert() public {
-        //pass zero in the number of users
-        try utils.calculateReward(0) {
-            Assert.ok(false, 'method execution should fail');
-        } catch Error(string memory reason) {
-            Assert.equal(
-                reason, 
-                "Number of users can't be zero", 
-                "In the calculateReward method if the number of users is 0 the transaction should be reverted, as the it will divide by 0");
-        } catch (bytes memory /*lowLevelData*/) {
-            Assert.ok(false, 'failed unexpected');
-        }
+        Assert.equal(
+            utils.calculateReward(10305168),
+            9416507,
+            "calculateFee method, when receiving 10,305,168 users as parameter, should return 0.000000000009416507"
+        );
+        Assert.equal(
+            utils.calculateReward(0),
+            1000000000000000000000,
+            "calculateReward method, when receiving 0 users as parameter, should return 1000"
+        );
     }
 
     function calculateFee() public {
@@ -172,20 +168,11 @@ contract Utils_test {
             12555343, 
             "calculateFee method, when receiving 10,305,168 users as parameter, should return 0.00000000001255534275"
         );
-    }
-
-    function calculateFeeShouldRevert() public {
-        //pass zero in the number of users
-        try utils.calculateFee(0) {
-            Assert.ok(false, 'method execution should fail');
-        } catch Error(string memory reason) {
-            Assert.equal(
-                reason, 
-                "Number of users can't be zero", 
-                "In the calculateFee method if the number of users is 0 the transaction should be reverted, as the it will divide by 0");
-        } catch (bytes memory /*lowLevelData*/) {
-            Assert.ok(false, 'failed unexpected');
-        }
+        Assert.equal(
+            utils.calculateFee(0),
+            1333333333333333333000,
+            "calculateFee method, when receiving 0 users as parameter, should return the commissionByBaseReward"
+        );
     }
 
     function isValidUserName() public {
