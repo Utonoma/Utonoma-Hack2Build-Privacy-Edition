@@ -128,22 +128,22 @@ contract Utils_test {
         Assert.equal(
             utils.calculateReward(10),
             10000000000000000000, 
-            "calculateFee method, when receiving 10 users as parameter, should return 10"
+            "calculateReward method, when receiving 10 users as parameter, should return 10"
         );
         Assert.equal(
             utils.calculateReward(16),
             3906250000000000000, 
-            "calculateFee method, when receiving 10 users as parameter, should return 3.906250"
+            "calculateReward method, when receiving 10 users as parameter, should return 3.906250"
         );
         Assert.equal(
             utils.calculateReward(10305168),
             9416507,
-            "calculateFee method, when receiving 10,305,168 users as parameter, should return 0.000000000009416507"
+            "calculateReward method, when receiving 10,305,168 users as parameter, should return 0.000000000009416507"
         );
         Assert.equal(
             utils.calculateReward(10305168),
             9416507,
-            "calculateFee method, when receiving 10,305,168 users as parameter, should return 0.000000000009416507"
+            "calculateReward method, when receiving 10,305,168 users as parameter, should return 0.000000000009416507"
         );
         Assert.equal(
             utils.calculateReward(0),
