@@ -26,6 +26,14 @@ document.querySelector('#buttonRightPanelToCenterPanel').addEventListener('click
   setTimeout(() => location.hash = '', 100)
 })
 
+window.addEventListener('storage', (event) => {
+  console.log('change in storage: ', event)
+  if (event.key === 'isUserLoggedIn' || event.key === 'userAddress') {
+    console.log('re evaluate right pannel')
+    switchSettingsOrConnectWallet()
+  }
+})
+
 async function switchSettingsOrConnectWallet() {
   if(getIsLoggedIn()) {
     $connectWallet.style.display = 'none'

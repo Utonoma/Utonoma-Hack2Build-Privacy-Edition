@@ -35,6 +35,7 @@ export function setIsLoggedIn(newValue) {
   if(isLoggedIn !== newValue) {
     isLoggedIn = newValue
     localStorage[isLoggedInKey] = newValue
+    window.dispatchEvent(new StorageEvent('storage', { key: isLoggedInKey }))
   }
 }
 
@@ -43,5 +44,6 @@ export function setAddress(newValue) {
   if(address !== newValue) {
     address = newValue
     localStorage[addressKey] = newValue
+    window.dispatchEvent(new StorageEvent('storage', { key: addressKey }))
   }
 }
