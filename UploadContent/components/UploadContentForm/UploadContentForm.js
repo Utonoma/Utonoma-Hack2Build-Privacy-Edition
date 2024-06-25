@@ -46,6 +46,7 @@ $formUploadContent.addEventListener('submit', async(event) => {
   } catch (error) {
     $dialogUploadingDataToIpfsError.show()
     setTimeout(() => $dialogUploadingDataToIpfsError.close(), 5000)
+    return
   }
 
   let uploadResponse
