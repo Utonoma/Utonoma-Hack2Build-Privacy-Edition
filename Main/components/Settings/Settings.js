@@ -11,9 +11,12 @@ const $modalConfirmActivateForVoting = document.querySelector('#modalConfirmActi
 const $dialogActivateForVotingCheckWallet = document.querySelector('#dialogActivateForVotingCheckWallet')
 const $dialogActivateForVotingTransactionSent = document.querySelector('#dialogActivateForVotingTransactionSent')
 const $dialogActivateForVotingError = document.querySelector('#dialogActivateForVotingError')
+const $dialogSendOrReceiveTokens = document.querySelector('#dialogSendOrReceiveTokens')
 const $connectWallet = document.querySelector('#connectWallet')
 const $buttonActivateForVoting = document.querySelector('#buttonActivateForVoting')
 const $buttonManageAccount = document.querySelector('#buttonManageAccount')
+const $buttonSendTokens = document.querySelector('#buttonSendTokens')
+const $buttonDialogCloseSendTokens = document.querySelector('#buttonDialogCloseSendTokens')
 
 $buttonManageAccount.addEventListener('click', async () => {
   $buttonManageAccount.disabled = true
@@ -67,3 +70,11 @@ async function activateForVoting() {
     setTimeout(() => $dialogActivateForVotingError.close(), 5000)
   }
 }
+
+$buttonSendTokens.addEventListener('click', () => {
+  $dialogSendOrReceiveTokens.showModal()
+})
+
+$buttonDialogCloseSendTokens.addEventListener('click', () => {
+  $dialogSendOrReceiveTokens.close()
+})

@@ -18,6 +18,7 @@
   font: var(--headline6);
   padding: 14px 18px;
   max-width: 23rem;
+  width: 100%;
 }
 
 .Button--textBetweenTwoIcons > div {
