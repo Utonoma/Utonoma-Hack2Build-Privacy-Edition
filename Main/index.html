@@ -121,6 +121,15 @@
       display: none;
     }
 
+    .Layout--settings {
+      display: flex; 
+      flex-direction: row;
+      width: 100%;
+      flex-wrap: wrap;
+      overflow: auto;
+      padding-block-end: 30px;
+    }
+
     .Image--utonomaBackgroundPoster {
       width: auto; 
       max-height: 70vh;
@@ -148,6 +157,11 @@
         align-self: flex-start; 
         width: 8.333%;
         justify-content: center;
+      }
+
+      .Layout--settings {
+        flex-direction: column;
+        align-content: start;
       }
 
       .Image--utonomaBackgroundPoster {
@@ -317,21 +331,15 @@
           </div>
         </button>
       </div>
-      <div id="settings"
-        style="display: flex; 
-        flex-direction: row;
-        width: 100%;
-        flex-wrap: wrap;
-        overflow: auto;
-        padding-block-end: 30px;"
-      >
+      <div id="settings" class="Layout--settings">
         <img src="../assets/img/utnoma-pattern-background.jpg" 
           style=" width: 100%; 
             max-width: 27rem; 
             max-height: 45%; 
             object-fit: cover;" 
-          alt="">
-        <h2 style="font: var(--headline1); margin: 32px 32px 16px 32px;">
+          alt=""
+        >
+        <h2 style="font: var(--headline1); margin: 32px 32px 16px 32px; width: 100%; max-width: 23rem;">
           <span lang="en">Settings</span>
           <span lang="es">Configuraciones</span>
         </h2>
