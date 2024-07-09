@@ -6,7 +6,8 @@ module.exports = {
   mode: 'development',
   entry: {
     main: './Main/main.js',
-    uploadContent: './UploadContent/main.js'
+    uploadContent: './UploadContent/main.js',
+    myContent: './MyContent/main.js'
   }, 
   devtool: 'inline-source-map',
   devServer: {
@@ -22,6 +23,11 @@ module.exports = {
       template: './UploadContent/index.html',
       chunks: ['uploadContent'],
       filename: './UploadContent/index.html',
+    }),
+    new HtmlWebpackPlugin({
+      template: './MyContent/index.html',
+      chunks: ['myContent'],
+      filename: './MyContent/index.html',
     }),
     new CopyPlugin({
       patterns: [
