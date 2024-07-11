@@ -48,8 +48,8 @@
     /*End of selectors for multilingual support*/
 
     body {
-      background-color: var(--pirateBlack);
-      color: var(--snow);
+      background-color: var(--snow);
+      color: var(--pirateBlack);
       font-family: var(--baseFontFamily);
       margin: 0;
     }
@@ -69,6 +69,43 @@
   </style>
 </head>
 <body>
-    <div>My content</div>
+  <div>
+    <img src="../assets/img/utnoma-pattern-background.jpg" 
+      style=" width: 100%; 
+        max-width: 27rem; 
+        max-height: 45%; 
+        object-fit: cover;" 
+      alt=""
+    >
+    <h2 style="font: var(--headline1); margin: 32px 32px 16px 32px; max-width: 23rem;">
+      <span lang="en">My content</span>
+      <span lang="es">Mi contenido</span>
+    </h2>
+    <div id="cardsContainer"></div>
+  </div>
+  <template id="contentInfoCardTemplate">
+    <p><span id="contentInfoCardTitle"></span></p>
+    <p>Likes <span id="contentInfoCardLikes"></span></p>
+    <p>Dislikes <span id="contentInfoCardDislikes"></span></p>
+  </template>
+  <template id="noUploadedContentTemplate">
+    <p style="font: var(--headline6); max-width: 60%; text-align: center; margin: auto;">
+      There is no content uploaded with this account
+    </p>
+  </template>
+  <dialog id="dialogFetchingMyContentError">
+    <h3 style="font: var(--headline1);">
+      <span lang="en">An error occurred while fetching your content</span>
+      <span lang="es">Ocurrió un error al recuperar tu contenido</span>
+    </h3>
+    <p style="font: var(--headline6)">
+      <span lang="en">
+        Verify that your user is logged in the Manage Account section.
+      </span>
+      <span lang="es">
+        Verifica que tu usuario esté conectado en la sección de Administrar cuenta.
+      </span>
+    </p>
+  </dialog>
 </body>
 </html>
