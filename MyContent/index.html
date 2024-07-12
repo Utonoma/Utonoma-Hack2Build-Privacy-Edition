@@ -84,9 +84,16 @@
     <div id="cardsContainer"></div>
   </div>
   <template id="contentInfoCardTemplate">
-    <p><span id="contentInfoCardTitle"></span></p>
-    <p>Likes <span id="contentInfoCardLikes"></span></p>
-    <p>Dislikes <span id="contentInfoCardDislikes"></span></p>
+    <div class="Card--titleAndAttributes">
+      <div>
+        <img src="../assets/icons/autoplay.svg" alt="">
+        <p><span id="contentInfoCardTitle"></span></p>
+      </div>
+      <div>
+        <p>Likes <b><span id="contentInfoCardLikes"></span></b></p>
+        <p>Dislikes <b><span id="contentInfoCardDislikes"></span></b></p>
+      </div>
+    </div>
   </template>
   <template id="noUploadedContentTemplate">
     <p style="font: var(--headline6); max-width: 60%; text-align: center; margin: auto;">

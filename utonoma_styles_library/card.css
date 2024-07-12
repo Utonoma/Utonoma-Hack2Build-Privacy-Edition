@@ -1,0 +1,30 @@
+.Card--titleAndAttributes {
+  width: auto; 
+  margin: 24px 32px; 
+  border: 1px solid var(--pirateBlack); 
+  padding: 8px 16px; font: var(--headline6)
+}
+
+.Card--titleAndAttributes div:nth-child(1) {
+  display: flex; 
+  align-items: center;
+}
+
+.Card--titleAndAttributes div:nth-child(2) {
+  display: flex;
+  margin-top: 8px;
+}
+
+.Card--titleAndAttributes b {
+  color: var(--vibrantOrange);
+}
+
+.Card--titleAndAttributes p {
+  margin: 0 0 0 8px;
+} 
+
+.Card--titleAndAttributes img:first-of-type + p {
+  overflow: hidden; 
+  white-space: nowrap; 
+  text-overflow: ellipsis;
+}
