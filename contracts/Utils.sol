@@ -33,7 +33,7 @@ contract Utils {
     * @dev Receives the number of likes, dislikes and the minimum quorum required to deliverate about a content
     * returns the true if the content should be eliminated, false if not. 
     * 
-    * It does it by calculated the upper limit of the confidence interval and compairing it with 2/3, that is 
+    * It does it by calculated the upper limit of the confidence interval and compairing it with 1/2, that is 
     * the proportion of negative votes that will cause the content to be eliminated. 
     * https://en.wikipedia.org/wiki/Confidence_interval.
     */
