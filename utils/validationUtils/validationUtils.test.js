@@ -58,3 +58,41 @@ test.each(shouldContentBeEliminatedNegativeCases)(
   }
 )
 
+//canContentBeHarvested
+const canContentBeHarvestedPositiveCases = [
+  [6, 1, 0],
+  [15, 1, 13],
+  [10, 8, 0],
+  [20, 5, 8],
+  [420, 280, 139],
+  [8, 0, 6],
+  [9759000000, 5241000000, 1000]
+]
+test.each(canContentBeHarvestedPositiveCases)(
+  "canContentBeHarvested method, when receiving %p likes and %p dislikes and %p harvested likes, should return true",
+  (likes, dislikes, harvestedLikes) => {
+    const result = canContentBeHarvested(likes, dislikes, harvestedLikes)
+    expect(result).toBe(true)
+  }
+)
+
+const canContentBeHarvestedNegativeCases = [
+  [24, 76, 4],
+  [1, 8, 0],
+  [0, 6, 15],
+  [13, 47, 0],
+  [43310, 98100, 1000000000000000],
+  [4950000000, 10050000000, 100],
+  [25, 75, 6548],
+  [80,107, 'fsafeafseafe'],
+  [1,1,0],
+  [10000000000, 0, 10000000000],
+  ['likes', '', 'harvestedLikes']
+]
+test.each(canContentBeHarvestedNegativeCases)(
+  "canContentBeHarvested method, when receiving %p likes and %p dislikes and %p harvested likes, should return true",
+  (likes, dislikes, harvestedLikes) => {
+    const result = canContentBeHarvested(likes, dislikes, harvestedLikes)
+    expect(result).toBe(false)
+  }
+)
