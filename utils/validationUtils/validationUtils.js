@@ -29,3 +29,18 @@ export async function validateVideoDuration($videoDomElement, file, maxDuration)
     }
   }) 
 }
+
+export function canContentBeHarvested(likes, dislikes, harvestedLikes) {
+  if(
+    typeof likes !=='number' || 
+    typeof dislikes !=='number' || 
+    typeof harvestedLikes !=='number'
+  ) return false
+
+  const minimumQuorum = 6
+  if(likes + dislikes < minimumQuorum) return false
+  const likesToHarvest = likes - dislikes - harvestedLikes
+  if(likesToHarvest <= 0) return false
+  return !shouldContentBeEliminated(likes, dislikes)
+}
+}
