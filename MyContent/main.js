@@ -1,7 +1,7 @@
 import '../utonoma_styles_library/index.css'
-import { useReadOnlyProvider } from "../web3_providers/readOnlyProvider.js";
-import { getUserAddress } from "../services/userManager/userManager.js";
-import { getIpfsHashFromBytes32 } from "../utils/encodingUtils/encodingUtils.js";
+import { useReadOnlyProvider } from "../web3_providers/readOnlyProvider.js"
+import { getUserAddress } from "../services/userManager/userManager.js"
+import { getIpfsHashFromBytes32 } from "../utils/encodingUtils/encodingUtils.js"
 
 const { utonomaContract } = useReadOnlyProvider()
 
