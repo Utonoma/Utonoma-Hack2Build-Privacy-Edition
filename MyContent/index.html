@@ -69,19 +69,23 @@
   </style>
 </head>
 <body>
-  <div>
-    <img src="../assets/img/utnoma-pattern-background.jpg" 
-      style=" width: 100%; 
-        max-width: 27rem; 
-        max-height: 45%; 
-        object-fit: cover;" 
-      alt=""
-    >
-    <h2 style="font: var(--headline1); margin: 32px 32px 16px 32px; max-width: 23rem;">
-      <span lang="en">My content</span>
-      <span lang="es">Mi contenido</span>
-    </h2>
-    <div id="cardsContainer"></div>
+  <div style="display: flex; justify-content: center; overflow: auto;">
+    <div style="max-width: 27rem; width: 100%;">
+      <div style="height: 45vh;">
+        <img src="../assets/img/utnoma-pattern-background.jpg" 
+          style=" width: 100%; 
+          max-width: 27rem; 
+          height: 100%; 
+          object-fit: cover;" 
+          alt=""
+        >
+      </div>
+      <h2 style="font: var(--headline1); margin: 32px 32px 16px 32px; max-width: 23rem;">
+        <span lang="en">My content</span>
+        <span lang="es">Mi contenido</span>
+      </h2>
+      <div id="cardsContainer"></div>
+    </div>
   </div>
   <template id="contentInfoCardTemplate">
     <div class="Card--titleAndAttributes">
@@ -90,14 +94,21 @@
         <p><span id="contentInfoCardTitle"></span></p>
       </div>
       <div>
-        <p>Likes <b><span id="contentInfoCardLikes"></span></b></p>
-        <p>Dislikes <b><span id="contentInfoCardDislikes"></span></b></p>
+        <p>
+          Likes 
+          <b><span id="contentInfoCardLikes"></span></b>
+        </p>
+        <p>
+          Dislikes 
+          <b><span id="contentInfoCardDislikes"></span></b>
+        </p>
       </div>
     </div>
   </template>
   <template id="noUploadedContentTemplate">
     <p style="font: var(--headline6); max-width: 60%; text-align: center; margin: auto;">
-      There is no content uploaded with this account
+      <span lang="en">There is no content uploaded with this account</span>
+      <span lang="es">No hay contenido subido con esta cuenta</span>
     </p>
   </template>
   <dialog id="dialogFetchingMyContentError">
