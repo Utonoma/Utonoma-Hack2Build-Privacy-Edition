@@ -43,4 +43,15 @@ export function canContentBeHarvested(likes, dislikes, harvestedLikes) {
   if(likesToHarvest <= 0) return false
   return !shouldContentBeEliminated(likes, dislikes)
 }
+
+export function shouldContentBeEliminated(likes, dislikes) {
+  //If there are 0 dislikes return false as a content without dislikes can't be eliminated
+  if(dislikes === 0) return false
+  const n = likes + dislikes
+  const p = dislikes / n
+  const z = 1.96
+
+  const result = p - z*(Math.sqrt((p*(1-p))/(n)))
+
+  return result > 0.5
 }
