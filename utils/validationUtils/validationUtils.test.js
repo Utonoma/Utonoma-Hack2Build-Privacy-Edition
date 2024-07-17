@@ -96,3 +96,9 @@ test.each(canContentBeHarvestedNegativeCases)(
     expect(result).toBe(false)
   }
 )
+
+test('canContentBeHarvested when receiving bigInt in any of the parameters, should throw an error', () => {
+  const errorMessage = 'CanContentBeHarvested cannot receive bigInts, only numbers'
+  
+  expect(() => canContentBeHarvested(BigInt(50), 50, 10)).toThrow(errorMessage)
+})

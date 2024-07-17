@@ -32,6 +32,12 @@ export async function validateVideoDuration($videoDomElement, file, maxDuration)
 
 export function canContentBeHarvested(likes, dislikes, harvestedLikes) {
   if(
+    typeof likes ==='bigint' || 
+    typeof dislikes ==='bigint' || 
+    typeof harvestedLikes ==='bigint'
+  ) throw new Error('CanContentBeHarvested cannot receive bigInts, only numbers')
+
+  if(
     typeof likes !=='number' || 
     typeof dislikes !=='number' || 
     typeof harvestedLikes !=='number'
