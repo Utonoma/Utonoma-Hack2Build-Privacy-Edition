@@ -121,7 +121,6 @@ $buttonLikeShortVideo.addEventListener('click', async() => {
     //Send the transaction to blockchain
     $dialogActivateForVotingCheckWallet.show()
     setTimeout(() => $dialogActivateForVotingCheckWallet.close(), 5000)
-    debugger
     const approveResult = await utonomaContractForSignedTransactions.like([currentUtonomaIdentifier.index, currentUtonomaIdentifier.contentType])
     $dialogActivateForVotingTransactionSent.show()
     setTimeout(() => $dialogActivateForVotingTransactionSent.close(), 5000)
