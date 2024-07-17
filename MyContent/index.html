@@ -88,21 +88,29 @@
     </div>
   </div>
   <template id="contentInfoCardTemplate">
-    <div class="Card--titleAndAttributes">
-      <div>
-        <img src="../assets/icons/autoplay.svg" alt="">
-        <p><span id="contentInfoCardTitle"></span></p>
+    <div class="Card__container">
+      <div class="Card__titleAndAttributes">
+        <div>
+          <img src="../assets/icons/autoplay.svg" alt="">
+          <p><span id="contentInfoCardTitle"></span></p>
+        </div>
+        <div>
+          <p>
+            Likes 
+            <b><span id="contentInfoCardLikes"></span></b>
+          </p>
+          <p>
+            Dislikes 
+            <b><span id="contentInfoCardDislikes"></span></b>
+          </p>
+        </div>
       </div>
-      <div>
-        <p>
-          Likes 
-          <b><span id="contentInfoCardLikes"></span></b>
-        </p>
-        <p>
-          Dislikes 
-          <b><span id="contentInfoCardDislikes"></span></b>
-        </p>
-      </div>
+      <button class="Card__actionButton">
+        <div style="display: flex; align-items: center; justify-content: center; gap: 8px">
+          <span>Cash reward</span>
+          <img src="../assets/icons/paid-icon.svg" alt="">
+        </div>
+      </button>
     </div>
   </template>
   <template id="noUploadedContentTemplate">
