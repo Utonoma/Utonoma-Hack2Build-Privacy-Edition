@@ -1,1 +1,1 @@
-export const sepoliaEndpoint = 'https://sepolia.infura.io/v3/a8b7f3c03367496183ae6e32ad962ee5'
+export const sepoliaEndpoint = 'https://scroll-sepolia.drpc.org'

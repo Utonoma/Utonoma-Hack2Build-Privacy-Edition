@@ -9,11 +9,11 @@ const projectId = 'acc64a6d2308020280276076ddc6effa'
 
 // 2. Set chains
 const sepolia = {
-  chainId: 11155111,
-  name: 'Sepolia',
+  chainId: 534351,
+  name: 'Scroll Sepolia Testnet',
   currency: 'ETH',
-  explorerUrl: 'https://sepolia.etherscan.io/',
-  rpcUrl: 'https://sepolia.infura.io/v3/a8b7f3c03367496183ae6e32ad962ee5'
+  explorerUrl: 'https://sepolia.scrollscan.com/',
+  rpcUrl: 'https://scroll-sepolia.drpc.org'
 }
 
 // 3. Create your application's metadata object
@@ -46,7 +46,7 @@ export async function useSignedProvider() {
         ethersConfig,
         chains: [sepolia],
         tokens: {
-          1: { address: '0x1AdaA27C9890c97D605778c2C7B9ff846B8e3352' }
+          1: { address: '0xdcDC5585ac7458443edbB57E6b03f0E7F486B5D1' }
         },
         projectId,
         enableAnalytics: true, // Optional - defaults to your Cloud configuration

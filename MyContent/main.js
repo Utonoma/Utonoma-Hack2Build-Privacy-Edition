@@ -3,6 +3,7 @@ import { useReadOnlyProvider } from "../web3_providers/readOnlyProvider.js"
 import { getUserAddress } from "../services/userManager/userManager.js"
 import { getIpfsHashFromBytes32 } from "../utils/encodingUtils/encodingUtils.js"
 import { canContentBeHarvested } from '../utils/validationUtils/validationUtils.js'
+import { getAddress } from 'ethers'
 
 const { utonomaContract } = useReadOnlyProvider()
 
@@ -14,7 +15,7 @@ const $dialogFetchingMyContentError = document.querySelector('#dialogFetchingMyC
 async function getContent() {
   let events
   try{
-    events = await utonomaContract.queryFilter(utonomaContract.filters.uploaded(getUserAddress()))
+    events = await utonomaContract.queryFilter(utonomaContract.filters.uploaded(getUserAddress()), 5720000, 'latest')
   }
   catch(error) {
     $dialogFetchingMyContentError.showModal()
@@ -22,7 +23,7 @@ async function getContent() {
       $dialogFetchingMyContentError.close() 
       window.location.replace('/#rightPanelContainer')
     }, 8000)
-    console.log('error when querying the events list of the account, check if user is logged in')
+    console.log('error when querying the events list of the account, check if user is logged in', error)
     return
   }
   if(!events?.length || events.length <= 0) {
