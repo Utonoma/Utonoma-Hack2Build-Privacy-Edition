@@ -13,7 +13,7 @@ const sepolia = {
   name: 'Scroll Sepolia Testnet',
   currency: 'ETH',
   explorerUrl: 'https://sepolia.scrollscan.com/',
-  rpcUrl: 'https://scroll-sepolia.drpc.org'
+  rpcUrl: 'https://lb.drpc.org/ogrpc?network=scroll-sepolia&dkey=Auunn83f_kDwpiMCtqrBebk1Yv1qSZ0R77NfvmJKmvm9'
 }
 
 // 3. Create your application's metadata object
