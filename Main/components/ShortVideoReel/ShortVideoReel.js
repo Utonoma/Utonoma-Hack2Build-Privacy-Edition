@@ -16,6 +16,7 @@ const $dialogActivateForVotingError = document.querySelector('#dialogActivateFor
 const $dialogNotEnoughBalanceError = document.querySelector('#dialogNotEnoughBalanceError')
 const $dialogActivateForVotingCheckWallet = document.querySelector('#dialogActivateForVotingCheckWallet')
 const $dialogActivateForVotingTransactionSent = document.querySelector('#dialogActivateForVotingTransactionSent')
+const $dialogLikeContentTransactionSent = document.querySelector('#dialogLikeContentTransactionSent')
 let currentUtonomaIdentifier
 
 $buttonNextShortVideo.addEventListener('click', async() => {
@@ -122,8 +123,8 @@ $buttonLikeShortVideo.addEventListener('click', async() => {
     $dialogActivateForVotingCheckWallet.show()
     setTimeout(() => $dialogActivateForVotingCheckWallet.close(), 5000)
     const approveResult = await utonomaContractForSignedTransactions.like([currentUtonomaIdentifier.index, currentUtonomaIdentifier.contentType])
-    $dialogActivateForVotingTransactionSent.show()
-    setTimeout(() => $dialogActivateForVotingTransactionSent.close(), 5000)
+    $dialogLikeContentTransactionSent.show()
+    setTimeout(() => $dialogLikeContentTransactionSent.close(), 5000)
     const transactionResp = await approveResult.wait()
     //Alert the success
     console.log(transactionResp)
