@@ -19,6 +19,7 @@
   padding: 14px 18px;
   max-width: 23rem;
   width: 100%;
+  flex-wrap: nowrap
 }
 
 .Button--textBetweenTwoIcons > div {
