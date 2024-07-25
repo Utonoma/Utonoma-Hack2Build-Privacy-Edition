@@ -75,11 +75,11 @@ document.querySelector('#buttonPreviousShortVideo').addEventListener('click', as
     currentUtonomaIdentifier = utonomaIdentifier
   } catch(error) {
     console.log("Error when loading the previous short video", error)
+  } finally {
+    $buttonNextShortVideo.disabled = false
+    $buttonPreviousShortVideo.disabled = false
+    $buttonLikeShortVideo.disabled = false
   }
-
-  $buttonNextShortVideo.disabled = false
-  $buttonPreviousShortVideo.disabled = false
-  $buttonLikeShortVideo.disabled = true
 })
 
 $buttonLikeShortVideo.addEventListener('click', async() => {
