@@ -125,9 +125,11 @@ $buttonLikeShortVideo.addEventListener('click', async() => {
     const approveResult = await utonomaContractForSignedTransactions.like([currentUtonomaIdentifier.index, currentUtonomaIdentifier.contentType])
     $dialogLikeContentTransactionSent.show()
     setTimeout(() => $dialogLikeContentTransactionSent.close(), 5000)
+    /*
     const transactionResp = await approveResult.wait()
     //Alert the success
     console.log(transactionResp)
+    */
 
   } catch(error) {
     console.log('Error in like short video: ', error)
@@ -154,9 +156,10 @@ $buttonLikeShortVideo.addEventListener('click', async() => {
       $dialogNotEnoughBalanceError.show()
       setTimeout(() => $dialogNotEnoughBalanceError.close(), 5000)
     }
+  } finally {
+    $buttonNextShortVideo.disabled = false
+    $buttonPreviousShortVideo.disabled = false
+    $buttonLikeShortVideo.disabled = false
   }
 
-  $buttonNextShortVideo.disabled = false
-  $buttonPreviousShortVideo.disabled = false
-  $buttonLikeShortVideo.disabled = false
 })
