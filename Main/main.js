@@ -42,7 +42,10 @@ async function switchSettingsOrConnectWallet() {
   } else {
     $settings.style.display = 'none'
     $connectWallet.style.display = 'flex'
-    await import('./components/ConnectWallet/ConnectWallet.js')
+    if(!ConnectWallet) {
+      var { ConnectWallet } = await import('./components/ConnectWallet/ConnectWallet.js')
+      ConnectWallet($connectWallet)
+    }
   }
 }
 switchSettingsOrConnectWallet()
