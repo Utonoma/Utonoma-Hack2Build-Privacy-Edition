@@ -1,11 +1,10 @@
 import '../utonoma_styles_library/index.css'
-import { useReadOnlyProvider } from "../web3_providers/readOnlyProvider.js"
+import { readOnlyProvider } from "../web3_providers/readOnlyProvider.js"
 import { getUserAddress } from "../services/userManager/userManager.js"
 import { getIpfsHashFromBytes32 } from "../utils/encodingUtils/encodingUtils.js"
 import { canContentBeHarvested } from '../utils/validationUtils/validationUtils.js'
 import { getAddress } from 'ethers'
 
-const { utonomaContract } = useReadOnlyProvider()
 
 const $contentInfoCardTemplate = document.querySelector('#contentInfoCardTemplate')
 const $cardsContainer = document.querySelector('#cardsContainer')
@@ -15,7 +14,7 @@ const $dialogFetchingMyContentError = document.querySelector('#dialogFetchingMyC
 async function getContent() {
   let events
   try{
-    events = await utonomaContract.queryFilter(utonomaContract.filters.uploaded(getUserAddress()), 5720000, 'latest')
+    events = await readOnlyProvider.filters.getContentUploadedByThisAccount(getUserAddress())
   }
   catch(error) {
     $dialogFetchingMyContentError.showModal()
@@ -50,7 +49,7 @@ async function getContent() {
           3: likes,
           4: dislikes,
           5: harvestedLikes
-        } = await utonomaContract.getContentById([identifierIndex, identifierContentType])
+        } = await readOnlyProvider.utonomaContract.getContentById([identifierIndex, identifierContentType])
   
         const metadata = await fetch(
           `https://copper-urban-gorilla-864.mypinata.cloud/ipfs/${getIpfsHashFromBytes32(metadataHashInBytes32)}?pinataGatewayToken=WmR3tEcyNtxE6vjc4lPPIrY0Hzp3Dc9AYf2X4Bl-8o6JYBzTx9aY_u3OlpL1wGra`

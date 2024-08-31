@@ -1,34 +1,52 @@
+/**
+ * Creates a read-only provider for interacting with the Utonoma contract.
+ *
+ * @module readOnlyProvider
+ */
+
 import { sepoliaEndpoint } from './rpcEndpoints.js'
 import { JsonRpcProvider, Contract } from 'ethers'
 import { utonomaSepoliaAddress, utonomaABI} from '../utonomaSmartContract.js'
 
-let provider
-let utonomaContract
 
-/**
- * @typedef {Object} useReadOnlyProviderReturn
- * @property {Object} provider - Handler to the JsonRpcProvider used to create the 
- * smart contract instance
- * @property {Object} utonomaContract - The instance of the utonoma contract
- */
+export const readOnlyProvider = (function() {
+  /**
+   * The JSON-RPC provider to the selected network
+   * @type {JsonRpcProvider}
+   */
+  let provider = new JsonRpcProvider(sepoliaEndpoint)
 
-/**
- * Gets a provider and a smart contract instance for methods that only reads information 
- * from the blockchain
- * @returns {useReadOnlyProviderReturn} - {@link useReadOnlyProviderReturn}
- */
+  /**
+   * The Utonoma contract instance.
+   * @type {Contract}
+   */
+  let utonomaContract = new Contract(
+    utonomaSepoliaAddress, 
+    utonomaABI,
+    provider
+  )
 
-export function useReadOnlyProvider() {
-  if(!provider || !utonomaContract) {
-    provider = new JsonRpcProvider(sepoliaEndpoint)
-    utonomaContract = new Contract(
-      utonomaSepoliaAddress, 
-      utonomaABI,
-      provider
-    )
+
+  let filters = {
+    /**
+     * Retrieves content uploaded by a specific account.
+     *
+     * @async
+     * @function getContentUploadedByThisAccount
+     * @param {string} userAddress - The address of the user whose content uploads are being queried.
+     * @returns {Promise<Array>} The list of contents uploaded by this account.
+     * @note The second parameter of the uploaded method is the starting block of the query.
+     * We start from the block that deployed the smart contract to improve performance and not filter
+     * so many events unnecessarily
+     */
+    getContentUploadedByThisAccount: async(userAddress) => {
+      return await utonomaContract.queryFilter(utonomaContract.filters.uploaded(userAddress), 5720000, 'latest')
+    }
   }
+
   return {
     provider,
-    utonomaContract
+    utonomaContract,
+    filters
   }
-}
+})()

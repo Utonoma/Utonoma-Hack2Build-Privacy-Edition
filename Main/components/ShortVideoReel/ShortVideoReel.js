@@ -88,17 +88,16 @@ $buttonLikeShortVideo.addEventListener('click', async() => {
   $buttonLikeShortVideo.disabled = true
 
   console.log('like button pressed for the content with id: ', currentUtonomaIdentifier)
-  const { useReadOnlyProvider } = await import('../../../web3_providers/readOnlyProvider.js')
+  const { readOnlyProvider } = await import('../../../web3_providers/readOnlyProvider.js')
   const { formatUnits } = await import('ethers')
   const { useUtonomaContractForSignedTransactions, useSignedProvider } = await import('../../../web3_providers/signedProvider.js')
 
-  const { utonomaContract } = useReadOnlyProvider()
   try {
     //get the current fee
-    let usersInTheLastPeriod = await utonomaContract.currentPeriodMAU()
+    let usersInTheLastPeriod = await readOnlyProvider.utonomaContract.currentPeriodMAU()
     console.log("current number of users is: ", usersInTheLastPeriod)
     if(usersInTheLastPeriod == 0) usersInTheLastPeriod = 1
-    const currentFee = await utonomaContract.calculateFee(usersInTheLastPeriod)
+    const currentFee = await readOnlyProvider.utonomaContract.calculateFee(usersInTheLastPeriod)
     //console.log('current Fee is: ', formatUnits(currentFee, 18))
     console.log('current Fee is: ', currentFee)
 
