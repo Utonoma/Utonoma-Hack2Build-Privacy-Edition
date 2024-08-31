@@ -1,9 +1,9 @@
-import { useReadOnlyProvider } from '../web3_providers/readOnlyProvider'
-const { provider, utonomaContract } = useReadOnlyProvider()
+import { readOnlyProvider } from '../web3_providers/readOnlyProvider'
 
-test('useReadOnlyProvider should return two not null objects: provider and utonomaContract', () => {
-  expect(provider).toBeTruthy()
-  expect(utonomaContract).toBeTruthy()
+test('useReadOnlyProvider should return three not null objects: provider and utonomaContract, and filters', () => {
+  expect(readOnlyProvider.provider).toBeTruthy()
+  expect(readOnlyProvider.utonomaContract).toBeTruthy()
+  expect(readOnlyProvider.filters).toBeTruthy()
 })
 
 /*
@@ -20,17 +20,17 @@ upload
 voluntarilyDelete
 getContentById
 */
-test('In useReadOnlyProvider, the returned utonomaContract object should contain the most important methods from the smart contract', () => {
-  expect(utonomaContract.approve).toBeTruthy()
-  expect(utonomaContract.createUser).toBeTruthy()
-  expect(utonomaContract.deletion).toBeTruthy()
-  expect(utonomaContract.dislike).toBeTruthy()
-  expect(utonomaContract.harvestLikes).toBeTruthy()
-  expect(utonomaContract.like).toBeTruthy()
-  expect(utonomaContract.reply).toBeTruthy()
-  expect(utonomaContract.updateUserMetadataHash).toBeTruthy()
-  expect(utonomaContract.upload).toBeTruthy()
-  expect(utonomaContract.voluntarilyDelete).toBeTruthy()
-  expect(utonomaContract.getContentById).toBeTruthy()
+test('In ReadOnlyProvider, the returned utonomaContract object should contain the most important methods from the smart contract', () => {
+  expect(readOnlyProvider.utonomaContract.approve).toBeTruthy()
+  expect(readOnlyProvider.utonomaContract.createUser).toBeTruthy()
+  expect(readOnlyProvider.utonomaContract.deletion).toBeTruthy()
+  expect(readOnlyProvider.utonomaContract.dislike).toBeTruthy()
+  expect(readOnlyProvider.utonomaContract.harvestLikes).toBeTruthy()
+  expect(readOnlyProvider.utonomaContract.like).toBeTruthy()
+  expect(readOnlyProvider.utonomaContract.reply).toBeTruthy()
+  expect(readOnlyProvider.utonomaContract.updateUserMetadataHash).toBeTruthy()
+  expect(readOnlyProvider.utonomaContract.upload).toBeTruthy()
+  expect(readOnlyProvider.utonomaContract.voluntarilyDelete).toBeTruthy()
+  expect(readOnlyProvider.utonomaContract.getContentById).toBeTruthy()
 
 })
