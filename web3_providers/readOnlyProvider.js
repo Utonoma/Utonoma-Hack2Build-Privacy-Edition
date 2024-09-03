@@ -44,9 +44,17 @@ export const readOnlyProvider = (function() {
     }
   }
 
+  let genericRequests = {
+    getCurrentFee: async() => {
+      let usersInTheLastPeriod = await readOnlyProvider.utonomaContract.currentPeriodMAU()
+      return await readOnlyProvider.utonomaContract.calculateFee(usersInTheLastPeriod)
+    }
+  }
+
   return {
     provider,
     utonomaContract,
-    filters
+    filters,
+    genericRequests
   }
 })()
