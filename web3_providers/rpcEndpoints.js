@@ -1,1 +1,1 @@
-export const sepoliaEndpoint = 'https://lb.drpc.org/ogrpc?network=scroll-sepolia&dkey=Auunn83f_kDwpiMCtqrBebk1Yv1qSZ0R77NfvmJKmvm9'
+export const sepoliaEndpoint = 'https://sepolia-rpc.scroll.io/'

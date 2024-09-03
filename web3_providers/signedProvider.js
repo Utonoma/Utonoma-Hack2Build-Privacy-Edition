@@ -1,6 +1,7 @@
 import { createWeb3Modal, defaultConfig } from '@web3modal/ethers'
 import { BrowserProvider, Contract } from 'ethers'
 import { utonomaSepoliaAddress, utonomaABI } from '../utonomaSmartContract.js'
+import { sepoliaEndpoint } from './rpcEndpoints.js'
 
 let modal
 
@@ -13,7 +14,7 @@ const sepolia = {
   name: 'Scroll Sepolia Testnet',
   currency: 'ETH',
   explorerUrl: 'https://sepolia.scrollscan.com/',
-  rpcUrl: 'https://lb.drpc.org/ogrpc?network=scroll-sepolia&dkey=Auunn83f_kDwpiMCtqrBebk1Yv1qSZ0R77NfvmJKmvm9'
+  rpcUrl: sepoliaEndpoint
 }
 
 // 3. Create your application's metadata object
