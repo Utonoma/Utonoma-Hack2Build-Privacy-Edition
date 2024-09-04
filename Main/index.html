@@ -285,6 +285,21 @@
             </button>
           </div>
         </div>
+        <dialog id="dialogConfirmLikeOrDislike">
+          <form method="dialog">
+            <h2 style="font: var(--headline1); margin: 0;">
+              <span lang="en">Confirm your like</span>
+              <span lang="es">Confirma tu like</span>
+            </h2>
+            <p style="font: var(--headline6); margin-bottom: 0;">
+              <span lang="en">Current fee for voting, in Utonoma tokens, is: </span>
+              <span lang="es">La tarifa actual para votar, en tokens de Utonoma, es: </span>
+              <span id="spanCurrentFee">-</span>
+            </p>
+            <button id="confirmButton" value="confirm">Confirm</button>
+            <button id="cancelButton" value="cancel">Cancel</button>
+          </form>
+        </dialog>
       </div>
     </div>
     <div class="Layout--rightPanelContainer" id="rightPanelContainer">
