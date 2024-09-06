@@ -65,9 +65,15 @@ async function activateForVoting() {
     console.log(transactionResp)
   }
   catch(error) {
-    console.log('Error message: ', error)
-    $dialogActivateForVotingError.show()
-    setTimeout(() => $dialogActivateForVotingError.close(), 5000)
+    if(error.error?.message == 'Please call connect() before request()' || error == 'Error: User disconnected') {
+      const { setIsLoggedIn, setAddress } = await import('../../../services/userManager/userManager.js')
+      setIsLoggedIn(false)
+      setAddress('')
+    }
+    else {
+      $dialogActivateForVotingError.show()
+      setTimeout(() => $dialogActivateForVotingError.close(), 5000)
+    }
   }
 }
 
