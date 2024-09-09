@@ -1,18 +1,13 @@
 const path = require('path')
 const HtmlWebpackPlugin = require('html-webpack-plugin')
-const CopyPlugin = require('copy-webpack-plugin');
+const CopyPlugin = require('copy-webpack-plugin')
 
 module.exports = {
-  mode: 'development',
   entry: {
     main: './Main/main.js',
     uploadContent: './UploadContent/main.js',
     myContent: './MyContent/main.js'
   }, 
-  devtool: 'inline-source-map',
-  devServer: {
-    static: './dist',
-  },
   plugins: [
     new HtmlWebpackPlugin({
       template: './Main/index.html',
