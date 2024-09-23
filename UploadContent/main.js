@@ -1,1 +1,3 @@
-import './components/UploadContentForm/UploadContentForm.js'
+import { UploadContentForm } from "../components/UploadContentForm/UploadContentForm.js";
+
+UploadContentForm(document)
