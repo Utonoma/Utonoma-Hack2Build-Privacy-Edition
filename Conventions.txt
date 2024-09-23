@@ -1,5 +1,7 @@
 Commiting:
 
+Branch strategy: GitFlow
+
 First you write the commit title, line jump, and then you put a message to explain why you did the commit. Like in the next example:
 Configurating jest to be able to run ECMAScript modules.
 By default, jest cannot run ECMAScript modules, this causes troubles when you have imports and exports in your code. With this configuration we can run our tests without having to transpile it with Babel
