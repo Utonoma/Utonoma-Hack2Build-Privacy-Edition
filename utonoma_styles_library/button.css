@@ -35,3 +35,7 @@
 .Button--textBetweenTwoIcons > div > img {
   margin-right: 8px;
 }
+
+button {
+  cursor: pointer;
+}
