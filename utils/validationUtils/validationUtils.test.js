@@ -4,16 +4,26 @@ import {
   canContentBeHarvested 
 } from "./validationUtils.js"
 
-test('validateVideoDuration when receiving a File object in the file parameter should throw an error', async() => {
-  const errorMessage = 'invalid file object provided'
-
+describe('validateVideoDuration', () => {
   document.body.innerHTML = '<video id="videoTag"> </video>'
-  const $videoTag = document.querySelector('#videoTag') 
+  const $videoTag = document.querySelector('#videoTag')
 
-  await expect(
-    validateVideoDuration($videoTag, 'not a File object', 60)
-  ).rejects
-  .toThrow(errorMessage)
+  test('when not receiving a File object in the file parameter should throw an error', async() => {
+    const errorMessage = 'invalid file object provided'
+
+    await expect(
+      validateVideoDuration($videoTag, { type: 'video/webm' }, 60)
+    ).rejects.toThrow(errorMessage)
+  })
+
+  test('when receiving a File object that its not it mp4 or webm formats should throw an error', async() => {
+    const errorMessage = 'Wrong video format'
+
+    await expect(
+      validateVideoDuration($videoTag, { type: 'video/quicktime' }, 60) //mock a video recorded from an iphone (.mov extension)
+    ).rejects.toThrow(errorMessage)
+  })
+
 })
 
 //shouldContentBeEliminated
