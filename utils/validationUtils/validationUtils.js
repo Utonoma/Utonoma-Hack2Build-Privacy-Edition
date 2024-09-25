@@ -5,12 +5,13 @@
  * @param {object} file - A File javascript object containing the video
  * @param {Number} maxDuration - The maximum time of seconds for the video to be considered valid
  * @returns {Promise} True if the video lasts less than the max duration time, false if it's longer
- * @throws {Error} If the html element provided in $videoDomElement is not a video tag or have no source. Also,
- * in case that the File is not a video
+ * @throws {Error} If the html element provided in $videoDomElement is not a video tag, have no source 
+ * or if the video its not in mp4 or webm formats. Also, in case that the File is not a video
  */
 export async function validateVideoDuration($videoDomElement, file, maxDuration) {
+  if(file.type !== 'video/mp4' && file.type !== 'video/webm') throw new Error('Wrong video format')
   return new Promise((resolve) => {
-    var reader = new FileReader();
+    var reader = new FileReader()
 
     reader.onload = function(e) {
       if(!$videoDomElement.src) throw new Error('Invalid video tag')
