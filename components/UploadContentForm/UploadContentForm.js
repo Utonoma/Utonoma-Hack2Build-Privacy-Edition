@@ -1,10 +1,14 @@
 import { ShortVideoMetadata } from '../../services/models.js'
 import { convertIPFSHashToBytes32 } from '../../utils/encodingUtils/encodingUtils.js'
-import { useUtonomaContractForSignedTransactions } from '../../web3_providers/signedProvider.js';
+import { useUtonomaContractForSignedTransactions } from '../../web3_providers/signedProvider.js'
 import { validateVideoDuration } from '../../utils/validationUtils/validationUtils.js'
-import { pinJsonToIpfs, pinFileToIPFS } from '../../services/ipfsService/ipfsService.js';
+import { pinJsonToIpfs, pinFileToIPFS } from '../../services/ipfsService/ipfsService.js'
+import { createStateForUploadContentForm } from './UploadContentForm.state.js'
 
 export const UploadContentForm = ($container) => {
+
+  const state = createStateForUploadContentForm()
+
   const $formUploadContent = $container.forms['formUploadContent'];
   const [$inputShortVideo, $textAreaShortVideoTitle, $textAreaVideoDescription] = $formUploadContent.elements
   const $videoPreview = $container.querySelector('#videoPreview')
@@ -15,83 +19,106 @@ export const UploadContentForm = ($container) => {
   const $dialogUploadContentTransactionSent = $container.querySelector('#dialogUploadContentTransactionSent')
   const $dialogUploadContentError = $container.querySelector('#dialogUploadContentError')
   const $buttonUploadContent = $container.querySelector('#buttonUploadContent')
+  const $dialogSuccess = $container.querySelector('#dialogSuccess')
+
+  //auxiliary variables for the effects
+  let metadataHash
+  let shortVideoHash
+  let shortVideoFile
+  let uploadResponse
+
+  async function effects() {
+    switch (state.currentState()) {
+      case state.availiableStates.fillingForm:
+        $buttonUploadContent.disabled = false
+        $inputShortVideo.value = null //clear the required input so the user is forced to put a video again
+        break
+      case state.availiableStates.validatingForm:
+        $buttonUploadContent.disabled = true
+        shortVideoFile = $inputShortVideo.files[0]
+        try{
+          const shortVideoDuration = await validateVideoDuration($videoPreview, shortVideoFile, 60)
+          if(!shortVideoDuration) state.setState(state.availiableStates.videoTooLongError, effects)
+          else state.setState(state.availiableStates.uploadingToIpfs, effects)
+        } catch(error) {
+          console.log(error)
+          state.setState(state.availiableStates.wrongVideoFileError, effects)
+        }
+        break
+      case state.availiableStates.uploadingToIpfs:
+        const metadata = new ShortVideoMetadata()
+        metadata.shortVideoTitle = $textAreaShortVideoTitle.value,
+        metadata.shortVideoDescription = $textAreaVideoDescription.value
+        try {
+          metadataHash = await pinJsonToIpfs(metadata)
+          shortVideoHash = await pinFileToIPFS(shortVideoFile)
+          state.setState(state.availiableStates.uploadingToUtonoma, effects)
+        } catch (error) {
+          console.log(error)
+          state.setState(state.availiableStates.uploadingToIpfsError, effects)
+        }
+        break
+      case state.availiableStates.uploadingToUtonoma:
+        try {
+          $dialogCheckWalletToApprove.showModal()
+          const { utonomaContractForSignedTransactions } = await useUtonomaContractForSignedTransactions()
+          uploadResponse = await utonomaContractForSignedTransactions.upload(
+            convertIPFSHashToBytes32(shortVideoHash.IpfsHash), 
+            convertIPFSHashToBytes32(metadataHash.IpfsHash), 
+            5
+          )
+          $dialogCheckWalletToApprove.close()
+          state.setState(state.availiableStates.confirmingTransaction, effects)
+        } catch (error) {
+          console.log(error)
+          $dialogCheckWalletToApprove.close()
+          state.setState(state.availiableStates.uploadingToUtonomaError, effects)
+        }
+        break
+      case state.availiableStates.confirmingTransaction:
+        $dialogUploadContentTransactionSent.showModal()
+        try {
+          const transactionResp = await uploadResponse.wait()
+          $dialogUploadContentTransactionSent.close()
+          state.setState(state.availiableStates.end, effects)
+          console.log(transactionResp)
+        } catch (error) {
+          console.log(error)
+          state.setState(state.availiableStates.end, effects)
+        }
+        break
+      case state.availiableStates.end: 
+        $dialogSuccess.showModal()
+        setTimeout(() => { 
+          $dialogSuccess.close()
+          window.location.replace('/')
+        }, 5000)
+        break
+      case state.availiableStates.videoTooLongError:
+        $dialogVideoTooLongError.show()
+        setTimeout(() => $dialogVideoTooLongError.close(), 5000)
+        state.setState(state.availiableStates.fillingForm, effects)
+        break
+      case state.availiableStates.wrongVideoFileError:
+        $dialogWrongVideoFileError.show()
+        setTimeout(() => $dialogWrongVideoFileError.close(), 5000)
+        state.setState(state.availiableStates.fillingForm, effects)
+        break
+      case state.availiableStates.uploadingToIpfsError:
+        $dialogUploadingDataToIpfsError.show()
+        setTimeout(() => $dialogUploadingDataToIpfsError.close(), 5000)
+        state.setState(state.availiableStates.fillingForm, effects)
+        break
+      case state.availiableStates.uploadingToUtonomaError:
+        $dialogUploadContentError.show()
+        setTimeout(() => { $dialogUploadContentError.close() }, 8000)
+        state.setState(state.availiableStates.fillingForm, effects)
+        break
+    }
+  }
 
   $formUploadContent.addEventListener('submit', async(event) => {
     event.preventDefault()
-    $buttonUploadContent.disabled = true
-
-    const shortVideoFile = $inputShortVideo.files[0]
-  
-    //validate that the video is no longer than 60 seconds
-    try{
-      const shortVideoDuration = await validateVideoDuration($videoPreview, shortVideoFile, 60)
-      if(!shortVideoDuration) {
-        $dialogVideoTooLongError.show()
-        setTimeout(() => $dialogVideoTooLongError.close(), 5000)
-        $buttonUploadContent.disabled = false
-        return
-      }
-    } catch(error) {
-      console.log(error)
-      $dialogWrongVideoFileError.show()
-      setTimeout(() => $dialogWrongVideoFileError.close(), 5000)
-      $buttonUploadContent.disabled = false
-      return
-    }
-    
-    //upload metadata to ipfs
-    const metadata = new ShortVideoMetadata()
-    metadata.shortVideoTitle = $textAreaShortVideoTitle.value,
-    metadata.shortVideoDescription = $textAreaVideoDescription.value
-    
-    let metadataHash
-    let shortVideoHash
-    try {
-      metadataHash = await pinJsonToIpfs(metadata)
-      shortVideoHash = await pinFileToIPFS(shortVideoFile)
-    } catch (error) {
-      $dialogUploadingDataToIpfsError.show()
-      setTimeout(() => $dialogUploadingDataToIpfsError.close(), 5000)
-      $buttonUploadContent.disabled = false
-      return
-    }
-  
-    let uploadResponse
-    try {
-      $dialogCheckWalletToApprove.show()
-      setTimeout(() => $dialogCheckWalletToApprove.close(), 5000)
-      //Enable the button again before asking the user to sign the transaction
-      $buttonUploadContent.disabled = false
-      const { utonomaContractForSignedTransactions } = await useUtonomaContractForSignedTransactions()
-      uploadResponse = await utonomaContractForSignedTransactions.upload(
-        convertIPFSHashToBytes32(shortVideoHash.IpfsHash), 
-        convertIPFSHashToBytes32(metadataHash.IpfsHash), 
-        5
-      )
-      $dialogUploadContentTransactionSent.show()
-      setTimeout(() => { 
-        $dialogUploadContentTransactionSent.close() 
-        window.location.replace('/')
-      }, 5000)
-    } catch (error) {
-      console.log(error)
-      $dialogUploadContentError.show()
-      setTimeout(() => { 
-        $dialogUploadContentError.close() 
-        window.location.replace('/#rightPanelContainer')
-      }, 8000)
-      $buttonUploadContent.disabled = false
-      return 
-    }
-  
-    try {
-      const transactionResp = await uploadResponse.wait()
-      console.log(transactionResp)
-    } catch (error) {
-      console.log(error)
-    }
-  
-    $buttonUploadContent.disabled = false
+    state.setState(state.availiableStates.validatingForm, effects)
   })
-
 }
