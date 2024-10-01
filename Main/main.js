@@ -8,7 +8,7 @@ const $buttonTouchToStart = document.querySelector('#buttonTouchToStart')
 $buttonTouchToStart.addEventListener('click', async () => {
   $splashScreen.style.display = 'none'
   document.querySelector('#shortVideoReel').style.display = ''
-  await import('./components/ShortVideoReel/ShortVideoReel.js')
+  await import('../components/ShortVideoReel/ShortVideoReel.js')
 })
 
 document.querySelector('#buttonSplashScreenToRightPanel').addEventListener('click', async()=> {

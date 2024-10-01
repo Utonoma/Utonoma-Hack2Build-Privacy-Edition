@@ -1,5 +1,5 @@
-import { getShortVideo } from '../../../services/contentProvider.js'
-import { getUrlFromIpfsHash } from '../../../utils/encodingUtils/encodingUtils.js'
+import { getShortVideo } from '../../services/contentProvider.js'
+import { getUrlFromIpfsHash } from '../../utils/encodingUtils/encodingUtils.js'
 import {
   nextShortVideo,
   getPreviousShortVideo,
@@ -88,9 +88,9 @@ $buttonLikeShortVideo.addEventListener('click', async() => {
   $buttonLikeShortVideo.disabled = true
 
   console.log('like button pressed for the content with id: ', currentUtonomaIdentifier)
-  const { readOnlyProvider } = await import('../../../web3_providers/readOnlyProvider.js')
+  const { readOnlyProvider } = await import('../../web3_providers/readOnlyProvider.js')
   const { formatUnits } = await import('ethers')
-  const { useUtonomaContractForSignedTransactions, useSignedProvider } = await import('../../../web3_providers/signedProvider.js')
+  const { useUtonomaContractForSignedTransactions, useSignedProvider } = await import('../../web3_providers/signedProvider.js')
 
   try {
     //get the current fee
@@ -103,7 +103,7 @@ $buttonLikeShortVideo.addEventListener('click', async() => {
 
     //get the allowance of the wallet to the smartcontract
     const { utonomaContractForSignedTransactions } = await useUtonomaContractForSignedTransactions()
-    const { utonomaSepoliaAddress } = await import('../../../utonomaSmartContract.js') 
+    const { utonomaSepoliaAddress } = await import('../../utonomaSmartContract.js') 
     const { modal } = await useSignedProvider()
 
     //check that the allowance is higher than the fee
@@ -138,7 +138,7 @@ $buttonLikeShortVideo.addEventListener('click', async() => {
     if(error.error?.message == 'Please call connect() before request()' || error == 'Error: User disconnected') {
       console.log('User is not connected')
       //send the user to the connect wallet screen
-      const { setIsLoggedIn, setAddress } = await import('../../../services/userManager/userManager.js')
+      const { setIsLoggedIn, setAddress } = await import('../../services/userManager/userManager.js')
       setIsLoggedIn(false)
       setAddress('')
       location.hash = 'rightPanelContainer'
