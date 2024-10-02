@@ -2,7 +2,7 @@ import { getShortVideo } from '../../services/contentProvider.js'
 import { getUrlFromIpfsHash } from '../../utils/encodingUtils/encodingUtils.js'
 import {
   createStateForShortVideoReel
-} from './ShortVideoReel.manager.js'
+} from './ShortVideoReel.state.js'
 
 export const ShortVideoReel = ($container) => {
   const state = createStateForShortVideoReel()
