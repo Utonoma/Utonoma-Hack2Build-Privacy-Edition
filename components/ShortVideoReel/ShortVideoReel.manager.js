@@ -1,52 +1,64 @@
-let shortVideoHistory = []
-let currentVideo = -1;
-let detachedHead = false
+export const createStateForShortVideoReel = () => {
 
-export function getShortVideoHistory() { return shortVideoHistory }
-export function getCurrentVideo() { return currentVideo }
-export function getDetachedHead() { return detachedHead }
+  const availiableSteps = Object.freeze({
+    waiting: Symbol('waiting'),
+    nextShortVideo: Symbol('nextShortVideo'),
+    previousShortVideo: Symbol('previousShortVideo'),
+    informCorrectPlay: Symbol('informCorrectPlay')
+  })
 
-export async function nextShortVideo(apiCall) {
-  if(detachedHead) {
-    updateCurrentShortVideo(currentVideo + 1)
-    return shortVideoHistory[currentVideo]
+  const state = {
+    shortVideoHistory: [],
+    currentVideo: -1,
+    _detachedHead: false,  // Internal property to hold the actual value
+    get detachedHead() { 
+      return this._detachedHead;  // Access the internal property
+    },
+    set detachedHead(value) {
+      if (typeof value !== "boolean") {
+        throw 'updateDetachedHead only accepts booleans';  // Correct the error check
+      }
+      this._detachedHead = value;  // Update the internal property
+    },
+    currentStep: availiableSteps.fillingForm,
   }
-  else {
-    //Add a case for when there are no videos in the network
-    return await apiCall()
-    /*Later you can catch exceptions from getShortVideo with this code 
-    if (Object.keys(myEmptyObj).length === 0) {
-      getShortVideoResp
-    }*/
+
+  function setStep(newState, effect, payload) {
+    if (!Object.values(availiableSteps).includes(newState)) return
+    state.currentStep = newState
+
+    switch (state.currentStep) {
+      case availiableSteps.nextShortVideo:
+        if(state.detachedHead) state.currentVideo++
+        break
+      case availiableSteps.previousShortVideo:
+        if(state.currentVideo <= 0 ) break
+        state.currentVideo--
+        state.detachedHead = true
+        break
+      case availiableSteps.informCorrectPlay:
+        if(!payload) throw new Error('No short video information to push')
+        if(state.currentVideo >= state.shortVideoHistory.length - 1) {
+          //If we are comming out of a detached head state, we are not going to add the video to the history
+          //because we already have it
+          if(state.detachedHead === false) {
+            state.shortVideoHistory.push(payload)
+            state.currentVideo = state.shortVideoHistory.length - 1
+          }
+          state.detachedHead = false
+        }
+        break
     }
-}
 
-export function getPreviousShortVideo() {
-  if(currentVideo <= 0 ) throw 'this is the first video, you can not go backwards'
-  updateCurrentShortVideo(currentVideo - 1)
-  updateDetachedHead(true)
-  return shortVideoHistory[currentVideo]
-}
-
-export function informCorrectPlay(shortVideo) {
-  if(currentVideo >= shortVideoHistory.length - 1) {
-    //If we are comming out of a detached head state, we are not going to add the video to the history
-    //because we already have its
-    if(detachedHead === false) addShortVideoToHistory(shortVideo)
-    updateDetachedHead(false)
+    if(effect) effect()
   }
-}
 
-function addShortVideoToHistory(shortVideoInfo) {
-  shortVideoHistory.push(shortVideoInfo)
-  updateCurrentShortVideo(shortVideoHistory.length - 1)
-}
-
-function updateCurrentShortVideo(index) {
-  currentVideo = index
-}
-
-function updateDetachedHead(boolean) {
-  if (typeof variable == "boolean") throw 'updateDetachedHead only accepts booleans'
-  detachedHead = boolean
+  return {
+    availiableSteps,
+    currentStep: () => state.currentStep,
+    setStep,
+    detachedHead: () => state.detachedHead,
+    shortVideoHistory: () => state.shortVideoHistory,
+    currentVideo: () => state.currentVideo
+  }
 }

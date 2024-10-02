@@ -1,12 +1,11 @@
 import { getShortVideo } from '../../services/contentProvider.js'
 import { getUrlFromIpfsHash } from '../../utils/encodingUtils/encodingUtils.js'
 import {
-  nextShortVideo,
-  getPreviousShortVideo,
-  informCorrectPlay,
+  createStateForShortVideoReel
 } from './ShortVideoReel.manager.js'
 
-let numberOfRetriesToGetShortVideo = 0 
+const state = createStateForShortVideoReel()
+
 const $shortVideoPlayer = document.querySelector('#shortVideoPlayer')
 const $buttonNextShortVideo = document.querySelector('#buttonNextShortVideo')
 const $buttonPreviousShortVideo = document.querySelector('#buttonPreviousShortVideo')
@@ -17,69 +16,79 @@ const $dialogNotEnoughBalanceError = document.querySelector('#dialogNotEnoughBal
 const $dialogActivateForVotingCheckWallet = document.querySelector('#dialogActivateForVotingCheckWallet')
 const $dialogActivateForVotingTransactionSent = document.querySelector('#dialogActivateForVotingTransactionSent')
 const $dialogLikeContentTransactionSent = document.querySelector('#dialogLikeContentTransactionSent')
+
 let currentUtonomaIdentifier
+let numberOfRetriesToGetShortVideo = 0 
+
+async function effects() {
+  switch (state.currentStep()) {
+    case state.availiableSteps.nextShortVideo:
+      loading(true)
+      //if user is watching a previuos video then get the next one from the history, otherwise get a new one from the internet
+      try {
+        if(state.detachedHead()) var nextShortVideo = state.shortVideoHistory()[state.currentVideo()]
+        else nextShortVideo = await getShortVideo()
+        const { authorAddress, contentId, metadata, likes, utonomaIdentifier } = nextShortVideo
+        debugger
+        $shortVideoPlayer.src = getUrlFromIpfsHash(contentId)
+        $shortVideoPlayer.load()
+        const playPromise = $shortVideoPlayer.play()
+        if (!playPromise) throw new Error('playPromise returned undefined')
+        playPromise.then(() => {
+          numberOfRetriesToGetShortVideo = 0
+          state.setStep(state.availiableSteps.informCorrectPlay, undefined, nextShortVideo)
+          currentUtonomaIdentifier = utonomaIdentifier
+          $likesNumber.innerHTML = likes
+          loading(false)
+        }).catch((error) => {
+          console.log(`Error when playing the short video. The message is: ${error}. Retry number ${numberOfRetriesToGetShortVideo}`)
+          numberOfRetriesToGetShortVideo++
+          if(numberOfRetriesToGetShortVideo < 10) {
+            console.log('Error when playing the short video, retrying')
+            state.setStep(state.availiableSteps.nextShortVideo, effects) //On error, transition to this same step to retry 
+            return
+          }
+          else {
+            loading(false)
+            console.log('Next short video method was not able to find valid content after all retries')
+          }
+        })
+      } catch(error) {
+        console.log("Error when loading the short video", error)
+        state.setStep(state.availiableSteps.nextShortVideo, effects) //On error, transition to this same step to retry 
+        return
+      }
+      break
+    case state.availiableSteps.previousShortVideo:
+      loading(true)
+      try {
+        const { authorAddress, contentId, metadata, likes, utonomaIdentifier } = state.shortVideoHistory()[state.currentVideo()]
+        $shortVideoPlayer.src = getUrlFromIpfsHash(contentId)
+        $shortVideoPlayer.load()
+        $shortVideoPlayer.play()
+        $likesNumber.innerHTML = likes
+        currentUtonomaIdentifier = utonomaIdentifier
+      } catch(error) {
+        console.log("Error when loading the previous short video", error)
+        state.setStep(state.availiableSteps.nextShortVideo, effects) //On error, transition to the next video step
+      }
+      loading(false)
+      break 
+  }
+}
+
+function loading(boolean) {
+  $buttonNextShortVideo.disabled = boolean
+  $buttonPreviousShortVideo.disabled = boolean
+  $buttonLikeShortVideo.disabled = boolean
+}
 
 $buttonNextShortVideo.addEventListener('click', async() => {
-  await next()
+  state.setStep(state.availiableSteps.nextShortVideo, effects)
 })
 
-async function next() {
-  $buttonNextShortVideo.disabled = true
-  $buttonPreviousShortVideo.disabled = true
-  $buttonLikeShortVideo.disabled = true
-
-  const nextShortVideoResp = await nextShortVideo(getShortVideo)
-  const { authorAddress, contentId, metadata, likes, utonomaIdentifier } = nextShortVideoResp
-  try {
-    $shortVideoPlayer.src = getUrlFromIpfsHash(contentId)
-    $shortVideoPlayer.load()
-  } catch(error) {
-    console.log("Error when loading the short video", error)
-  }
-  var playPromise = $shortVideoPlayer.play()
-  if (playPromise !== undefined) {
-    playPromise.then(() => {
-      numberOfRetriesToGetShortVideo = 0
-      informCorrectPlay(nextShortVideoResp)
-      currentUtonomaIdentifier = utonomaIdentifier
-      $buttonLikeShortVideo.disabled = false
-      $likesNumber.innerHTML = likes
-    }).catch((error) => {
-      console.log(`Error when playing the short video. The message is: ${error}. Retry number ${numberOfRetriesToGetShortVideo}`)
-      numberOfRetriesToGetShortVideo++
-      if(numberOfRetriesToGetShortVideo < 5) {
-        next(getShortVideo)
-      }
-      else {
-        console.log('Next short video method was not able to find valid content after all retries')
-      }
-    })
-  }
-
-  $buttonNextShortVideo.disabled = false
-  $buttonPreviousShortVideo.disabled = false
-}
-next()
-
-document.querySelector('#buttonPreviousShortVideo').addEventListener('click', async() => {
-  $buttonNextShortVideo.disabled = true
-  $buttonPreviousShortVideo.disabled = true
-  $buttonLikeShortVideo.disabled = true
-  
-  try {
-    const { authorAddress, contentId, metadata, likes, utonomaIdentifier } = getPreviousShortVideo()
-    $shortVideoPlayer.src = getUrlFromIpfsHash(contentId)
-    $shortVideoPlayer.load()
-    $shortVideoPlayer.play()
-    $likesNumber.innerHTML = likes
-    currentUtonomaIdentifier = utonomaIdentifier
-  } catch(error) {
-    console.log("Error when loading the previous short video", error)
-  } finally {
-    $buttonNextShortVideo.disabled = false
-    $buttonPreviousShortVideo.disabled = false
-    $buttonLikeShortVideo.disabled = false
-  }
+$buttonPreviousShortVideo.addEventListener('click', async() => {
+  state.setStep(state.availiableSteps.previousShortVideo, effects)
 })
 
 $buttonLikeShortVideo.addEventListener('click', async() => {
@@ -162,3 +171,5 @@ $buttonLikeShortVideo.addEventListener('click', async() => {
   }
 
 })
+
+state.setStep(state.availiableSteps.nextShortVideo, effects) //kickstart the component
