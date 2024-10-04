@@ -15,7 +15,7 @@ export const UploadContentForm = ($container) => {
   const $dialogWrongVideoFileError = $container.querySelector('#dialogWrongVideoFileError')
   const $dialogVideoTooLongError = $container.querySelector('#dialogVideoTooLongError')
   const $dialogUploadingDataToIpfsError = $container.querySelector('#dialogUploadingDataToIpfsError')
-  const $dialogCheckWalletToApprove = $container.querySelector('#dialogCheckWalletToApprove')
+  const $dialogCheckWalletToApprove = document.querySelector('#dialogCheckWalletToApprove')
   const $dialogUploadContentTransactionSent = $container.querySelector('#dialogUploadContentTransactionSent')
   const $dialogUploadContentError = $container.querySelector('#dialogUploadContentError')
   const $buttonUploadContent = $container.querySelector('#buttonUploadContent')

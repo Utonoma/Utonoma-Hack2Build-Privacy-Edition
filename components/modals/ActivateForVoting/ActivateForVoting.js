@@ -6,7 +6,7 @@ import { parseUnits } from 'ethers'
 export const ActivateForVoting = ($container) => {
 
   const $modalConfirmActivateForVoting = $container.querySelector('#modalConfirmActivateForVoting')
-  const $dialogActivateForVotingCheckWallet = $container.querySelector('#dialogActivateForVotingCheckWallet')
+  const $dialogCheckWalletToApprove = document.querySelector('#dialogCheckWalletToApprove')
   const $dialogActivateForVotingTransactionSent = $container.querySelector('#dialogActivateForVotingTransactionSent')
   const $dialogActivateForVotingSuccess = $container.querySelector('#dialogActivateForVotingSuccess')
   const $dialogActivateForVotingError = $container.querySelector('#dialogActivateForVotingError')
@@ -25,7 +25,7 @@ export const ActivateForVoting = ($container) => {
       case state.availiableSteps.userAccepted:
         try {
           $modalConfirmActivateForVoting.close()
-          $dialogActivateForVotingCheckWallet.showModal()
+          $dialogCheckWalletToApprove.showModal()
           const { utonomaContractForSignedTransactions } = await useUtonomaContractForSignedTransactions()
           approveResult = await utonomaContractForSignedTransactions.approve(utonomaSepoliaAddress, parseUnits("100000.0", 18))
           state.setStep(state.availiableSteps.waitingForApproveOnWallet, effects)
@@ -36,7 +36,7 @@ export const ActivateForVoting = ($container) => {
           }
           else state.setStep(state.availiableSteps.genericError, effects)
         } finally {
-          $dialogActivateForVotingCheckWallet.close()
+          $dialogCheckWalletToApprove.close()
         }
         break
       case state.availiableSteps.userDeclined:
