@@ -9,6 +9,7 @@ const $contentInfoCardTemplate = document.querySelector('#contentInfoCardTemplat
 const $cardsContainer = document.querySelector('#cardsContainer')
 const $tempFragment = document.createDocumentFragment()
 const $dialogFetchingMyContentError = document.querySelector('#dialogFetchingMyContentError')
+const $loadingIndicator = document.querySelector('#loadingIndicator')
 
 async function getContent() {
   //getting all the events
@@ -30,6 +31,7 @@ async function getContent() {
     return
   }
   if(!events?.length || events.length <= 0) {
+    $loadingIndicator.style.display = 'none'
     $cardsContainer.appendChild(
       document.querySelector('#noUploadedContentTemplate').content.cloneNode(true)
     )
@@ -45,6 +47,8 @@ async function getContent() {
       await delay(300)
     }
     console.log(contents)
+
+    $loadingIndicator.style.display = 'none'
 
     //placing the contents on screen
     await place(contents)
