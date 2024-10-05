@@ -1,6 +1,6 @@
 import '../utonoma_styles_library/index.css'
 import { readOnlyProvider } from "../web3_providers/readOnlyProvider.js"
-import { getUserAddress } from "../services/userManager/userManager.js"
+import { setIsLoggedIn, setAddress, getUserAddress } from "../services/userManager/userManager.js"
 import { getIpfsHashFromBytes32 } from "../utils/encodingUtils/encodingUtils.js"
 import { canContentBeHarvested } from '../utils/validationUtils/validationUtils.js'
 
@@ -12,6 +12,10 @@ const $dialogFetchingMyContentError = document.querySelector('#dialogFetchingMyC
 
 async function getContent() {
   //getting all the events
+  if(!getUserAddress()) {
+    errorUserDisconnected()
+  }
+
   let events
   try{
     events = await readOnlyProvider.filters.getContentUploadedByThisAccount(getUserAddress())
@@ -133,7 +137,12 @@ const contentInformationCard = (
         console.log(harvestLikesResp)
       } catch (error) {
         console.log(error)
-        alertUserNotLoggedIn($container)
+        if(error.error?.message == 'Please call connect() before request()' || error == 'Error: User disconnected') {
+          errorUserDisconnected()
+        } 
+        else {  //generic error
+          alertUserNotLoggedIn($container)
+        }
       }
 
       $container.classList.remove('Card__container--glow')
@@ -166,4 +175,11 @@ const contentInformationCard = (
   }
 
   return $template
+}
+
+function errorUserDisconnected() {
+  setIsLoggedIn(false)
+  setAddress('')
+  window.location.replace('/#rightPanelContainer')
+  setTimeout(() => location.hash = '', 100)
 }
