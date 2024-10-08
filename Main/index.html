@@ -134,6 +134,19 @@
       justify-content: center;
       flex-wrap: wrap;
     }
+
+    .Layout--swipeRight {
+      display: flex;
+      flex-direction: column;
+      align-items: flex-end;
+      margin-bottom: 24px;
+      font: var(--headline6);
+      min-width: 60vw;
+      max-width: 70vw;
+      align-items: center;
+      text-align: right;
+    }
+
     @media screen and (min-width: 700px) {
       .Layout--splashScreen {
         width: 100%;
@@ -163,6 +176,11 @@
         align-items: center;
         flex-wrap: nowrap;
       }
+
+      .Layout--swipeRight {
+        display: none;
+      }
+
       .Image--utonomaBackgroundPoster {
         width: auto; 
         object-fit: cover;
@@ -210,6 +228,13 @@
             <span style="font: var(--headline6);" lang="en">SETTINGS</span>
             <span style="font: var(--headline6);" lang="es">CONFIG.</span>
           </button>
+        </div>
+        <div class="Layout--swipeRight">
+          <p class="Button--horizontalText">
+            <span style="font: var(--headline6);" lang="en">Swipe right for settings</span>
+            <span style="font: var(--headline6);" lang="es">Desliza a la izquierda para ajustes</span>
+            <img src="../assets/icons/swipe-left.svg" alt="">
+          </p>
         </div>
       </header>
       <div id="shortVideoReel" 
