@@ -10,6 +10,7 @@ const $buttonActivateForVoting = document.querySelector('#buttonActivateForVotin
 const $buttonManageAccount = document.querySelector('#buttonManageAccount')
 const $buttonSendTokens = document.querySelector('#buttonSendTokens')
 const $buttonDialogCloseSendTokens = document.querySelector('#buttonDialogCloseSendTokens')
+const $buttonBuySellTokens = document.querySelector('#buttonBuySellTokens')
 
 let ActivateForVoting
 
@@ -47,4 +48,9 @@ $buttonSendTokens.addEventListener('click', () => {
 
 $buttonDialogCloseSendTokens.addEventListener('click', () => {
   $dialogSendOrReceiveTokens.close()
+})
+
+$buttonBuySellTokens.addEventListener('click', async () => {
+  const { dexLink } = await import('../../../utonomaSmartContract.js')
+  window.location.href = dexLink
 })
