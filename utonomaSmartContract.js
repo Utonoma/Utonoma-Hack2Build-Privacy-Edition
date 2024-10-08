@@ -1,6 +1,6 @@
 export const utonomaSepoliaAddress = '0xdcdc5585ac7458443edbb57e6b03f0e7f486b5d1'
 
-export const dexLink = `https://uniswap-testnet.sourcehat.io/#/add/${utonomaSepoliaAddress}/ETH/3000`
+export const dexLink = `https://uniswap-showcase.sepolia.scroll.xyz/#/swap?outputCurrency=${utonomaSepoliaAddress}`
 
 export const utonomaABI = [
 	{
