@@ -130,6 +130,14 @@ contract Utonoma is ERC20, ContentStorage, Users, Time {
         IERC20(address(this)).transfer(_owner, maxBalance);
     }
 
+    function _collectFee(uint256 fee) internal {
+        require(IERC20(address(this)).balanceOf(msg.sender) >= fee, "Balance is not enough to pay the fee");
+        require(IERC20(address(this)).allowance(msg.sender, address(this)) >= fee, 
+            "No allowance to this smarcontract for the fee amount");
+        IERC20(address(this)).transferFrom(msg.sender, address(this), fee);
+        _burn(address(this), calculateFeeToBurn(fee));
+    }
+
     /**
     * @notice filtering by contentCreator can be used as a way of knowing if an author that a user follows  
     * uploaded something new

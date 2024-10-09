@@ -83,11 +83,13 @@ contract Utils {
         return 3 * calculateFee(usersNumber) * numberOfStrikes;
     }
 
-    function _collectFee(uint256 fee) internal {
-        require(IERC20(address(this)).balanceOf(msg.sender) >= fee, "Balance is not enough to pay the fee");
-        require(IERC20(address(this)).allowance(msg.sender, address(this)) >= fee, 
-            "No allowance to this smarcontract for the fee amount");
-        IERC20(address(this)).transferFrom(msg.sender, address(this), fee);
+    /**
+    *  @notice Calculates the amount of tokens to burn based on the given fee.
+    *  @param fee The total fee from which the burn amount will be calculated.
+    *  @return The amount of tokens to be burned.
+    */ 
+    function calculateFeeToBurn(uint256 fee) public pure returns (uint256) {
+        return fee / 4;
     }
 
     /**

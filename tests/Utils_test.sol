@@ -307,4 +307,22 @@ contract Utils_test {
         }
     }
 
+    function calculateFeeToBurn() public {
+        Assert.equal(
+            utils.calculateFeeToBurn(140000000000000000000),
+            35000000000000000000, 
+            "CalculateFeeToBurn when receiving 140000000000000000000 as fee, should return 35000000000000000000"
+        );
+        Assert.equal(
+            utils.calculateFeeToBurn(4),
+            1, 
+            "CalculateFeeToBurn when receiving 4 as fee, should return 1"
+        );
+        Assert.equal(
+            utils.calculateFeeToBurn(0),
+            0, 
+            "CalculateFeeToBurn when receiving 0 as fee, should return 0"
+        );
+    }
+
 }
