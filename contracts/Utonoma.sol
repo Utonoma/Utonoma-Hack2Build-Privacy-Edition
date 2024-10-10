@@ -22,7 +22,7 @@ contract Utonoma is ERC20, ContentStorage, Users, Time {
     
     address internal _owner;
 
-    constructor(uint256 initialSupply) ERC20("Omas", "OMA") {
+    constructor(string memory name_, string memory symbol_, uint256 initialSupply) ERC20(name_, symbol_) {
         _mint(msg.sender, initialSupply);
         _owner = msg.sender;
     }
@@ -37,7 +37,7 @@ contract Utonoma is ERC20, ContentStorage, Users, Time {
         if(strikes > 0) { //if content creator has strikes it will have to pay the fee
             _collectFee(calculateFeeForUsersWithStrikes(strikes, currentPeriodMAU()));
         } 
-        _logUserInteraction(block.timestamp, _startTimeOfTheNetwork);
+_logUserInteraction(block.timestamp, _startTimeOfTheNetwork);
         Content memory content = Content(
             msg.sender,
             contentHash,
