@@ -37,7 +37,6 @@ contract Utonoma is ERC20, ContentStorage, Users, Time {
         if(strikes > 0) { //if content creator has strikes it will have to pay the fee
             _collectFee(calculateFeeForUsersWithStrikes(strikes, currentPeriodMAU()));
         } 
-_logUserInteraction(block.timestamp, _startTimeOfTheNetwork);
         Content memory content = Content(
             msg.sender,
             contentHash,
