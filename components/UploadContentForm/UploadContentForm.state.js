@@ -2,14 +2,16 @@ export const createStateForUploadContentForm = () => {
   const availiableStates = Object.freeze({
     fillingForm: Symbol('fillingForm'),
     validatingForm: Symbol('validatingForm'), 
+    checkingIfUserIsConnected: Symbol('checkingIfUserIsConnected'),
     uploadingToIpfs: Symbol('uploadingToIpfs'),
     uploadingToUtonoma: Symbol('uploadingToUtonoma'),
     confirmingTransaction: Symbol('success'),
-    end: Symbol('end'),
+    success: Symbol('success'),
     videoTooLongError: Symbol('videoTooLongError'),
     wrongVideoFileError: Symbol('wrongVideoFileError'),
     uploadingToIpfsError: Symbol('uploadingToIpfsError'),
-    uploadingToUtonomaError: Symbol('uploadingToUtonomaError')
+    genericError: Symbol('genericError'),
+    userDisconnectedError: Symbol('userDisconnectedError')
   })
 
   let currentState = availiableStates.fillingForm

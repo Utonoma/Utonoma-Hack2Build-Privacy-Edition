@@ -1,4 +1,8 @@
-export const utonomaSepoliaAddress = '0xdcdc5585ac7458443edbb57e6b03f0e7f486b5d1'
+export const utonomaSepoliaAddress = '0xBed329C06DD3C5ddB7DFbd7597Bd552b2Fb3863D'
+
+export const dexLink = `https://pancakeswap.finance/swap?chain=scrollSepolia&outputCurrency=${utonomaSepoliaAddress}`
+
+export const contractDeployedInBlock = 6940955
 
 export const utonomaABI = [
 	{
@@ -95,6 +99,16 @@ export const utonomaABI = [
 	},
 	{
 		"inputs": [
+			{
+				"internalType": "string",
+				"name": "name_",
+				"type": "string"
+			},
+			{
+				"internalType": "string",
+				"name": "symbol_",
+				"type": "string"
+			},
 			{
 				"internalType": "uint256",
 				"name": "initialSupply",
@@ -716,6 +730,25 @@ export const utonomaABI = [
 			}
 		],
 		"name": "calculateFeeForUsersWithStrikes",
+		"outputs": [
+			{
+				"internalType": "uint256",
+				"name": "",
+				"type": "uint256"
+			}
+		],
+		"stateMutability": "pure",
+		"type": "function"
+	},
+	{
+		"inputs": [
+			{
+				"internalType": "uint256",
+				"name": "fee",
+				"type": "uint256"
+			}
+		],
+		"name": "calculateFeeToBurn",
 		"outputs": [
 			{
 				"internalType": "uint256",

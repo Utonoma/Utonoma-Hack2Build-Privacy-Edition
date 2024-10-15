@@ -2,21 +2,17 @@ import {
   setIsLoggedIn,
   setAddress
 } from '../../../services/userManager/userManager.js'
-import { useUtonomaContractForSignedTransactions, useSignedProvider } from '../../../web3_providers/signedProvider.js'
-import { utonomaSepoliaAddress } from '../../../utonomaSmartContract.js'
-import { parseUnits } from 'ethers'
 
 const $settings = document.querySelector('#settings')
-const $modalConfirmActivateForVoting = document.querySelector('#modalConfirmActivateForVoting')
-const $dialogActivateForVotingCheckWallet = document.querySelector('#dialogActivateForVotingCheckWallet')
-const $dialogActivateForVotingTransactionSent = document.querySelector('#dialogActivateForVotingTransactionSent')
-const $dialogActivateForVotingError = document.querySelector('#dialogActivateForVotingError')
 const $dialogSendOrReceiveTokens = document.querySelector('#dialogSendOrReceiveTokens')
 const $connectWallet = document.querySelector('#connectWallet')
 const $buttonActivateForVoting = document.querySelector('#buttonActivateForVoting')
 const $buttonManageAccount = document.querySelector('#buttonManageAccount')
 const $buttonSendTokens = document.querySelector('#buttonSendTokens')
 const $buttonDialogCloseSendTokens = document.querySelector('#buttonDialogCloseSendTokens')
+const $buttonBuySellTokens = document.querySelector('#buttonBuySellTokens')
+
+let ActivateForVoting
 
 $buttonManageAccount.addEventListener('click', async () => {
   $buttonManageAccount.disabled = true
@@ -39,43 +35,12 @@ $buttonManageAccount.addEventListener('click', async () => {
 })
 
 $buttonActivateForVoting.addEventListener('click', async() => {
-  $buttonActivateForVoting.disabled = true
-  $modalConfirmActivateForVoting.showModal()
-  document.querySelector('#buttonConfirmActivateForVotingYes').addEventListener('click', () => {
-    activateForVoting()
-    $modalConfirmActivateForVoting.close()
-    $dialogActivateForVotingCheckWallet.show()
-    setTimeout(() => $dialogActivateForVotingCheckWallet.close(), 5000)
-    $buttonActivateForVoting.disabled = false
-  })
-  document.querySelector('#buttonConfirmActivateForVotingNo').addEventListener('click', () => {
-    $modalConfirmActivateForVoting.close()
-    $buttonActivateForVoting.disabled = false
-  })
+  if(!ActivateForVoting) {
+    const { ActivateForVoting: ActivateForVotingFactory } = await import('../../../components/modals/ActivateForVoting/ActivateForVoting.js')
+    ActivateForVoting = ActivateForVotingFactory(document.querySelector('#activateForVoting'))
+  }
+  ActivateForVoting.openModal()
 })
-
-async function activateForVoting() {
-  try {
-    const { utonomaContractForSignedTransactions } = await useUtonomaContractForSignedTransactions()
-    const approveResult = await utonomaContractForSignedTransactions.approve(utonomaSepoliaAddress, parseUnits("100000.0", 18))
-    $dialogActivateForVotingTransactionSent.show()
-    setTimeout(() => $dialogActivateForVotingTransactionSent.close(), 5000)
-    const transactionResp = await approveResult.wait()
-    //Alert the success
-    console.log(transactionResp)
-  }
-  catch(error) {
-    if(error.error?.message == 'Please call connect() before request()' || error == 'Error: User disconnected') {
-      const { setIsLoggedIn, setAddress } = await import('../../../services/userManager/userManager.js')
-      setIsLoggedIn(false)
-      setAddress('')
-    }
-    else {
-      $dialogActivateForVotingError.show()
-      setTimeout(() => $dialogActivateForVotingError.close(), 5000)
-    }
-  }
-}
 
 $buttonSendTokens.addEventListener('click', () => {
   $dialogSendOrReceiveTokens.showModal()
@@ -83,4 +48,9 @@ $buttonSendTokens.addEventListener('click', () => {
 
 $buttonDialogCloseSendTokens.addEventListener('click', () => {
   $dialogSendOrReceiveTokens.close()
+})
+
+$buttonBuySellTokens.addEventListener('click', async () => {
+  const { dexLink } = await import('../../../utonomaSmartContract.js')
+  window.location.href = dexLink
 })

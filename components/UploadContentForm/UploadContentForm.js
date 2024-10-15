@@ -1,6 +1,6 @@
 import { ShortVideoMetadata } from '../../services/models.js'
 import { convertIPFSHashToBytes32 } from '../../utils/encodingUtils/encodingUtils.js'
-import { useUtonomaContractForSignedTransactions } from '../../web3_providers/signedProvider.js'
+import { useSignedProvider, useUtonomaContractForSignedTransactions } from '../../web3_providers/signedProvider.js'
 import { validateVideoDuration } from '../../utils/validationUtils/validationUtils.js'
 import { pinJsonToIpfs, pinFileToIPFS } from '../../services/ipfsService/ipfsService.js'
 import { createStateForUploadContentForm } from './UploadContentForm.state.js'
@@ -15,7 +15,7 @@ export const UploadContentForm = ($container) => {
   const $dialogWrongVideoFileError = $container.querySelector('#dialogWrongVideoFileError')
   const $dialogVideoTooLongError = $container.querySelector('#dialogVideoTooLongError')
   const $dialogUploadingDataToIpfsError = $container.querySelector('#dialogUploadingDataToIpfsError')
-  const $dialogCheckWalletToApprove = $container.querySelector('#dialogCheckWalletToApprove')
+  const $dialogCheckWalletToApprove = document.querySelector('#dialogCheckWalletToApprove')
   const $dialogUploadContentTransactionSent = $container.querySelector('#dialogUploadContentTransactionSent')
   const $dialogUploadContentError = $container.querySelector('#dialogUploadContentError')
   const $buttonUploadContent = $container.querySelector('#buttonUploadContent')
@@ -39,11 +39,16 @@ export const UploadContentForm = ($container) => {
         try{
           const shortVideoDuration = await validateVideoDuration($videoPreview, shortVideoFile, 60)
           if(!shortVideoDuration) state.setState(state.availiableStates.videoTooLongError, effects)
-          else state.setState(state.availiableStates.uploadingToIpfs, effects)
+          else state.setState(state.availiableStates.checkingIfUserIsConnected, effects)
         } catch(error) {
           console.log(error)
           state.setState(state.availiableStates.wrongVideoFileError, effects)
         }
+        break
+      case state.availiableStates.checkingIfUserIsConnected:
+        const { modal } = await useSignedProvider()
+        if(!modal.getIsConnected()) state.setState(state.availiableStates.userDisconnectedError, effects)
+        else state.setState(state.availiableStates.uploadingToIpfs, effects)
         break
       case state.availiableStates.uploadingToIpfs:
         const metadata = new ShortVideoMetadata()
@@ -72,22 +77,21 @@ export const UploadContentForm = ($container) => {
         } catch (error) {
           console.log(error)
           $dialogCheckWalletToApprove.close()
-          state.setState(state.availiableStates.uploadingToUtonomaError, effects)
+          state.setState(state.availiableStates.genericError, effects)
         }
         break
       case state.availiableStates.confirmingTransaction:
         $dialogUploadContentTransactionSent.showModal()
         try {
-          const transactionResp = await uploadResponse.wait()
+          await uploadResponse.wait()
           $dialogUploadContentTransactionSent.close()
-          state.setState(state.availiableStates.end, effects)
-          console.log(transactionResp)
+          state.setState(state.availiableStates.success, effects)
         } catch (error) {
           console.log(error)
-          state.setState(state.availiableStates.end, effects)
+          state.setState(state.availiableStates.genericError, effects)
         }
         break
-      case state.availiableStates.end: 
+      case state.availiableStates.success: 
         $dialogSuccess.showModal()
         setTimeout(() => { 
           $dialogSuccess.close()
@@ -109,9 +113,18 @@ export const UploadContentForm = ($container) => {
         setTimeout(() => $dialogUploadingDataToIpfsError.close(), 5000)
         state.setState(state.availiableStates.fillingForm, effects)
         break
-      case state.availiableStates.uploadingToUtonomaError:
+      case state.availiableStates.genericError:
         $dialogUploadContentError.show()
         setTimeout(() => { $dialogUploadContentError.close() }, 8000)
+        state.setState(state.availiableStates.fillingForm, effects)
+        break
+      case state.availiableStates.userDisconnectedError:
+        console.log('user disconnected step')
+        const { setIsLoggedIn, setAddress } = await import('../../services/userManager/userManager.js')
+        setIsLoggedIn(false)
+        setAddress('')
+        window.location.replace('/#rightPanelContainer')
+        setTimeout(() => location.hash = '', 100)
         state.setState(state.availiableStates.fillingForm, effects)
         break
     }

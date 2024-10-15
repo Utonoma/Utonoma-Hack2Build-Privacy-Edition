@@ -47,7 +47,7 @@ export async function useSignedProvider() {
         ethersConfig,
         chains: [sepolia],
         tokens: {
-          1: { address: '0xdcDC5585ac7458443edbB57E6b03f0E7F486B5D1' }
+          534351 : { address:  utonomaSepoliaAddress}
         },
         projectId,
         enableAnalytics: true, // Optional - defaults to your Cloud configuration

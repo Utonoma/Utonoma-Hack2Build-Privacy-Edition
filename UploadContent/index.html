@@ -54,24 +54,35 @@
       margin: 0;
     }
 
-    .Button--horizontalText {
-      background-color: transparent;
-      align-items: center;
-      gap: 16px;
-      border: none;
-      display: flex;
-      padding: 16px;
-    }
-
     @media screen and (min-width: 700px) {
 
     }
   </style>
 </head>
 <body>
+  <button 
+    id="buttonRightPanelToCenterPanel"
+    class="Button--horizontalText" 
+    style="margin-top: 7rem; transform: rotate(-90deg); color: var(--snow);" 
+    onclick="location.href='/'"
+    type="button">
+    <span style="font: var(--headline6);" lang="en">BACK</span>
+    <span style="font: var(--headline6);" lang="es">ATRAS</span>
+    <svg width="21" height="36" viewBox="0 0 21 36" fill="none" xmlns="http://www.w3.org/2000/svg"
+      style="transform: rotate(-90deg);">
+      <g clip-path="url(#clip0_541_508)">
+      <path d="M1.16406 1.19029L18.3187 17.4749L1.16406 34.7478" stroke="#fffafa" stroke-width="3.28351"/>
+      </g>
+      <defs>
+      <clipPath id="clip0_541_508">
+      <rect width="20.6681" height="35.9052" fill="white"/>
+      </clipPath>
+      </defs>
+    </svg>
+  </button>
   <div style="display: flex; justify-content: center;">
     <div style="margin: 24px; text-align: center; max-width: 500px;">
-      <img style="width: 80%; margin: 100px 0;" src="../assets/icons/utonoma-small-logo.svg" alt="">
+      <img style="width: 80%; margin: 10px 0;" src="../assets/icons/utonoma-small-logo.svg" alt="">
       <form name="formUploadContent">
         <div style="text-align: left">
           <h2 style="font: var(--headline1); margin-bottom: 21px;">
@@ -149,8 +160,8 @@
   </dialog>
   <dialog id="dialogWrongVideoFileError">
     <p style="font: var(--headline6)">
-      <span lang="en">An error occurred while uploading the short video, check that video is in WebM or MP4 format</span>
-      <span lang="es">Ocurrió un error al subir el video corto, compruebe que el vídeo está en formato WebM o MP4</span>
+      <span lang="en">An error occurred, <b>check that video is in WebM or MP4 format</b></span>
+      <span lang="es">Ocurrió un error, <b>compruebe que el vídeo está en formato WebM o MP4</b></span>
     </p>
   </dialog>
   <dialog id="dialogUploadingDataToIpfsError">
@@ -195,17 +206,9 @@
   </dialog>
   <dialog id="dialogUploadContentError">
     <h3 style="font: var(--headline1);">
-      <span lang="en">An error occurred. Check that you have resources to pay for the gas.</span>
-      <span lang="es">Ocurrió un error. Verifica que tengas recursos para pagar el gas.</span>
+      <span lang="en">An error occurred</span>
+      <span lang="es">Ocurrió un error</span>
     </h3>
-    <p style="font: var(--headline6)">
-      <span lang="en">
-        Verify that your user is logged in the Manage Account section.
-      </span>
-      <span lang="es">
-        Verifica que tu usuario esté conectado en la sección de Administrar cuenta.
-      </span>
-    </p>
   </dialog>
   <div style="display: none;">
     <video id="videoPreview" src="" type="video/MP4, video/WebM"></video>
