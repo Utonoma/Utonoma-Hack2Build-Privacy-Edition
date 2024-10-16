@@ -6,6 +6,9 @@ const $connectWallet = document.querySelector('#connectWallet')
 const $splashScreen = document.querySelector('#splashScreen')
 const $buttonTouchToStart = document.querySelector('#buttonTouchToStart')
 const $shortVideoReel = document.querySelector('#shortVideoReel')
+
+let ConnectWallet
+
 $buttonTouchToStart.addEventListener('click', async () => {
   $splashScreen.style.display = 'none'
   $shortVideoReel.style.display = ''
@@ -45,8 +48,9 @@ async function switchSettingsOrConnectWallet() {
     $settings.style.display = 'none'
     $connectWallet.style.display = 'flex'
     if(!ConnectWallet) {
-      var { ConnectWallet } = await import('./components/ConnectWallet/ConnectWallet.js')
-      ConnectWallet($connectWallet)
+      ConnectWallet = true //prevent creating multiple instances as setting ConnectWallet depends on an async operation
+      const { ConnectWallet: ConnectWalletFactory } = await import('./components/ConnectWallet/ConnectWallet.js')
+      ConnectWallet = ConnectWalletFactory($connectWallet)
     }
   }
 }
