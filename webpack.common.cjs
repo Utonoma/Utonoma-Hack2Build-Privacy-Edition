@@ -6,7 +6,8 @@ module.exports = {
   entry: {
     main: './Main/main.js',
     uploadContent: './UploadContent/main.js',
-    myContent: './MyContent/main.js'
+    myContent: './MyContent/main.js',
+    uploadWithAdditionalContent: './UploadWithAdditionalContent/main.js'
   }, 
   plugins: [
     new HtmlWebpackPlugin({
@@ -23,6 +24,11 @@ module.exports = {
       template: './MyContent/index.html',
       chunks: ['myContent'],
       filename: './MyContent/index.html',
+    }),
+    new HtmlWebpackPlugin({
+      template: './UploadWithAdditionalContent/index.html',
+      chunks: ['uploadWithAdditionalContent'],
+      filename: './UploadWithAdditionalContent/index.html',
     }),
     new CopyPlugin({
       patterns: [
