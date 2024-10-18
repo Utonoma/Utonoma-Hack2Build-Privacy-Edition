@@ -16,19 +16,24 @@ export const ConnectWallet = ($container) => {
   const $buttonImANewUser = document.querySelector('#buttonImANewUser')
 
   $buttonImANewUser.addEventListener('click', async() => {
-    $buttonImANewUser.disabled = true
+    loading(true)
     const { modal } = await useSignedProvider()
     await modal.open({ view: 'WhatIsAWallet' })
-    $buttonImANewUser.disabled = false
+    loading(false)
   })
 
+  function loading(boolean) {
+    $buttonImANewUser.disabled = boolean
+    $buttonConnectWallet.disabled = boolean
+  }
+
   async function effectIsButtonConnectWalletEnabled() {
-    $buttonConnectWallet.disabled = true
+    loading(true)
     const { modal } = await useSignedProvider()
     modal.subscribeState(async(newState) => {
       if(newState?.open === false) {
         state.setIsButtonConnectWalletEnabled(true, () => {})
-        $buttonConnectWallet.disabled = false
+        loading(false)
       }
     })
     modal.subscribeProvider(({ address, isConnected }) => {
