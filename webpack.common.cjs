@@ -8,7 +8,8 @@ module.exports = {
     uploadContent: './UploadContent/main.js',
     myContent: './MyContent/main.js',
     uploadWithAdditionalContent: './UploadWithAdditionalContent/main.js',
-    textEditor: './TextEditor/main.js'
+    textEditor: './TextEditor/main.js',
+    converter: './Converter/main.js'
   }, 
   plugins: [
     new HtmlWebpackPlugin({
@@ -35,6 +36,11 @@ module.exports = {
       template: './TextEditor/index.html',
       chunks: ['textEditor'],
       filename: './TextEditor/index.html',
+    }),
+    new HtmlWebpackPlugin({
+      template: './Converter/index.html',
+      chunks: ['converter'],
+      filename: './Converter/index.html',
     }),
     new CopyPlugin({
       patterns: [
