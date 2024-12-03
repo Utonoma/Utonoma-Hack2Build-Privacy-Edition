@@ -6,13 +6,10 @@ import {
 const $settings = document.querySelector('#settings')
 const $dialogSendOrReceiveTokens = document.querySelector('#dialogSendOrReceiveTokens')
 const $connectWallet = document.querySelector('#connectWallet')
-const $buttonActivateForVoting = document.querySelector('#buttonActivateForVoting')
 const $buttonManageAccount = document.querySelector('#buttonManageAccount')
 const $buttonSendTokens = document.querySelector('#buttonSendTokens')
 const $buttonDialogCloseSendTokens = document.querySelector('#buttonDialogCloseSendTokens')
 const $buttonBuySellTokens = document.querySelector('#buttonBuySellTokens')
-
-let ActivateForVoting
 
 $buttonManageAccount.addEventListener('click', async () => {
   $buttonManageAccount.disabled = true
@@ -34,13 +31,6 @@ $buttonManageAccount.addEventListener('click', async () => {
   $buttonManageAccount.disabled = false
 })
 
-$buttonActivateForVoting.addEventListener('click', async() => {
-  if(!ActivateForVoting) {
-    const { ActivateForVoting: ActivateForVotingFactory } = await import('../../../components/modals/ActivateForVoting/ActivateForVoting.js')
-    ActivateForVoting = ActivateForVotingFactory(document.querySelector('#activateForVoting'))
-  }
-  ActivateForVoting.openModal()
-})
 
 $buttonSendTokens.addEventListener('click', () => {
   $dialogSendOrReceiveTokens.showModal()

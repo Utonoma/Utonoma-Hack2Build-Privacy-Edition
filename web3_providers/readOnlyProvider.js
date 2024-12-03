@@ -49,9 +49,6 @@ export const readOnlyProvider = (function() {
       let usersInTheLastPeriod = await readOnlyProvider.utonomaContract.currentPeriodMAU()
       return await readOnlyProvider.utonomaContract.calculateFee(usersInTheLastPeriod)
     },
-    getAllowance: async(address) => {
-      return await readOnlyProvider.utonomaContract.allowance(address , utonomaSepoliaAddress)
-    },
     getBalance: async(address) => {
       return await readOnlyProvider.utonomaContract.balanceOf(address)
     } 
