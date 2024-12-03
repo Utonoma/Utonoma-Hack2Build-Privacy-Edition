@@ -499,20 +499,8 @@
           <img src="../assets/icons/arrow.svg" alt="">
         </button>
         <p style="font: var(--headline6); max-width: 23rem; margin: 12px 32px;">
-          <span lang="en">3. Now that you have some Utonoma tokens, you can activate your account and start voting.</span>
-          <span lang="es">3. Ahora que tienes algunos tokens de Utonoma, puedes activar tu cuenta y comenzar a votar.</span>
-        </p>
-        <button id="buttonActivateForVoting" class="Button--textBetweenTwoIcons">
-          <div>
-            <img src="../assets/icons/checked-profile-icon.svg" alt="">
-            <span lang="en">Activate for voting</span>
-            <span lang="es">Activar para votar</span>
-          </div>
-          <img src="../assets/icons/arrow.svg" alt="">
-        </button>
-        <p style="font: var(--headline6); max-width: 23rem; margin: 12px 32px;">
-          <span lang="en">4. You can view your content and claim your reward here.</span>
-          <span lang="es">4. Puedes ver tu contenido y reclamar tu recompensa aquí.</span>
+          <span lang="en">3. You can view your content and claim your reward here.</span>
+          <span lang="es">3. Puedes ver tu contenido y reclamar tu recompensa aquí.</span>
         </p>
         <button id="buttonMyContent" onclick="location.href='/MyContent'" class="Button--textBetweenTwoIcons">
           <div>
@@ -523,8 +511,8 @@
           <img src="../assets/icons/arrow.svg" alt="">
         </button>
         <p style="font: var(--headline6); max-width: 23rem; margin: 12px 32px;">
-          <span lang="en">5. You can log out here.</span>
-          <span lang="es">5. Puedes cerrar sesión aquí.</span>
+          <span lang="en">4. You can log out here.</span>
+          <span lang="es">4. Puedes cerrar sesión aquí.</span>
         </p>
         <button id="buttonManageAccount" class="Button--textBetweenTwoIcons">
           <div>
@@ -535,76 +523,6 @@
           <img src="../assets/icons/arrow.svg" alt="">
         </button>
       </div>
-    </div>
-    <div id="activateForVoting">
-      <dialog id="modalConfirmActivateForVoting">
-        <h3 style="font: var(--headline1);">
-          <span lang="en">¿Do you want to activate your account?</span>
-          <span lang="es">¿Quieres activar tu cuenta?</span>
-        </h3>
-        <p style="font: var(--headline6)">
-          <span lang="en">
-            This will allow the Utonoma smart contract to automatically charge your 
-            account for the token fees for liking and disliking content.
-          </span>
-          <span lang="es">
-            Esto permitirá que el contrato inteligente de Utonoma cargue automáticamente 
-            en tu cuenta las tarifas en tokens por dar "me gusta" y "no me gusta".
-          </span>
-        </p>
-        <button id="buttonConfirmActivateForVotingYes">
-          <span lang="en">Yes</span>
-          <span lang="es">Si</span>
-        </button>
-        <button id="buttonConfirmActivateForVotingNo">
-          <span lang="en">No</span>
-          <span lang="es">No</span>
-        </button>
-      </dialog>
-      <dialog id="dialogActivateForVotingTransactionSent">
-        <h3 style="font: var(--headline1);">
-          <span lang="en">Transaction sent to the blockchain</span>
-          <span lang="es">Operación enviada a la cadena de bloques</span>
-        </h3>
-        <p style="font: var(--headline6)">
-          <span lang="en">
-            In a few minutes your account will be activated to start voting 
-            for content.
-          </span>
-          <span lang="es">
-            En unos minutos tu cuenta estará activada para comenzar a votar 
-            por contenido.
-          </span>
-        </p>
-      </dialog>
-      <dialog id="dialogActivateForVotingSuccess">
-        <h3 style="font: var(--headline1);">
-          <span lang="en">Success</span>
-          <span lang="es">Éxito</span>
-        </h3>
-        <p style="font: var(--headline6)">
-          <span lang="en">
-            Your account is activated and ready to vote.
-          </span>
-          <span lang="es">
-            Tu cuenta está activada y lista para votar.
-          </span>
-        </p>
-      </dialog>
-      <dialog id="dialogActivateForVotingError">
-        <h3 style="font: var(--headline1);">
-          <span lang="en">An error occurred while activating your account</span>
-          <span lang="es">Ocurrió un error al activar tu cuenta</span>
-        </h3>
-        <p style="font: var(--headline6)">
-          <span lang="en">
-            Please try again so you can start voting for content.
-          </span>
-          <span lang="es">
-            Por favor, reintenta para que puedas comenzar a votar por contenido.
-          </span>
-        </p>
-      </dialog>
     </div>
     <dialog id="dialogSendOrReceiveTokens">
       <h3 style="font: var(--headline1);">
