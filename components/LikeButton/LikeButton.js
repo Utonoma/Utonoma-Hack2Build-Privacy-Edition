@@ -17,7 +17,6 @@ export const LikeButton = ($container) => {
   let ConfirmLikeOrDislike
   let modal
   let currentFee
-  let ActivateForVoting
   let likeResult
 
   async function effects() {
@@ -42,17 +41,8 @@ export const LikeButton = ($container) => {
           ConfirmLikeOrDislike.updateFee(formatUnits(currentFee, 18))
           const confirmation = await ConfirmLikeOrDislike.askForUserConfirmation()
           if(!confirmation) loading(false) //user rejected
-          else state.setStep(state.availiableSteps.checkingUserAllowance, effects)
-        } catch (error) {
-          state.setStep(state.availiableSteps.genericError, effects)
-        }
-        break
-      case state.availiableSteps.checkingUserAllowance:
-        try {
-          const accountAllowance = await readOnlyProvider.genericRequests.getAllowance(modal.getAddress())
-          if(accountAllowance <= currentFee) state.setStep(state.availiableSteps.activatingAccount, effects)
           else state.setStep(state.availiableSteps.checkingAccountBalance, effects)
-        } catch(error) {
+        } catch (error) {
           state.setStep(state.availiableSteps.genericError, effects)
         }
         break
@@ -92,14 +82,6 @@ export const LikeButton = ($container) => {
       case state.availiableSteps.success:
         $dialogLikeButtonSuccess.show()
         setTimeout(() => $dialogLikeButtonSuccess.close(), 5000)
-        break
-      case state.availiableSteps.activatingAccount:
-        if(!ActivateForVoting) {
-          const { ActivateForVoting: ActivateForVotingFactory } = await import('../modals/ActivateForVoting/ActivateForVoting.js')
-          ActivateForVoting = ActivateForVotingFactory(document.querySelector('#activateForVoting'))
-        }
-        ActivateForVoting.openModal()
-        loading(false)
         break
       case state.availiableSteps.userDisconnectedError:
         const { setIsLoggedIn, setAddress } = await import('../../services/userManager/userManager.js')
