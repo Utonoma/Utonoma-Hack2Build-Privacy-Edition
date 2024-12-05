@@ -27,18 +27,17 @@ export const ConnectWallet = ($container) => {
     $buttonConnectWallet.disabled = boolean
   }
 
-  async function effectIsButtonConnectWalletEnabled() {
+  function effectIsButtonConnectWalletEnabled() {
     loading(true)
-    const { modal } = await useSignedProvider()
+    const { modal } = useSignedProvider()
     modal.subscribeState(async(newState) => {
       if(newState?.open === false) {
         state.setIsButtonConnectWalletEnabled(true, () => {})
         loading(false)
       }
-    })
-    modal.subscribeProvider(({ address, isConnected }) => {
-      console.log('something happened with the provider')
-      if(isConnected) {
+      const isLoggedIn = modal.getIsConnectedState()
+      if(isLoggedIn) {
+        const address = modal.getAddress()
         setIsLoggedIn(true)
         setAddress(address)
         $connectWallet.style.display = 'none'
