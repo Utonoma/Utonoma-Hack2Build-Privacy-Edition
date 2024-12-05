@@ -16,10 +16,7 @@ const metadata = {
   icons: ['https://demo.utonoma.com/'] //set an icon
 }
 
-export async function useSignedProvider() {
-  return new Promise((resolve) => {
-    //Give two seconds before returning the modal, as there are wrong lectures on the getIsConnected method when
-    //we return it immediately
+export function useSignedProvider() {
     if(!modal) {
       modal = createAppKit({
         adapters: [new EthersAdapter()],
@@ -34,10 +31,7 @@ export async function useSignedProvider() {
         ]
       })
     }
-    setTimeout(() => {
-      resolve({ modal })
-    }, 2000)
-  }) 
+    return { modal }
 }
 
 export async function useUtonomaContractForSignedTransactions() {
