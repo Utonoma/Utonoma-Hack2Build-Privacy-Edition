@@ -31,7 +31,7 @@ export const LikeButton = ($container) => {
           const { modal: modalInstance } = await useSignedProvider()
           modal = modalInstance
         }
-        if(modal.getIsConnected()) state.setStep(state.availiableSteps.requestingFeeAcceptance, effects)
+        if(modal.getIsConnectedState()) state.setStep(state.availiableSteps.requestingFeeAcceptance, effects)
         else state.setStep(state.availiableSteps.userDisconnectedError, effects)
         break
       case state.availiableSteps.requestingFeeAcceptance:
