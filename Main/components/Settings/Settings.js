@@ -14,7 +14,7 @@ const $buttonBuySellTokens = document.querySelector('#buttonBuySellTokens')
 $buttonManageAccount.addEventListener('click', async () => {
   $buttonManageAccount.disabled = true
   const { useSignedProvider } = await import('../../../web3_providers/signedProvider.js')
-  const { modal } = useSignedProvider()
+  const { modal } = await useSignedProvider()
   modal.subscribeState(async(newState) => {
     const isLoggedIn = modal.getIsConnectedState()
     if(isLoggedIn) {

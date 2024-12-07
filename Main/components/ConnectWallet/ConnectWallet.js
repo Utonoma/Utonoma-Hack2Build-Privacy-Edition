@@ -27,9 +27,9 @@ export const ConnectWallet = ($container) => {
     $buttonConnectWallet.disabled = boolean
   }
 
-  function effectIsButtonConnectWalletEnabled() {
+  async function effectIsButtonConnectWalletEnabled() {
     loading(true)
-    const { modal } = useSignedProvider()
+    const { modal } = await useSignedProvider()
     modal.subscribeState(async(newState) => {
       if(newState?.open === false) {
         state.setIsButtonConnectWalletEnabled(true, () => {})

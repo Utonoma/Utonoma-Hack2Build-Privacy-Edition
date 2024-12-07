@@ -16,7 +16,10 @@ const metadata = {
   icons: ['https://demo.utonoma.com/'] //set an icon
 }
 
-export function useSignedProvider() {
+export async function useSignedProvider() {
+  return new Promise((resolve) => {
+    //Give one second before returning the modal, as there are wrong lectures on the getIsConnected method when
+    //we return it immediately
     if(!modal) {
       modal = createAppKit({
         adapters: [new EthersAdapter()],
@@ -31,17 +34,18 @@ export function useSignedProvider() {
         ]
       })
     }
-    return { modal }
+    setTimeout(() => {
+      resolve({ modal })
+    }, 1000)
+  }) 
 }
 
 export async function useUtonomaContractForSignedTransactions() {
-  /*
   let { modal } = await useSignedProvider()
-  if(!modal.getIsConnected()) throw(new Error('User disconnected'))
+  if(!modal.getIsConnectedState()) throw(new Error('User disconnected'))
   const walletProvider = modal.getWalletProvider()
   const ethersProvider = new BrowserProvider(walletProvider)
   const signer = await ethersProvider.getSigner()
-  const utonomaContractForSignedTransactions = new Contract(utonomaSepoliaAddress, utonomaABI, signer)*/
-  const utonomaContractForSignedTransactions = new Object()
+  const utonomaContractForSignedTransactions = new Contract(utonomaSepoliaAddress, utonomaABI, signer)
   return { utonomaContractForSignedTransactions }
 }
