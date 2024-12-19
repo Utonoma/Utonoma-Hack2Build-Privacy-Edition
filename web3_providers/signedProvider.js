@@ -1,6 +1,6 @@
 import { createAppKit } from '@reown/appkit'
 import { EthersAdapter } from '@reown/appkit-adapter-ethers'
-import { scrollSepolia } from '@reown/appkit/networks'
+import { scrollSepolia, scroll } from '@reown/appkit/networks'
 import { BrowserProvider, Contract } from 'ethers'
 import { utonomaSepoliaAddress, utonomaABI } from '../utonomaSmartContract.js'
 import { sepoliaEndpoint } from './rpcEndpoints.js'
@@ -23,15 +23,19 @@ export async function useSignedProvider() {
     if(!modal) {
       modal = createAppKit({
         adapters: [new EthersAdapter()],
-        networks: [scrollSepolia],
+        networks: [scrollSepolia, scroll],
         metadata,
+        debug: true,
         projectId,
         features: {
-          analytics: true // Optional - defaults to your Cloud configuration
+          analytics: true, // Optional - defaults to your Cloud configuration
         },
-        featuredWalletIds: [ //Wallets shown by default when opening the modal
-          '4622a2b2d6af1c9844944291e5e7351a6aa24cd7b23099efac1b2fd875da31a0' //Trust Wallet
-        ]
+        tokens: {
+          "eip155:534351": {
+            address: utonomaSepoliaAddress,
+          },
+        },
+        allWallets: 'SHOW'
       })
     }
     setTimeout(() => {
@@ -47,5 +51,8 @@ export async function useUtonomaContractForSignedTransactions() {
   const ethersProvider = new BrowserProvider(walletProvider)
   const signer = await ethersProvider.getSigner()
   const utonomaContractForSignedTransactions = new Contract(utonomaSepoliaAddress, utonomaABI, signer)
-  return { utonomaContractForSignedTransactions }
+  return { 
+    walletProvider,
+    utonomaContractForSignedTransactions 
+  }
 }
