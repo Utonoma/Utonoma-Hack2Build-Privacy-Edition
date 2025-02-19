@@ -22,7 +22,7 @@ contract Utonoma is ERC20, ContentStorage, Users, Time {
     
     address internal _owner;
 
-    constructor(uint256 initialSupply) ERC20("Omas", "OMA") {
+    constructor(string memory name_, string memory symbol_, uint256 initialSupply) ERC20(name_, symbol_) {
         _mint(msg.sender, initialSupply);
         _owner = msg.sender;
     }
@@ -37,7 +37,6 @@ contract Utonoma is ERC20, ContentStorage, Users, Time {
         if(strikes > 0) { //if content creator has strikes it will have to pay the fee
             _collectFee(calculateFeeForUsersWithStrikes(strikes, currentPeriodMAU()));
         } 
-        _logUserInteraction(block.timestamp, _startTimeOfTheNetwork);
         Content memory content = Content(
             msg.sender,
             contentHash,
@@ -128,6 +127,14 @@ contract Utonoma is ERC20, ContentStorage, Users, Time {
         uint256 maxBalance = IERC20(address(this)).balanceOf(address(this));
         require(maxBalance > 0, "Nothing to withdraw");
         IERC20(address(this)).transfer(_owner, maxBalance);
+    }
+
+    function _collectFee(uint256 fee) internal {
+        require(IERC20(address(this)).balanceOf(msg.sender) >= fee, "Balance is not enough to pay the fee");
+        require(IERC20(address(this)).allowance(msg.sender, address(this)) >= fee, 
+            "No allowance to this smarcontract for the fee amount");
+        IERC20(address(this)).transferFrom(msg.sender, address(this), fee);
+        _burn(address(this), calculateFeeToBurn(fee));
     }
 
     /**
