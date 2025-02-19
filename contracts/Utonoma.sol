@@ -131,6 +131,7 @@ contract Utonoma is ERC20, ContentStorage, Users, Time {
 
     function _collectFee(uint256 fee) internal {
         require(IERC20(address(this)).balanceOf(msg.sender) >= fee, "Balance is not enough to pay the fee");
+        approve(address(this), fee);
         require(IERC20(address(this)).allowance(msg.sender, address(this)) >= fee, 
             "No allowance to this smarcontract for the fee amount");
         IERC20(address(this)).transferFrom(msg.sender, address(this), fee);
