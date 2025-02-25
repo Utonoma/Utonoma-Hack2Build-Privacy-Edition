@@ -2,8 +2,8 @@
 
 pragma solidity 0.8.22;
 
-abstract contract Time {
-    uint256 internal _startTimeOfTheNetwork;
+contract Time {
+    uint256 internal immutable _startTimeOfTheNetwork;
 
     constructor() {
         _startTimeOfTheNetwork = block.timestamp;
