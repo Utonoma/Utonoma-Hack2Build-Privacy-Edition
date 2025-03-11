@@ -25,7 +25,7 @@ export const ShortVideoReel = ($container) => {
         //if user is watching a previuos video then get the next one from the history, otherwise get a new one from the internet
         try {
           if(state.detachedHead()) var nextShortVideo = state.shortVideoHistory()[state.currentVideo()]
-          else nextShortVideo = await getShortVideo()
+          else nextShortVideo = await getShortVideo(state.shortVideoHistory())
           const { authorAddress, contentId, metadata, likes, utonomaIdentifier } = nextShortVideo
           $shortVideoPlayer.src = getUrlFromIpfsHash(contentId)
           $shortVideoPlayer.load()
@@ -72,7 +72,7 @@ export const ShortVideoReel = ($container) => {
           state.setStep(state.availiableSteps.nextShortVideo, effects) //On error, transition to the next video step
         }
         loading(false)
-        break 
+        break
     }
   }
 
