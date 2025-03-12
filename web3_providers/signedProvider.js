@@ -3,7 +3,6 @@ import { EthersAdapter } from '@reown/appkit-adapter-ethers'
 import { scrollSepolia, scroll } from '@reown/appkit/networks'
 import { BrowserProvider, Contract } from 'ethers'
 import { utonomaSepoliaAddress, utonomaABI } from '../utonomaSmartContract.js'
-import { sepoliaEndpoint } from './rpcEndpoints.js'
 
 let modal
 
