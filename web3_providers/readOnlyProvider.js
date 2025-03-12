@@ -4,7 +4,7 @@
  * @module readOnlyProvider
  */
 
-import { sepoliaEndpoint } from './rpcEndpoints.js'
+import { sepoliaRpcEndpoint, sepoliaEventFilterEndpoint } from './rpcEndpoints.js'
 import { JsonRpcProvider, Contract } from 'ethers'
 import { utonomaSepoliaAddress, utonomaABI, contractDeployedInBlock } from '../utonomaSmartContract.js'
 
@@ -14,7 +14,7 @@ export const readOnlyProvider = (function() {
    * The JSON-RPC provider to the selected network
    * @type {JsonRpcProvider}
    */
-  let provider = new JsonRpcProvider(sepoliaEndpoint)
+  let provider = new JsonRpcProvider(sepoliaRpcEndpoint)
 
   /**
    * The Utonoma contract instance.
