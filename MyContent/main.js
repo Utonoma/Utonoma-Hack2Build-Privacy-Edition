@@ -43,7 +43,8 @@ async function getContent() {
     //getting the contents
     let contents = []
     for (let i = 0; i < events.length; i++) {
-      contents.push(await getElement(events[i]))
+      contents.push(await getElement(events[i].index, events[i].contentType))
+      //fetch the contents one by one and with a delay to avoid the provider to block the requests
       await delay(300)
     }
     console.log(contents)
@@ -63,13 +64,7 @@ async function getContent() {
   }
 }
 
-async function getElement(element) {
-  const { 
-    0: uploaderAddress, 
-    1: identifierIndex, 
-    2: identifierContentType 
-  } = element.args
-
+async function getElement(index, contentType) {
   const { 
     0: authorAddress, 
     1: contentIdInBytes32, 
@@ -77,7 +72,7 @@ async function getElement(element) {
     3: likes,
     4: dislikes,
     5: harvestedLikes
-  } = await readOnlyProvider.utonomaContract.getContentById([identifierIndex, identifierContentType])
+  } = await readOnlyProvider.utonomaContract.getContentById([index, contentType])
 
   const metadata = await fetch(
     `https://copper-urban-gorilla-864.mypinata.cloud/ipfs/${getIpfsHashFromBytes32(metadataHashInBytes32)}?pinataGatewayToken=WmR3tEcyNtxE6vjc4lPPIrY0Hzp3Dc9AYf2X4Bl-8o6JYBzTx9aY_u3OlpL1wGra`
@@ -92,8 +87,8 @@ async function getElement(element) {
     dislikes,
     harvestedLikes,
     isHarvestable,
-    identifierIndex,
-    identifierContentType
+    identifierIndex: index,
+    identifierContentType: contentType
   }
 }
 
