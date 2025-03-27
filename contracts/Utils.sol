@@ -39,7 +39,7 @@ contract Utils {
     */
     function shouldContentBeEliminated(uint256 likes, uint256 dislikes) public pure returns(bool) {
         uint256 likesPlusDislikes = (likes + dislikes);
-        require(likesPlusDislikes > _minimumQuorum, "Minimum quorum hasn't been reached");
+        require(likesPlusDislikes > _minimumQuorum, "Minimum quorum not reached");
         if(dislikes == 0) return false;
         uint256 normalizedDislikes = dislikes * 10**18;
         uint256 p = normalizedDislikes / likesPlusDislikes;
@@ -79,7 +79,7 @@ contract Utils {
     *  in the strikes number
     */ 
     function calculateFeeForUsersWithStrikes(uint64 numberOfStrikes, uint256 usersNumber) public pure returns(uint256) {
-        require(numberOfStrikes > 0, "Number of strikes should be greater than zero"); 
+        require(numberOfStrikes > 0, "Strikes not greater than zero"); 
         return 3 * calculateFee(usersNumber) * numberOfStrikes;
     }
 
@@ -119,7 +119,7 @@ contract Utils {
         }
 
         require(numberOfCharacters > 3, "At least 4 characters");
-        require(!charAfterNullSpace, "Invalid null value in between username");
+        require(!charAfterNullSpace, "Null value in between username");
 
         return true;
     }
