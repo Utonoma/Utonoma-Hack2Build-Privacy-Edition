@@ -10,7 +10,7 @@ contract Utils {
     uint256 private constant _BASE_REWARD = 1000;
     //uint256 internal constant _commission = 1333333333333333333; //1.333333333333333333% of commission
     //If the values of the _BASE_REWARD or _commission changes, the next const should also be recalculated
-    uint256 private constant _commissionByBaseReward = 1333333333333333333000;
+    uint256 private constant _COMMISSION_BY_BASE_REWARD = 1333333333333333333000;
     uint256 private constant _minimumQuorum = 5;
 
     /// @notice please refer to the Utonoma paper to know what the base reward is
@@ -20,7 +20,7 @@ contract Utils {
 
     /// @notice precomputed multiplication of the commision by the base reward stored to save calculations
     function commissionByBaseReward() external pure returns(uint256) {
-        return _commissionByBaseReward;
+        return _COMMISSION_BY_BASE_REWARD;
     }
 
     /// @notice minimum amount of votes (likes and dislikes) that should be emited to grant a reward
@@ -67,11 +67,11 @@ contract Utils {
         return (10**18 * _BASE_REWARD) / usersNumber**2;
     }
 
-    /// @notice calculates the fee, if the number of users is 0, will return _commissionByBaseReward
+    /// @notice calculates the fee, if the number of users is 0, will return _COMMISSION_BY_BASE_REWARD
     /// @param usersNumber the current monthly active users (MAU) that the platform has
     function calculateFee(uint256 usersNumber) public pure returns(uint256) {
-        if(usersNumber == 0) return (_commissionByBaseReward);
-        return _commissionByBaseReward / usersNumber**2;
+        if(usersNumber == 0) return (_COMMISSION_BY_BASE_REWARD);
+        return _COMMISSION_BY_BASE_REWARD / usersNumber**2;
     }
 
     /**
