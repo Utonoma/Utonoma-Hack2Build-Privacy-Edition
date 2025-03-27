@@ -11,7 +11,7 @@ contract Utils {
     //uint256 internal constant _commission = 1333333333333333333; //1.333333333333333333% of commission
     //If the values of the _BASE_REWARD or _commission changes, the next const should also be recalculated
     uint256 private constant _COMMISSION_BY_BASE_REWARD = 1333333333333333333000;
-    uint256 private constant _minimumQuorum = 5;
+    uint256 private constant _MINIMUM_QUORUM = 5;
 
     /// @notice please refer to the Utonoma paper to know what the base reward is
     function baseReward() external pure returns (uint256) {
@@ -25,7 +25,7 @@ contract Utils {
 
     /// @notice minimum amount of votes (likes and dislikes) that should be emited to grant a reward
     function minimumQuorum() external pure returns(uint256) {
-        return _minimumQuorum;
+        return _MINIMUM_QUORUM;
     }
 
 
@@ -39,7 +39,7 @@ contract Utils {
     */
     function shouldContentBeEliminated(uint256 likes, uint256 dislikes) public pure returns(bool) {
         uint256 likesPlusDislikes = (likes + dislikes);
-        require(likesPlusDislikes > _minimumQuorum, "Minimum quorum not reached");
+        require(likesPlusDislikes > _MINIMUM_QUORUM, "Minimum quorum not reached");
         if(dislikes == 0) return false;
         uint256 normalizedDislikes = dislikes * 10**18;
         uint256 p = normalizedDislikes / likesPlusDislikes;
