@@ -7,15 +7,15 @@ import {IERC20} from "@openzeppelin/contracts/token/ERC20/IERC20.sol";
 
 contract Utils {
 
-    uint256 private constant _baseReward = 1000;
+    uint256 private constant _BASE_REWARD = 1000;
     //uint256 internal constant _commission = 1333333333333333333; //1.333333333333333333% of commission
-    //If the values of the _baseReward or _commission changes, the next const should also be recalculated
+    //If the values of the _BASE_REWARD or _commission changes, the next const should also be recalculated
     uint256 private constant _commissionByBaseReward = 1333333333333333333000;
     uint256 private constant _minimumQuorum = 5;
 
     /// @notice please refer to the Utonoma paper to know what the base reward is
     function baseReward() external pure returns (uint256) {
-        return _baseReward;
+        return _BASE_REWARD;
     }
 
     /// @notice precomputed multiplication of the commision by the base reward stored to save calculations
@@ -60,11 +60,11 @@ contract Utils {
         return pMinusRootByZ > oneHalf;
     }
 
-    /// @notice calculates the reward that a content creator can receive for one like, if the users number is 0, will return 10**18 * _baseReward
+    /// @notice calculates the reward that a content creator can receive for one like, if the users number is 0, will return 10**18 * _BASE_REWARD
     /// @param usersNumber the current monthly active users (MAU) that the platform has
     function calculateReward(uint256 usersNumber) public pure returns(uint256) {
-        if(usersNumber == 0) return (10**18 * _baseReward);
-        return (10**18 * _baseReward) / usersNumber**2;
+        if(usersNumber == 0) return (10**18 * _BASE_REWARD);
+        return (10**18 * _BASE_REWARD) / usersNumber**2;
     }
 
     /// @notice calculates the fee, if the number of users is 0, will return _commissionByBaseReward
