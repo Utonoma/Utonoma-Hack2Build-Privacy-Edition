@@ -43,19 +43,19 @@ contract Utils {
         if(dislikes == 0) return false;
         uint256 normalizedDislikes = dislikes * 10**18;
         uint256 p = normalizedDislikes / likesPlusDislikes;
-        uint256 oneMinusP = 1000000000000000000 - p;
+        uint256 oneMinusP = 1e18 - p;
         uint256 pByOneMinusP = p * oneMinusP;
         uint256 n = likesPlusDislikes * 10**18;
         uint256 pByOneMinusPBetweenN = pByOneMinusP / n;
         uint256 root = Math.sqrt(pByOneMinusPBetweenN);
-        uint256 z = 1960000000000000000;
+        uint256 z = 1.96e18;
         uint256 rootByZ = (root * z) / 10**9;
         uint256 pMinusRootByZ;
         unchecked{
             pMinusRootByZ = p - rootByZ;
         }
         if(pMinusRootByZ > p) return false;
-        uint256 oneHalf = 500000000000000000;
+        uint256 oneHalf = 5e17;
         
         return pMinusRootByZ > oneHalf;
     }
