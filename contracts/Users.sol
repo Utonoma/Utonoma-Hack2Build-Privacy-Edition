@@ -30,9 +30,9 @@ contract Users is Utils {
     }
 
     /// @notice gets the account of the owner of a username
-    /// @param userName is the username from wich wants to know the owner's account
-    function getUserNameOwner(bytes15 userName) public view returns(address) {
-        return _userNames[userName];
+    /// @param requestedUserName is the username from wich wants to know the owner's account
+    function getUserNameOwner(bytes15 requestedUserName) public view returns(address) {
+        return _userNames[requestedUserName];
     }
 
     /// @notice gets the account of the owner of a user name
