@@ -42,11 +42,6 @@ contract ContentStorage {
 
     Content[][15] internal _contentLibraries;
 
-    /// @notice gets the min value of the ContentTypes struct (return will be 0)
-    function getMinContentTypes() external pure returns(uint256) {
-        return uint256(type(ContentTypes).min);
-    }
-
     /// @notice gets the highest value (as integer) that the ContentTypes struct can take
     function getMaxContentTypes() public pure returns(uint256) {
         return uint256(type(ContentTypes).max);
