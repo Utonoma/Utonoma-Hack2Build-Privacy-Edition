@@ -98,9 +98,11 @@ contract Users is Utils {
         uint256 startTimeMinusCurrent = currentTime - startTimeOfNetwork;
         uint256 elapsedMonths = startTimeMinusCurrent / 30 days;
 
+        uint256 MAUArrayLength = _MAU.length;
+
         //If there are no users during the whole period then fill with 0 in the report
-        if(elapsedMonths > _MAU.length) {
-            uint256 monthsWithNoInteraction = elapsedMonths - _MAU.length;
+        if(elapsedMonths > MAUArrayLength) {
+            uint256 monthsWithNoInteraction = elapsedMonths - MAUArrayLength;
             for(uint i = 0; i < monthsWithNoInteraction; i++) {
                 _MAU.push(0);
             }
@@ -111,7 +113,7 @@ contract Users is Utils {
         bool shouldCountAsNewInteraction;
 
         //If the interaction is the first of a new opening period.
-        if(elapsedMonths + 1 > _MAU.length) {
+        if(elapsedMonths + 1 > MAUArrayLength) {
             _MAU.push(1);
         }
 
@@ -120,14 +122,14 @@ contract Users is Utils {
 
         //If the previous interaction was before the begining of the new period
         else {
-            uint startTimeOfNewPeriod = startTimeOfNetwork + (30 days * _MAU.length);
+            uint startTimeOfNewPeriod = startTimeOfNetwork + (30 days * MAUArrayLength);
             if(startTimeOfNewPeriod < latestUserInteraction) {
                 shouldCountAsNewInteraction = true;
             }
         }
 
         if(shouldCountAsNewInteraction) {
-            _MAU[_MAU.length - 1]++;
+            _MAU[MAUArrayLength - 1]++;
         }
 
         _users[account].latestInteraction = currentTime;
