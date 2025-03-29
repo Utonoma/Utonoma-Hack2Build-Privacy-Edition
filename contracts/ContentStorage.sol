@@ -56,7 +56,11 @@ contract ContentStorage {
     }
 
     /// @notice gets all the information of a content, searching by it's Identifier
-    function getContentById(Identifier memory id) contentShouldExists(id) public view returns(Content memory){
+    function getContentById(Identifier memory id) 
+        public 
+        view 
+        contentShouldExists(id)
+        returns(Content memory) {
         return _contentLibraries[uint256(id.contentType)][id.index];
     }
 
@@ -67,7 +71,11 @@ contract ContentStorage {
     * and we recreate the original Identifier struct of each reply, to later append all of them in an array
     * by using the for loop
     */
-    function getContentsRepliedByThis(Identifier memory id) contentShouldExists(id) public view returns(Identifier[] memory) {
+    function getContentsRepliedByThis(Identifier memory id) 
+        public 
+        view 
+        contentShouldExists(id)
+        returns(Identifier[] memory) {
         uint256 replyingToLength = _contentLibraries[uint256(id.contentType)][id.index].replyingTo.length;
         Identifier[] memory contentsRepliedByThis = new Identifier[](replyingToLength);
         for(uint256 i = 0; i < replyingToLength; i++) {
@@ -86,7 +94,11 @@ contract ContentStorage {
     * and we recreate the original Identifier struct of each reply, to later append all of them in an array
     * by using the for loop
     */
-    function getRepliesToThisContent(Identifier memory id) contentShouldExists(id) public view returns(Identifier[] memory) {
+    function getRepliesToThisContent(Identifier memory id) 
+        public 
+        view 
+        contentShouldExists(id)
+        returns(Identifier[] memory) {
         uint256 repliedByLength = _contentLibraries[uint256(id.contentType)][id.index].repliedBy.length;
         Identifier[] memory repliesToThisContent = new Identifier[](repliedByLength);
         for(uint256 i = 0; i < repliedByLength; i++) {
@@ -116,7 +128,9 @@ contract ContentStorage {
     function _createReply(
         Identifier memory replyId, 
         Identifier memory replyingToId
-    ) contentShouldExists(replyId) contentShouldExists(replyingToId) internal {
+    ) internal 
+        contentShouldExists(replyId) 
+        contentShouldExists(replyingToId)  {
         _contentLibraries[uint256(replyId.contentType)][replyId.index].replyingTo.push(replyingToId.index);
         _contentLibraries[uint256(replyId.contentType)][replyId.index].replyingToContentType.push(uint8(replyingToId.contentType));
 
@@ -124,11 +138,15 @@ contract ContentStorage {
         _contentLibraries[uint256(replyingToId.contentType)][replyingToId.index].repliedByContentType.push(uint8(replyId.contentType));
     }    
 
-    function _updateContent(Content memory content, Identifier memory id) contentShouldExists(id) internal {
+    function _updateContent(Content memory content, Identifier memory id) 
+        internal 
+        contentShouldExists(id) {
         _contentLibraries[uint256(id.contentType)][id.index] = content;
     }
 
-    function _deleteContent(Identifier memory id) contentShouldExists(id) internal {
+    function _deleteContent(Identifier memory id) 
+        internal 
+        contentShouldExists(id) {
         delete(_contentLibraries[uint256(id.contentType)][id.index]);
     }
 
