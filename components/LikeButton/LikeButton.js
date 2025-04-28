@@ -60,14 +60,14 @@ export const LikeButton = ($container) => {
           $dialogCheckWalletToApprove.showModal()
           const { utonomaContractForSignedTransactions } = await useUtonomaContractForSignedTransactions()
           likeResult = await utonomaContractForSignedTransactions.like([state.utonomaIdentifier().index, state.utonomaIdentifier().contentType])
-          state.setStep(state.availiableSteps.waitiingForBlockchainResult, effects)
+          state.setStep(state.availiableSteps.waitingForBlockchainResult, effects)
         } catch(error) {
           state.setStep(state.availiableSteps.genericError, effects)
         } finally {
           $dialogCheckWalletToApprove.close()
         }
         break
-      case state.availiableSteps.waitiingForBlockchainResult:
+      case state.availiableSteps.waitingForBlockchainResult:
         try {
           $dialogLikeContentTransactionSent.show()
           setTimeout(() => $dialogLikeContentTransactionSent.close(), 5000)

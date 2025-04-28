@@ -8,7 +8,7 @@ export const createStateForLikeButton = () => {
     requestingFeeAcceptance: Symbol('requestingFeeAcceptance'),
     checkingAccountBalance: Symbol('checkingAccountBalance'),
     waitingForApproveOnWallet: Symbol('waitingForApproveOnWallet'),
-    waitiingForBlockchainResult: Symbol('waitiingForBlockchainResult'),
+    waitingForBlockchainResult: Symbol('waitingForBlockchainResult'),
     updatingUtonomaIdentifier: Symbol('updatingUtonomaIdentifier'),
     success: Symbol('success'),
     userDisconnectedError: Symbol('userDisconnectedError'),
