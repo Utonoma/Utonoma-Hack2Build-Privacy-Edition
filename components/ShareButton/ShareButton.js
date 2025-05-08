@@ -16,9 +16,10 @@ export const ShareButton = () => {
   }
 
   $buttonShare.addEventListener('click', async() => {
-    await navigator.clipboard.writeText(window.location.href)
+    const shareUrl = `${window.location.origin}?watch=${state.currentVideo}`
+    await navigator.clipboard.writeText(shareUrl)
     $dialogShareButtonTextCopied.show()
-    setTimeout(() => $dialogShareButtonTextCopied.close(), 2000)
+    setTimeout(() => $dialogShareButtonTextCopied.close(), 2500)
   })
   
   return state
