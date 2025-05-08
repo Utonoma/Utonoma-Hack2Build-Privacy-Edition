@@ -2,7 +2,7 @@ import { getShortVideo } from '../../services/contentProvider.js'
 import { getUrlFromIpfsHash } from '../../utils/encodingUtils/encodingUtils.js'
 import { shortVideoReelState as state } from './ShortVideoReel.state.js'
 import { LikeButton as LikeButtonFactory } from '../LikeButton/LikeButton.js'
-import { ShareButton } from '../ShareButton/ShareButton.js'
+import { ShareButton as ShareButtonFactory } from '../ShareButton/ShareButton.js'
 
 const $shortVideoPlayer = document.querySelector('#shortVideoPlayer')
 const $buttonNextShortVideo = document.querySelector('#buttonNextShortVideo')
@@ -10,7 +10,7 @@ const $buttonPreviousShortVideo = document.querySelector('#buttonPreviousShortVi
 const $likesNumber = document.querySelector('#likesNumber')
 
 const LikeButton = LikeButtonFactory(document.querySelector('#likeButtonContainer'))
-ShareButton()
+const ShareButton = ShareButtonFactory()
 
 let currentUtonomaIdentifier
 let numberOfRetriesToGetShortVideo = 0 
