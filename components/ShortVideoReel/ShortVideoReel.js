@@ -10,7 +10,7 @@ const $buttonPreviousShortVideo = document.querySelector('#buttonPreviousShortVi
 const $likesNumber = document.querySelector('#likesNumber')
 
 const LikeButton = LikeButtonFactory(document.querySelector('#likeButtonContainer'))
-const ShareButton = ShareButtonFactory()
+const ShareButton = ShareButtonFactory(document.querySelector('#buttonShare'))
 
 let currentUtonomaIdentifier
 let numberOfRetriesToGetShortVideo = 0 

@@ -16,7 +16,7 @@ export class State {
 }
 
 export const ShareButton = ($container) => {
-  const $buttonShare = $container.querySelector('#buttonShare')
+  const $buttonShare = $container
   const $dialogShareButtonTextCopied = document.querySelector('#dialogShareButtonTextCopied')
 
   const effects = {
