@@ -11,8 +11,19 @@ export async function getShortVideo() {
   //throw exception if the content id is 0
   try {
     const shortVideosLibraryLength = formatUnits(await readOnlyProvider.utonomaContract.getContentLibraryLength(5), 0)
+    //Reset the indexesOfSeenShortVideos if there are no more videos to see
     if(state.indexesOfSeenShortVideos.length >= shortVideosLibraryLength) state.indexesOfSeenShortVideos = []
-    const identifier = getUniqueRandomNumberFromArray(shortVideosLibraryLength, state.indexesOfSeenShortVideos)
+    const params = new URLSearchParams(window.location.search)
+    const watchValue = params.get('watch')
+    //Clear "watch" from the query params if it exists
+    if(watchValue) {
+      const url = new URL(window.location)
+      url.searchParams.delete('watch')
+      window.history.replaceState({}, '', url)
+    }
+    const identifier = watchValue && Number(watchValue) < shortVideosLibraryLength 
+    ? watchValue
+    : getUniqueRandomNumberFromArray(shortVideosLibraryLength, state.indexesOfSeenShortVideos)
     if(identifier !== null) state.indexesOfSeenShortVideos.push(identifier)
     else throw new Error('indexesOfSeenShortVideos was not reseted correctly')
     const { 
