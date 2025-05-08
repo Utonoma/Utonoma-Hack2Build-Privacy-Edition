@@ -1,18 +1,23 @@
-export const ShareButton = () => {
-  const $buttonShare = document.querySelector('#buttonShare')
-  const $dialogShareButtonTextCopied = document.querySelector('#dialogShareButtonTextCopied')
-
-  const state = {
-    currentVideo: null,
-    _loading: false,
-    get loading() {
-      return this._loading
-    },
-    set loading(value) {
-      this._loading = value
-      if (effects.loading) effects.loading()
-    },
+export class State {
+  constructor(effects = {}) {
+    this.currentVideo = null;
+    this._loading = false;
+    this.effects = effects;
   }
+
+  get loading() {
+    return this._loading;
+  }
+
+  set loading(value) {
+    this._loading = value;
+    this.effects.loading?.();
+  }
+}
+
+export const ShareButton = ($container) => {
+  const $buttonShare = $container.querySelector('#buttonShare')
+  const $dialogShareButtonTextCopied = document.querySelector('#dialogShareButtonTextCopied')
 
   const effects = {
     loading: () => {
@@ -26,7 +31,7 @@ export const ShareButton = () => {
     }
   }
 
-  state.effects = effects
+  const state = new State(effects)
 
   $buttonShare.addEventListener('click', async() => {
     const shareUrl = `${window.location.origin}?watch=${state.currentVideo}`
