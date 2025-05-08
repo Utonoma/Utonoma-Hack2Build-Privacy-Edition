@@ -8,12 +8,25 @@ export const ShareButton = () => {
     get loading() {
       return this._loading
     },
-    set loading({value, effects, payload}) {
-      //disable the button
+    set loading(value) {
       this._loading = value
-      if (effects) effects(payload)
+      if (effects.loading) effects.loading()
+    },
+  }
+
+  const effects = {
+    loading: () => {
+      if (state.loading) {
+        $buttonShare.disabled = true
+        $buttonShare.style.visibility = 'hidden'
+      } else {
+        $buttonShare.disabled = false
+        $buttonShare.style.visibility = 'visible'
+      }
     }
   }
+
+  state.effects = effects
 
   $buttonShare.addEventListener('click', async() => {
     const shareUrl = `${window.location.origin}?watch=${state.currentVideo}`

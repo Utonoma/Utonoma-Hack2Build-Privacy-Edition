@@ -65,6 +65,7 @@ async function effects() {
         currentUtonomaIdentifier = utonomaIdentifier
         LikeButton.updateUtonomaIdentifier(utonomaIdentifier)
         const { index } = currentUtonomaIdentifier
+        ShareButton.currentVideo = index
       } catch(error) {
         console.log("Error when loading the previous short video", error)
         state.setStep(state.availiableSteps.nextShortVideo, effects) //On error, transition to the next video step
@@ -73,6 +74,7 @@ async function effects() {
       break
     case state.availiableSteps.informCorrectPlay:
       const { index } = currentUtonomaIdentifier
+      ShareButton.currentVideo = index
       break
   }
 }
@@ -81,6 +83,7 @@ function loading(boolean) {
   $buttonNextShortVideo.disabled = boolean
   $buttonPreviousShortVideo.disabled = boolean
   LikeButton.loading(boolean)
+  ShareButton.loading = boolean
 }
 
 $buttonNextShortVideo.addEventListener('click', async() => {
