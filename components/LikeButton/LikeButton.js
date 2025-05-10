@@ -8,6 +8,7 @@ export const LikeButton = ($container) => {
   const state = createStateForLikeButton()
 
   const $buttonLikeShortVideo = $container.querySelector('#buttonLikeShortVideo')
+  const $likesNumber = $container.querySelector('#likesNumber')
   const $dialogNotEnoughBalanceError = document.querySelector('#dialogNotEnoughBalanceError')
   const $dialogCheckWalletToApprove = document.querySelector('#dialogCheckWalletToApprove')
   const $dialogLikeContentTransactionSent = document.querySelector('#dialogLikeContentTransactionSent')
@@ -80,6 +81,7 @@ export const LikeButton = ($container) => {
         }
         break
       case state.availiableSteps.success:
+        $likesNumber.innerHTML = parseInt($likesNumber.innerHTML) + 1
         $dialogLikeButtonSuccess.show()
         setTimeout(() => $dialogLikeButtonSuccess.close(), 5000)
         break
