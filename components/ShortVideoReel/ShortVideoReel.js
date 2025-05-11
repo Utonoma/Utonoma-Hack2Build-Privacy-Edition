@@ -31,8 +31,8 @@ async function effects() {
         playPromise.then(() => {
           numberOfRetriesToGetShortVideo = 0
           currentUtonomaIdentifier = utonomaIdentifier
-          LikeButton.updateUtonomaIdentifier(utonomaIdentifier)
-          $likesNumber.innerHTML = likes
+          LikeButton.utonomaIdentifier = utonomaIdentifier
+          LikeButton.votesCount = likes
           loading(false)
           state.setStep(state.availiableSteps.informCorrectPlay, effects, nextShortVideo)
         }).catch((error) => {
@@ -61,9 +61,9 @@ async function effects() {
         $shortVideoPlayer.src = getUrlFromIpfsHash(contentId)
         $shortVideoPlayer.load()
         $shortVideoPlayer.play()
-        $likesNumber.innerHTML = likes
+        LikeButton.votesCount = likes
         currentUtonomaIdentifier = utonomaIdentifier
-        LikeButton.updateUtonomaIdentifier(utonomaIdentifier)
+        LikeButton.utonomaIdentifier = utonomaIdentifier
         const { index } = currentUtonomaIdentifier
         ShareButton.currentVideo = index
       } catch(error) {
@@ -82,7 +82,7 @@ async function effects() {
 function loading(boolean) {
   $buttonNextShortVideo.disabled = boolean
   $buttonPreviousShortVideo.disabled = boolean
-  LikeButton.loading(boolean)
+  LikeButton.loading = boolean
   ShareButton.loading = boolean
 }
 
