@@ -148,3 +148,7 @@ export const ShareButton = ($container) => {
 As you may see, each instance of the ShareButton component may have its own button tag in the dom, but you wanna 
 reuse the same dialog for all the instances, then in one case you go to the $container or the document depending 
 on your needs
+
+Object.freeze in the possible actions object.
+When using Object.freeze in an object, you are telling that the object will never change this gives you the chance 
+to have autocompletion when using this object, its like having enums in another languages.
