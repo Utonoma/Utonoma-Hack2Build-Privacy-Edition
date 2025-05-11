@@ -1,11 +1,68 @@
-import { createStateForLikeButton } from './LikeButton.state.js'
 import { ConfirmLikeOrDislike as ConfirmLikeOrDislikeFactory } from '../modals/ConfirmLikeOrDislike/ConfirmLikeOrDislike.js'
 import { readOnlyProvider } from "../../web3_providers/readOnlyProvider.js"
 import { formatUnits } from 'ethers'
 import { useUtonomaContractForSignedTransactions } from '../../web3_providers/signedProvider.js'
 
+export const ACTIONS = Object.freeze({
+  waiting: 'waiting',
+  loading: 'loading',
+  pressingButton: 'likeButtonPressed',
+  checkingIfUserIsConnected: 'checkingIfUserIsConnected',
+  requestingFeeAcceptance: 'requestingFeeAcceptance',
+  checkingAccountBalance: 'checkingAccountBalance',
+  waitingForApproveOnWallet: 'waitingForApproveOnWallet',
+  waitingForBlockchainResult: 'waitingForBlockchainResult',
+  updatingUtonomaIdentifier: 'updatingUtonomaIdentifier',
+  success: 'success',
+  userDisconnectedError: 'userDisconnectedError',
+  balanceNotEnoughtError: 'balanceNotEnoughtError',
+  genericError: 'genericError'
+})
+
+export class State {
+
+  #loading = false
+  #votesCount = '-'
+  #currentAction = ACTIONS.waiting
+
+  constructor(effects = {}, actions = {}) {
+    this.utonomaIdentifier = {}
+    this.effects = effects
+    this.actions = actions
+  }
+
+  get loading() {
+    return this.#loading
+  }
+
+  set loading(value) {
+    this.#loading = value
+    this.effects.loading?.()
+  }
+
+  get votesCount() {
+    return this.#votesCount
+  }
+
+  set votesCount(value) {
+    this.#votesCount = value
+    this.effects.votesCount?.()
+  }
+
+  get currentAction() {
+    return this.#currentAction;
+  }
+  
+  set currentAction(value) {
+    if (!Object.values(ACTIONS).includes(value)) {
+      throw new Error(`Invalid action: "${value}". Must be one of: ${Object.values(ACTIONS).join(', ')}`);
+    }
+    this.#currentAction = value;
+    this.actions[this.#currentAction]?.()
+  }
+}
+
 export const LikeButton = ($container) => { 
-  const state = createStateForLikeButton()
 
   const $buttonLikeShortVideo = $container.querySelector('#buttonLikeShortVideo')
   const $likesNumber = $container.querySelector('#likesNumber')
@@ -20,112 +77,107 @@ export const LikeButton = ($container) => {
   let currentFee
   let likeResult
 
-  async function effects() {
-    switch (state.currentStep()) {
-      case state.availiableSteps.pressingButton:
-        loading(true)
-        state.setStep(state.availiableSteps.checkingIfUserIsConnected, effects)
-        break      
-      case state.availiableSteps.checkingIfUserIsConnected:
-        if(!modal) {
+  const _effects = {
+    loading: () => {
+      if(state.loading) {
+        $buttonLikeShortVideo.disabled = true
+        $buttonLikeShortVideo.style.visibility = 'hidden'
+      }
+      else {
+        $buttonLikeShortVideo.disabled = false
+        $buttonLikeShortVideo.style.visibility = 'visible'
+      }
+    },
+    votesCount: () => {
+      $likesNumber.innerHTML = state.votesCount
+    }
+  }
+
+  const actions = {
+    checkingIfUserIsConnected: async () => {
+      if(!modal) {
           const { useSignedProvider } = await import('../../web3_providers/signedProvider.js')
           const { modal: modalInstance } = await useSignedProvider()
           modal = modalInstance
-        }
-        if(modal.getIsConnectedState()) state.setStep(state.availiableSteps.requestingFeeAcceptance, effects)
-        else state.setStep(state.availiableSteps.userDisconnectedError, effects)
-        break
-      case state.availiableSteps.requestingFeeAcceptance:
-        try {
-          currentFee = await readOnlyProvider.genericRequests.getCurrentFee(modal.getAddress())
-          if(!ConfirmLikeOrDislike) ConfirmLikeOrDislike = ConfirmLikeOrDislikeFactory($container.querySelector('#dialogConfirmLikeOrDislike'))
-          ConfirmLikeOrDislike.updateFee(formatUnits(currentFee, 18))
-          const confirmation = await ConfirmLikeOrDislike.askForUserConfirmation()
-          if(!confirmation) loading(false) //user rejected
-          else state.setStep(state.availiableSteps.checkingAccountBalance, effects)
-        } catch (error) {
-          state.setStep(state.availiableSteps.genericError, effects)
-        }
-        break
-      case state.availiableSteps.checkingAccountBalance:
-        try {
-          const accountBalance = await readOnlyProvider.genericRequests.getBalance(modal.getAddress())
-          if(accountBalance <= currentFee) state.setStep(state.availiableSteps.balanceNotEnoughtError, effects)
-          else state.setStep(state.availiableSteps.waitingForApproveOnWallet, effects)
-        } catch(error) {
-          state.setStep(state.availiableSteps.genericError, effects)
-        }
-        break
-      case state.availiableSteps.waitingForApproveOnWallet:
-        try {
-          $dialogCheckWalletToApprove.showModal()
-          const { utonomaContractForSignedTransactions } = await useUtonomaContractForSignedTransactions()
-          likeResult = await utonomaContractForSignedTransactions.like([state.utonomaIdentifier().index, state.utonomaIdentifier().contentType])
-          state.setStep(state.availiableSteps.waitingForBlockchainResult, effects)
-        } catch(error) {
-          state.setStep(state.availiableSteps.genericError, effects)
-        } finally {
-          $dialogCheckWalletToApprove.close()
-        }
-        break
-      case state.availiableSteps.waitingForBlockchainResult:
-        try {
-          $dialogLikeContentTransactionSent.show()
-          setTimeout(() => $dialogLikeContentTransactionSent.close(), 5000)
-          await likeResult.wait()
-          state.setStep(state.availiableSteps.success, effects)
-        } catch(error) {
-          state.setStep(state.availiableSteps.genericError, effects)
-        } finally {
-          loading(false)
-        }
-        break
-      case state.availiableSteps.success:
-        $likesNumber.innerHTML = parseInt($likesNumber.innerHTML) + 1
-        $dialogLikeButtonSuccess.show()
-        setTimeout(() => $dialogLikeButtonSuccess.close(), 5000)
-        break
-      case state.availiableSteps.userDisconnectedError:
-        const { setIsLoggedIn, setAddress } = await import('../../services/userManager/userManager.js')
-        setIsLoggedIn(false)
-        setAddress('')
-        location.hash = 'rightPanelContainer'
-        setTimeout(() => location.hash = '', 100)
-        loading(false)
-        break
-      case state.availiableSteps.balanceNotEnoughtError:
-        $dialogNotEnoughBalanceError.show()
-        setTimeout(() => $dialogNotEnoughBalanceError.close(), 5000)
-        loading(false)
-        break
-      case state.availiableSteps.genericError:
-        loading(false)
-        $dialogLikeButtonError.show()
-        setTimeout(() => $dialogLikeButtonError.close(), 5000)
-        break
+      }
+      if(modal.getIsConnectedState()) state.currentAction = ACTIONS.requestingFeeAcceptance
+      else state.currentAction = ACTIONS.userDisconnectedError
+    },
+    requestingFeeAcceptance: async () => {
+      try {
+        currentFee = await readOnlyProvider.genericRequests.getCurrentFee(modal.getAddress())
+        if(!ConfirmLikeOrDislike) ConfirmLikeOrDislike = ConfirmLikeOrDislikeFactory($container.querySelector('#dialogConfirmLikeOrDislike'))
+        ConfirmLikeOrDislike.updateFee(formatUnits(currentFee, 18))
+        const confirmation = await ConfirmLikeOrDislike.askForUserConfirmation()
+        if(!confirmation) state.loading = false //user rejected
+        else state.currentAction = ACTIONS.checkingAccountBalance
+      } catch (error) {
+        state.currentAction = ACTIONS.genericError
+      }
+    },
+    checkingAccountBalance: async () => {
+      try {
+        const accountBalance = await readOnlyProvider.genericRequests.getBalance(modal.getAddress())
+        if(accountBalance <= currentFee) state.currentAction = ACTIONS.balanceNotEnoughtError
+        else state.currentAction = ACTIONS.waitingForApproveOnWallet
+      } catch(error) {
+        state.currentAction = ACTIONS.genericError
+      }
+    },
+    waitingForApproveOnWallet: async () => {
+      try {
+        $dialogCheckWalletToApprove.showModal()
+        const { utonomaContractForSignedTransactions } = await useUtonomaContractForSignedTransactions()
+        likeResult = await utonomaContractForSignedTransactions.like([state.utonomaIdentifier.index, state.utonomaIdentifier.contentType])
+        state.currentAction = ACTIONS.waitingForBlockchainResult
+      } catch(error) {
+        state.currentAction = ACTIONS.genericError
+      } finally {
+        $dialogCheckWalletToApprove.close()
+      } 
+    },
+    waitingForBlockchainResult: async () => {
+      try {
+        $dialogLikeContentTransactionSent.show()
+        setTimeout(() => $dialogLikeContentTransactionSent.close(), 5000)
+        await likeResult.wait()
+        state.currentAction = ACTIONS.success
+      } catch(error) {
+        state.currentAction = ACTIONS.genericError
+      } finally {
+        state.loading = false
+      }
+    },
+    success: () => {
+      $likesNumber.innerHTML = parseInt($likesNumber.innerHTML) + 1
+      $dialogLikeButtonSuccess.show()
+      setTimeout(() => $dialogLikeButtonSuccess.close(), 5000)
+    },
+    userDisconnectedError: async () => {
+      const { setIsLoggedIn, setAddress } = await import('../../services/userManager/userManager.js')
+      setIsLoggedIn(false)
+      setAddress('')
+      location.hash = 'rightPanelContainer'
+      setTimeout(() => location.hash = '', 100)
+      state.loading = false
+    },
+    genericError: () => {
+      state.loading = false 
+      $dialogLikeButtonError.show()
+      setTimeout(() => $dialogLikeButtonError.close(), 5000)
+    },
+    balanceNotEnoughtError: () => {
+      $dialogNotEnoughBalanceError.show()
+      setTimeout(() => $dialogNotEnoughBalanceError.close(), 5000)
+      state.loading = false
     }
   }
 
-  function loading(boolean) {
-    if(boolean) {
-      $buttonLikeShortVideo.disabled = true
-      $buttonLikeShortVideo.style.visibility = 'hidden'
-    }
-    else {
-      $buttonLikeShortVideo.disabled = false
-      $buttonLikeShortVideo.style.visibility = 'visible'
-    }
-  }
+  const state = new State(_effects, actions)
 
   $buttonLikeShortVideo.addEventListener('click', () => {
-    state.setStep(state.availiableSteps.pressingButton, effects)
+    state.currentAction = ACTIONS.checkingIfUserIsConnected
   })
 
-  return {
-    state,
-    loading: (boolean) => { 
-      state.setStep(state.availiableSteps.loading, () => loading(state.loading()), boolean) 
-    },
-    updateUtonomaIdentifier: (id) => { state.setStep(state.availiableSteps.updatingUtonomaIdentifier, undefined, id) }
-  }
+  return state
 }
