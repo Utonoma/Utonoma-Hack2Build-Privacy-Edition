@@ -288,6 +288,15 @@
                 </svg>                  
                 <span class="Text--shaded" id="likesNumber" style="margin: 0; color: var(--snow);">-</span>
               </button>
+              <button class="Button--verticalText" type="button" id="buttonDislikeShortVideo">
+                <svg xmlns="http://www.w3.org/2000/svg" 
+                  class="Icon--small Icon--shaded"
+                  viewBox="0 -960 960 960" 
+                  fill="#F3F3F3">
+                  <path d="M240-840h440v520L400-40l-50-50q-7-7-11.5-19t-4.5-23v-14l44-174H120q-32 0-56-24t-24-56v-80q0-7 2-15t4-15l120-282q9-20 30-34t44-14Zm360 80H240L120-480v80h360l-54 220 174-174v-406Zm0 406v-406 406Zm80 34v-80h120v-360H680v-80h200v520H680Z"/>
+                </svg> 
+                <span class="Text--shaded" id="likesNumber" style="margin: 0; color: var(--snow);">-</span>
+              </button>
               <button id="buttonShare"
                 style="margin-left: 10px;">
                 <svg class="Icon--small Icon--shaded" xmlns="http://www.w3.org/2000/svg" height="24px" viewBox="0 -960 960 960" width="24px" fill="#fffafa">
@@ -297,8 +306,8 @@
               <dialog id="dialogConfirmLikeOrDislike">
                 <form method="dialog">
                   <h2 style="font: var(--headline1); margin: 0;">
-                    <span lang="en">Confirm your like</span>
-                    <span lang="es">Confirma tu like</span>
+                    <span lang="en">Confirm your vote</span>
+                    <span lang="es">Confirma tu voto</span>
                   </h2>
                   <p style="font: var(--headline6); margin-bottom: 0;">
                     <span lang="en">Current fee for voting, in Utonoma tokens, is: </span>
