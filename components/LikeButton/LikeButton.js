@@ -50,21 +50,21 @@ export class State {
   }
 
   get currentAction() {
-    return this.#currentAction;
+    return this.#currentAction
   }
   
-  set currentAction(value) {
+  set currentAction({value, payload }) {
     if (!Object.values(ACTIONS).includes(value)) {
-      throw new Error(`Invalid action: "${value}". Must be one of: ${Object.values(ACTIONS).join(', ')}`);
+      throw new Error(`Invalid action: "${value}". Must be one of: ${Object.values(ACTIONS).join(', ')}`)
     }
-    this.#currentAction = value;
-    this.actions[this.#currentAction]?.()
+    this.#currentAction = value
+    this.actions[this.#currentAction]?.(payload)
   }
 }
 
 export const LikeButton = ($container) => { 
 
-  const $buttonLikeShortVideo = $container.querySelector('#buttonLikeShortVideo')
+  const $buttonLikeShortVideo = $container
   const $likesNumber = $container.querySelector('#likesNumber')
   const $dialogNotEnoughBalanceError = document.querySelector('#dialogNotEnoughBalanceError')
   const $dialogCheckWalletToApprove = document.querySelector('#dialogCheckWalletToApprove')
@@ -100,28 +100,28 @@ export const LikeButton = ($container) => {
           const { modal: modalInstance } = await useSignedProvider()
           modal = modalInstance
       }
-      if(modal.getIsConnectedState()) state.currentAction = ACTIONS.requestingFeeAcceptance
-      else state.currentAction = ACTIONS.userDisconnectedError
+      if(modal.getIsConnectedState()) state.currentAction = { value: ACTIONS.requestingFeeAcceptance }
+      else state.currentAction = { value: ACTIONS.userDisconnectedError}
     },
     requestingFeeAcceptance: async () => {
       try {
         currentFee = await readOnlyProvider.genericRequests.getCurrentFee(modal.getAddress())
-        if(!ConfirmLikeOrDislike) ConfirmLikeOrDislike = ConfirmLikeOrDislikeFactory($container.querySelector('#dialogConfirmLikeOrDislike'))
+        if(!ConfirmLikeOrDislike) ConfirmLikeOrDislike = ConfirmLikeOrDislikeFactory(document.querySelector('#dialogConfirmLikeOrDislike'))
         ConfirmLikeOrDislike.updateFee(formatUnits(currentFee, 18))
         const confirmation = await ConfirmLikeOrDislike.askForUserConfirmation()
         if(!confirmation) state.loading = false //user rejected
-        else state.currentAction = ACTIONS.checkingAccountBalance
+        else state.currentAction = { value: ACTIONS.checkingAccountBalance }
       } catch (error) {
-        state.currentAction = ACTIONS.genericError
+        state.currentAction = { value: ACTIONS.genericError }
       }
     },
     checkingAccountBalance: async () => {
       try {
         const accountBalance = await readOnlyProvider.genericRequests.getBalance(modal.getAddress())
-        if(accountBalance <= currentFee) state.currentAction = ACTIONS.balanceNotEnoughtError
-        else state.currentAction = ACTIONS.waitingForApproveOnWallet
+        if(accountBalance <= currentFee) state.currentAction = { value: ACTIONS.balanceNotEnoughtError }
+        else state.currentAction = { value: ACTIONS.waitingForApproveOnWallet }
       } catch(error) {
-        state.currentAction = ACTIONS.genericError
+        state.currentAction = { value: ACTIONS.genericError }
       }
     },
     waitingForApproveOnWallet: async () => {
@@ -129,21 +129,21 @@ export const LikeButton = ($container) => {
         $dialogCheckWalletToApprove.showModal()
         const { utonomaContractForSignedTransactions } = await useUtonomaContractForSignedTransactions()
         likeResult = await utonomaContractForSignedTransactions.like([state.utonomaIdentifier.index, state.utonomaIdentifier.contentType])
-        state.currentAction = ACTIONS.waitingForBlockchainResult
+        state.currentAction = { value: ACTIONS.waitingForBlockchainResult, payload: likeResult }
       } catch(error) {
-        state.currentAction = ACTIONS.genericError
+        state.currentAction = { value: ACTIONS.genericError }
       } finally {
         $dialogCheckWalletToApprove.close()
       } 
     },
-    waitingForBlockchainResult: async () => {
+    waitingForBlockchainResult: async (likeResult) => {
       try {
         $dialogLikeContentTransactionSent.show()
         setTimeout(() => $dialogLikeContentTransactionSent.close(), 5000)
         await likeResult.wait()
-        state.currentAction = ACTIONS.success
+        state.currentAction = { value: ACTIONS.success }
       } catch(error) {
-        state.currentAction = ACTIONS.genericError
+        state.currentAction = { value: ACTIONS.genericError }
       } finally {
         state.loading = false
       }
@@ -176,7 +176,7 @@ export const LikeButton = ($container) => {
   const state = new State(_effects, actions)
 
   $buttonLikeShortVideo.addEventListener('click', () => {
-    state.currentAction = ACTIONS.checkingIfUserIsConnected
+    state.currentAction = { value: ACTIONS.checkingIfUserIsConnected }
   })
 
   return state
