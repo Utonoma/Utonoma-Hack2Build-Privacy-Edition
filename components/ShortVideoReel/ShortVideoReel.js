@@ -2,15 +2,16 @@ import { getShortVideo } from '../../services/contentProvider.js'
 import { getUrlFromIpfsHash } from '../../utils/encodingUtils/encodingUtils.js'
 import { shortVideoReelState as state } from './ShortVideoReel.state.js'
 import { LikeButton as LikeButtonFactory } from '../LikeButton/LikeButton.js'
+import { DislikeButton as DislikeButtonFactory } from '../DislikeButton/DislikeButton.js'
 import { ShareButton as ShareButtonFactory } from '../ShareButton/ShareButton.js'
 
 const $shortVideoPlayer = document.querySelector('#shortVideoPlayer')
 const $buttonNextShortVideo = document.querySelector('#buttonNextShortVideo')
 const $buttonPreviousShortVideo = document.querySelector('#buttonPreviousShortVideo')
-const $likesNumber = document.querySelector('#likesNumber')
 
-const LikeButton = LikeButtonFactory(document.querySelector('#likeButtonContainer'))
+const LikeButton = LikeButtonFactory(document.querySelector('#buttonLikeShortVideo'))
 const ShareButton = ShareButtonFactory(document.querySelector('#buttonShare'))
+const DislikeButton = DislikeButtonFactory(document.querySelector('#buttonDislikeShortVideo'))
 
 let currentUtonomaIdentifier
 let numberOfRetriesToGetShortVideo = 0 
@@ -23,7 +24,7 @@ async function effects() {
       try {
         if(state.detachedHead()) var nextShortVideo = state.shortVideoHistory()[state.currentVideo()]
         else nextShortVideo = await getShortVideo(state.shortVideoHistory())
-        const { authorAddress, contentId, metadata, likes, utonomaIdentifier } = nextShortVideo
+        const { authorAddress, contentId, metadata, likes, dislikes, utonomaIdentifier } = nextShortVideo
         $shortVideoPlayer.src = getUrlFromIpfsHash(contentId)
         $shortVideoPlayer.load()
         const playPromise = $shortVideoPlayer.play()
@@ -33,6 +34,8 @@ async function effects() {
           currentUtonomaIdentifier = utonomaIdentifier
           LikeButton.utonomaIdentifier = utonomaIdentifier
           LikeButton.votesCount = likes
+          DislikeButton.utonomaIdentifier = utonomaIdentifier
+          DislikeButton.votesCount = dislikes
           loading(false)
           state.setStep(state.availiableSteps.informCorrectPlay, effects, nextShortVideo)
         }).catch((error) => {
@@ -57,13 +60,15 @@ async function effects() {
     case state.availiableSteps.previousShortVideo:
       loading(true)
       try {
-        const { authorAddress, contentId, metadata, likes, utonomaIdentifier } = state.shortVideoHistory()[state.currentVideo()]
+        const { authorAddress, contentId, metadata, likes, dislikes, utonomaIdentifier } = state.shortVideoHistory()[state.currentVideo()]
         $shortVideoPlayer.src = getUrlFromIpfsHash(contentId)
         $shortVideoPlayer.load()
         $shortVideoPlayer.play()
         LikeButton.votesCount = likes
+        DislikeButton.votesCount = dislikes
         currentUtonomaIdentifier = utonomaIdentifier
         LikeButton.utonomaIdentifier = utonomaIdentifier
+        DislikeButton.utonomaIdentifier = utonomaIdentifier
         const { index } = currentUtonomaIdentifier
         ShareButton.currentVideo = index
       } catch(error) {
@@ -83,6 +88,7 @@ function loading(boolean) {
   $buttonNextShortVideo.disabled = boolean
   $buttonPreviousShortVideo.disabled = boolean
   LikeButton.loading = boolean
+  DislikeButton.loading = boolean
   ShareButton.loading = boolean
 }
 
