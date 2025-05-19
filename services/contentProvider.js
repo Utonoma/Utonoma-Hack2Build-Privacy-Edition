@@ -2,6 +2,7 @@ import { readOnlyProvider } from '../web3_providers/readOnlyProvider.js'
 import { formatUnits } from 'ethers'
 import { getIpfsHashFromBytes32 } from '../utils/encodingUtils/encodingUtils.js'
 import { getUniqueRandomNumberFromArray } from '../utils/generalUtils/generalUtils.js'
+import { shouldContentBeEliminated } from '../utils/validationUtils/validationUtils.js'
 
 const state = {
   indexesOfSeenShortVideos: []
@@ -41,7 +42,8 @@ export async function getShortVideo() {
       metadata,
       likes,
       dislikes,
-      utonomaIdentifier: { index: identifier, contentType: 5 }
+      utonomaIdentifier: { index: identifier, contentType: 5 },
+      isDeletable: shouldContentBeEliminated(Number(likes), Number(dislikes))
     }
   } catch(error) {
     console.log('Error in getContentLibrary getContentById: ', error)

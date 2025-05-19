@@ -152,3 +152,14 @@ on your needs
 Object.freeze in the possible actions object.
 When using Object.freeze in an object, you are telling that the object will never change this gives you the chance 
 to have autocompletion when using this object, its like having enums in another languages.
+
+When to use setters, effects and actions in the State of the components
+Use the setters to change pure values from the state
+Use the effects to change values that have dependencies (like changing the dom)
+Use actions to call multiple effects or to excecute async functions
+
+If you need to call an action directly from the outside of the component, instead of triggering
+the action by modifying the state via setters and getters, you can call the action methods directly
+like this: ComponentInstance.actions.actionName()
+This tecnnique is usefull if want to await for an action that returns a promise, as you cannot 
+await in setters. See an example of this in the ThisContentCanBeDeleted modal
