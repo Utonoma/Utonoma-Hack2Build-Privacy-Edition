@@ -1,3 +1,7 @@
+/* Original component, it was replaced for a much less verbose version
+that keeps the good practices from the origial but with less code
+as it removes the finite state machine and only uses setters, effects and actions
+
 export const ACTIONS = Object.freeze({
   idling: 'idling',
   showDialog: 'showDialog',
@@ -53,6 +57,52 @@ export const ThisContentCanBeDeleted = ($container) => {
           $understoodButtton.removeEventListener('click', onClick)
           state.isDialogVisible = false
           state.currentAction = { value: ACTIONS.idling }
+          resolve(true)
+        })
+      })
+    }
+  }
+
+  const state = new State(effects, actions)
+
+  return state
+}
+*/
+
+export class State {
+  #isDialogVisible = false
+  constructor(effects = {}, actions = {}) {
+    this.effects = effects
+    this.actions = actions
+  }
+
+  get isDialogVisible() {
+    return this.#isDialogVisible
+  }
+
+  set isDialogVisible(value) {
+    this.#isDialogVisible = value
+    this.effects.isDialogVisible?.()
+  }
+}
+
+export const ThisContentCanBeDeleted = ($container) => {
+  const $dialog = $container
+  const $understoodButtton = $container.querySelector('button')
+
+  const effects = {
+    isDialogVisible: () => {
+      state.isDialogVisible ? $dialog.showModal() : $dialog.close()
+    }
+  }
+
+  const actions = {
+    showDialog: async() => {
+      state.isDialogVisible = true
+      return new Promise((resolve) => {
+        $understoodButtton.addEventListener('click', function onClick() {
+          $understoodButtton.removeEventListener('click', onClick)
+          state.isDialogVisible = false
           resolve(true)
         })
       })
