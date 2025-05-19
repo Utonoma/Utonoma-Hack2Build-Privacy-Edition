@@ -8,6 +8,7 @@ import { ShareButton as ShareButtonFactory } from '../ShareButton/ShareButton.js
 const $shortVideoPlayer = document.querySelector('#shortVideoPlayer')
 const $buttonNextShortVideo = document.querySelector('#buttonNextShortVideo')
 const $buttonPreviousShortVideo = document.querySelector('#buttonPreviousShortVideo')
+const $dialogThisContentCanBeDeleted = document.querySelector('#dialogThisContentCanBeDeleted')
 
 const LikeButton = LikeButtonFactory(document.querySelector('#buttonLikeShortVideo'))
 const ShareButton = ShareButtonFactory(document.querySelector('#buttonShare'))
@@ -24,9 +25,28 @@ async function effects() {
       try {
         if(state.detachedHead()) var nextShortVideo = state.shortVideoHistory()[state.currentVideo()]
         else nextShortVideo = await getShortVideo(state.shortVideoHistory())
-        const { authorAddress, contentId, metadata, likes, dislikes, utonomaIdentifier } = nextShortVideo
+        const { 
+          authorAddress, 
+          contentId, 
+          metadata, 
+          likes, 
+          dislikes, 
+          isDeletable, 
+          utonomaIdentifier 
+        } = nextShortVideo
         $shortVideoPlayer.src = getUrlFromIpfsHash(contentId)
         $shortVideoPlayer.load()
+        //before playing the video, inform that its ready to be deleted
+        if(isDeletable) {
+          if(!ThisContentCanBeDeleted) {
+            var {
+              ThisContentCanBeDeleted: ThisContentCanBeDeletedFactory,
+              ACTIONS
+            } = await import('../modals/ThisContentCanBeDeleted/ThisContentCanBeDeleted.js')
+            var ThisContentCanBeDeleted = ThisContentCanBeDeletedFactory($dialogThisContentCanBeDeleted)
+          }
+          await ThisContentCanBeDeleted.actions[ACTIONS.showDialog]()
+        }
         const playPromise = $shortVideoPlayer.play()
         if (!playPromise) throw new Error('playPromise returned undefined')
         playPromise.then(() => {
