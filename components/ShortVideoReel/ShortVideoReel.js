@@ -4,6 +4,7 @@ import { shortVideoReelState as state } from './ShortVideoReel.state.js'
 import { LikeButton as LikeButtonFactory } from '../LikeButton/LikeButton.js'
 import { DislikeButton as DislikeButtonFactory } from '../DislikeButton/DislikeButton.js'
 import { ShareButton as ShareButtonFactory } from '../ShareButton/ShareButton.js'
+import { ThisContentCanBeDeleted as ThisContentCanBeDeletedFactory } from '../modals/ThisContentCanBeDeleted/ThisContentCanBeDeleted.js'
 
 const $shortVideoPlayer = document.querySelector('#shortVideoPlayer')
 const $buttonNextShortVideo = document.querySelector('#buttonNextShortVideo')
@@ -13,6 +14,7 @@ const $dialogThisContentCanBeDeleted = document.querySelector('#dialogThisConten
 const LikeButton = LikeButtonFactory(document.querySelector('#buttonLikeShortVideo'))
 const ShareButton = ShareButtonFactory(document.querySelector('#buttonShare'))
 const DislikeButton = DislikeButtonFactory(document.querySelector('#buttonDislikeShortVideo'))
+const ThisContentCanBeDeletedModal = ThisContentCanBeDeletedFactory($dialogThisContentCanBeDeleted)
 
 let currentUtonomaIdentifier
 let numberOfRetriesToGetShortVideo = 0 
@@ -37,15 +39,7 @@ async function effects() {
         $shortVideoPlayer.src = getUrlFromIpfsHash(contentId)
         $shortVideoPlayer.load()
         //before playing the video, inform that its ready to be deleted
-        if(isDeletable) {
-          if(!ThisContentCanBeDeleted) {
-            var {
-              ThisContentCanBeDeleted: ThisContentCanBeDeletedFactory,
-            } = await import('../modals/ThisContentCanBeDeleted/ThisContentCanBeDeleted.js')
-            var ThisContentCanBeDeleted = ThisContentCanBeDeletedFactory($dialogThisContentCanBeDeleted)
-          }
-          await ThisContentCanBeDeleted.actions.showDialog()
-        }
+        if(isDeletable) await ThisContentCanBeDeletedModal.actions.showDialog()
         const playPromise = $shortVideoPlayer.play()
         if (!playPromise) throw new Error('playPromise returned undefined')
         playPromise.then(() => {
@@ -79,9 +73,18 @@ async function effects() {
     case state.availiableSteps.previousShortVideo:
       loading(true)
       try {
-        const { authorAddress, contentId, metadata, likes, dislikes, utonomaIdentifier } = state.shortVideoHistory()[state.currentVideo()]
+        const { 
+          authorAddress, 
+          contentId, 
+          metadata, 
+          likes, 
+          dislikes, 
+          isDeletable,
+          utonomaIdentifier 
+        } = state.shortVideoHistory()[state.currentVideo()]
         $shortVideoPlayer.src = getUrlFromIpfsHash(contentId)
         $shortVideoPlayer.load()
+        if(isDeletable) await ThisContentCanBeDeletedModal.actions.showDialog()
         $shortVideoPlayer.play()
         LikeButton.votesCount = likes
         DislikeButton.votesCount = dislikes
