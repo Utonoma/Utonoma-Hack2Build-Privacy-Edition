@@ -41,11 +41,10 @@ async function effects() {
           if(!ThisContentCanBeDeleted) {
             var {
               ThisContentCanBeDeleted: ThisContentCanBeDeletedFactory,
-              ACTIONS
             } = await import('../modals/ThisContentCanBeDeleted/ThisContentCanBeDeleted.js')
             var ThisContentCanBeDeleted = ThisContentCanBeDeletedFactory($dialogThisContentCanBeDeleted)
           }
-          await ThisContentCanBeDeleted.actions[ACTIONS.showDialog]()
+          await ThisContentCanBeDeleted.actions.showDialog()
         }
         const playPromise = $shortVideoPlayer.play()
         if (!playPromise) throw new Error('playPromise returned undefined')
