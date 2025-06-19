@@ -18,9 +18,6 @@ export class State {
 
 export const GenericModal = ($container) => {
   const $dialog = $container
-  const $confirmButton = $container.querySelector('#confirmButton')
-  const $cancelButton = $container.querySelector('#cancelButton')
-
 
   const effects = {
     isDialogVisible: () => {
