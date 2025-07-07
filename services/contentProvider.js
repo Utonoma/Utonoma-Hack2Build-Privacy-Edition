@@ -1,5 +1,5 @@
 import { readOnlyProvider } from '../web3_providers/readOnlyProvider.js'
-import { formatUnits } from 'ethers'
+import { formatUnits, ZeroHash } from 'ethers'
 import { getIpfsHashFromBytes32 } from '../utils/encodingUtils/encodingUtils.js'
 import { getUniqueRandomNumberFromArray } from '../utils/generalUtils/generalUtils.js'
 import { shouldContentBeEliminated } from '../utils/validationUtils/validationUtils.js'
@@ -22,20 +22,27 @@ export async function getShortVideo() {
       url.searchParams.delete('watch')
       window.history.replaceState({}, '', url)
     }
-    const identifier = watchValue && Number(watchValue) < shortVideosLibraryLength 
+    let identifier = watchValue && Number(watchValue) < shortVideosLibraryLength 
     ? watchValue
-    : getUniqueRandomNumberFromArray(shortVideosLibraryLength, state.indexesOfSeenShortVideos)
-    if(identifier !== null) state.indexesOfSeenShortVideos.push(identifier)
-    else throw new Error('indexesOfSeenShortVideos was not reseted correctly')
-    const { 
-      0: authorAddress, 
-      1: contentIdInBytes32, 
-      2: metadata, 
-      3: likes,
-      4: dislikes 
-    } = await readOnlyProvider.utonomaContract.getContentById([identifier,5])
+    : null
+    let authorAddress, contentIdInBytes32, metadata, likes, dislikes
+    //This do while is used to avoid returning contents that have been deleted from the smart contract
+    do {
+      if(!identifier) identifier = getUniqueRandomNumberFromArray(shortVideosLibraryLength, state.indexesOfSeenShortVideos)
+      if(identifier !== null) state.indexesOfSeenShortVideos.push(identifier)
+      else throw new Error('indexesOfSeenShortVideos was not reseted correctly')
+      const rawContent = await readOnlyProvider.utonomaContract.getContentById([identifier,5])
+      if(!rawContent) continue
+      ({ 
+        0: authorAddress, 
+        1: contentIdInBytes32, 
+        2: metadata, 
+        3: likes,
+        4: dislikes 
+      } = rawContent)
+      if(contentIdInBytes32 === ZeroHash) identifier = null
+    } while(!contentIdInBytes32 || contentIdInBytes32 === ZeroHash)
     const contentId = getIpfsHashFromBytes32(contentIdInBytes32)
-    //if(contentId == '0x0') throw 'Content deleted'
     return {
       authorAddress,
       contentId,
