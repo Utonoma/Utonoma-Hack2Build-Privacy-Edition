@@ -5,7 +5,8 @@ import { GenericModal as GenericModalFactory } from '../modals/GenericModal/Gene
 export const DislikeButton = ($container) => {
   
   const $dialogCheckWalletToApprove = document.querySelector('#dialogCheckWalletToApprove')
-  
+  const $dialogLikeButtonSuccess = document.querySelector('#dialogLikeButtonSuccess')
+
   const DislikeButton = LikeButton($container)
   const DialogConfirmDelete = GenericModalFactory(document.querySelector('#dialogConfirmDelete'))
   
@@ -41,17 +42,17 @@ export const DislikeButton = ($container) => {
     try {
       const { utonomaContractForSignedTransactions } = await useUtonomaContractForSignedTransactions()
       const transaction = await utonomaContractForSignedTransactions.deletion(DislikeButton.utonomaIdentifier)
-      const likeResult = await transaction.wait()
-      if(likeResult.status === 1) {
-        DislikeButton.currentAction = { value: ACTIONS.deletionSuccess }
+      const deleteResult = await transaction.wait()
+      if(deleteResult.status === 1) {
+        $dialogLikeButtonSuccess.show()
+        setTimeout(() => $dialogLikeButtonSuccess.close(), 5000)
       } else {
-        DislikeButton.currentAction = { value: ACTIONS.deletionError }
+        DislikeButton.currentAction = { value: ACTIONS.genericError }
       }
     } catch (error) {
       console.error('Error while deleting content:', error)
       DislikeButton.currentAction = { value: ACTIONS.genericError }
     }
   }
-
   return DislikeButton
 }
