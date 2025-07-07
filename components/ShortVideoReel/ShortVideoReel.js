@@ -47,6 +47,7 @@ async function effects() {
           currentUtonomaIdentifier = utonomaIdentifier
           LikeButton.utonomaIdentifier = utonomaIdentifier
           LikeButton.votesCount = likes
+          DislikeButton.isDeleteable = isDeletable
           DislikeButton.utonomaIdentifier = utonomaIdentifier
           DislikeButton.votesCount = dislikes
           loading(false)
@@ -88,6 +89,7 @@ async function effects() {
         $shortVideoPlayer.play()
         LikeButton.votesCount = likes
         DislikeButton.votesCount = dislikes
+        DislikeButton.isDeleteable = isDeletable
         currentUtonomaIdentifier = utonomaIdentifier
         LikeButton.utonomaIdentifier = utonomaIdentifier
         DislikeButton.utonomaIdentifier = utonomaIdentifier
