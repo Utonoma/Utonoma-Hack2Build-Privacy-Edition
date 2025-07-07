@@ -4,6 +4,7 @@ import { setIsLoggedIn, setAddress, getUserAddress } from "../services/userManag
 import { getIpfsHashFromBytes32 } from "../utils/encodingUtils/encodingUtils.js"
 import { canContentBeHarvested } from '../utils/validationUtils/validationUtils.js'
 import { ContentInformationCard } from '../components/ContentInformationCard/ContentInformationCard.js'
+import { ZeroHash } from 'ethers'
 
 const $contentInfoCardTemplate = document.querySelector('#contentInfoCardTemplate')
 const $cardsContainer = document.querySelector('#cardsContainer')
@@ -43,7 +44,8 @@ async function getContent() {
     //getting the contents
     let contents = []
     for (let i = 0; i < events.length; i++) {
-      contents.push(await getElement(events[i].index, events[i].contentType))
+      const element = await getElement(events[i].index, events[i].contentType)
+      if(element) contents.push(element)
       //fetch the contents one by one and with a delay to avoid the provider to block the requests
       await delay(300)
     }
@@ -73,6 +75,8 @@ async function getElement(index, contentType) {
     4: dislikes,
     5: harvestedLikes
   } = await readOnlyProvider.utonomaContract.getContentById([index, contentType])
+
+  if(metadataHashInBytes32 === ZeroHash) return null
 
   const metadata = await fetch(
     `https://copper-urban-gorilla-864.mypinata.cloud/ipfs/${getIpfsHashFromBytes32(metadataHashInBytes32)}?pinataGatewayToken=WmR3tEcyNtxE6vjc4lPPIrY0Hzp3Dc9AYf2X4Bl-8o6JYBzTx9aY_u3OlpL1wGra`

@@ -3,7 +3,7 @@ import { readOnlyProvider } from "../../web3_providers/readOnlyProvider.js"
 import { formatUnits } from 'ethers'
 import { useUtonomaContractForSignedTransactions } from '../../web3_providers/signedProvider.js'
 
-export const ACTIONS = Object.freeze({
+export const ACTIONS = {
   waiting: 'waiting',
   loading: 'loading',
   pressingButton: 'likeButtonPressed',
@@ -17,13 +17,14 @@ export const ACTIONS = Object.freeze({
   userDisconnectedError: 'userDisconnectedError',
   balanceNotEnoughtError: 'balanceNotEnoughtError',
   genericError: 'genericError'
-})
+}
 
 export class State {
 
   #loading = false
   #votesCount = '-'
   #currentAction = ACTIONS.waiting
+  isDeleteable = false
 
   constructor(effects = {}, actions = {}) {
     this.utonomaIdentifier = {}
@@ -100,7 +101,11 @@ export const LikeButton = ($container) => {
           const { modal: modalInstance } = await useSignedProvider()
           modal = modalInstance
       }
-      if(modal.getIsConnectedState()) state.currentAction = { value: ACTIONS.requestingFeeAcceptance }
+      if(modal.getIsConnectedState()) {
+        state.isDeleteable
+        ? state.currentAction = { value: ACTIONS.alertDelete }
+        : state.currentAction = { value: ACTIONS.requestingFeeAcceptance }
+      } 
       else state.currentAction = { value: ACTIONS.userDisconnectedError}
     },
     requestingFeeAcceptance: async () => {
