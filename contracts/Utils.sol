@@ -7,25 +7,25 @@ import {IERC20} from "@openzeppelin/contracts/token/ERC20/IERC20.sol";
 
 contract Utils {
 
-    uint256 private constant _baseReward = 1000;
+    uint256 private constant _BASE_REWARD = 1000;
     //uint256 internal constant _commission = 1333333333333333333; //1.333333333333333333% of commission
-    //If the values of the _baseReward or _commission changes, the next const should also be recalculated
-    uint256 private constant _commissionByBaseReward = 1333333333333333333000;
-    uint256 private constant _minimumQuorum = 5;
+    //If the values of the _BASE_REWARD or _commission changes, the next const should also be recalculated
+    uint256 private constant _COMMISSION_BY_BASE_REWARD = 1333333333333333333000;
+    uint256 private constant _MINIMUM_QUORUM = 5;
 
     /// @notice please refer to the Utonoma paper to know what the base reward is
     function baseReward() external pure returns (uint256) {
-        return _baseReward;
+        return _BASE_REWARD;
     }
 
     /// @notice precomputed multiplication of the commision by the base reward stored to save calculations
     function commissionByBaseReward() external pure returns(uint256) {
-        return _commissionByBaseReward;
+        return _COMMISSION_BY_BASE_REWARD;
     }
 
     /// @notice minimum amount of votes (likes and dislikes) that should be emited to grant a reward
     function minimumQuorum() external pure returns(uint256) {
-        return _minimumQuorum;
+        return _MINIMUM_QUORUM;
     }
 
 
@@ -39,7 +39,7 @@ contract Utils {
     */
     function shouldContentBeEliminated(uint256 likes, uint256 dislikes) public pure returns(bool) {
         uint256 likesPlusDislikes = (likes + dislikes);
-        require(likesPlusDislikes > _minimumQuorum, "Minimum quorum hasn't been reached");
+        require(likesPlusDislikes > _MINIMUM_QUORUM, "Minimum quorum not reached");
         if(dislikes == 0) return false;
         uint256 normalizedDislikes = dislikes * 10**18;
         uint256 p = normalizedDislikes / likesPlusDislikes;
@@ -60,18 +60,18 @@ contract Utils {
         return pMinusRootByZ > oneHalf;
     }
 
-    /// @notice calculates the reward that a content creator can receive for one like, if the users number is 0, will return 10**18 * _baseReward
+    /// @notice calculates the reward that a content creator can receive for one like, if the users number is 0, will return 10**18 * _BASE_REWARD
     /// @param usersNumber the current monthly active users (MAU) that the platform has
     function calculateReward(uint256 usersNumber) public pure returns(uint256) {
-        if(usersNumber == 0) return (10**18 * _baseReward);
-        return (10**18 * _baseReward) / usersNumber**2;
+        if(usersNumber == 0) return (10**18 * _BASE_REWARD);
+        return (10**18 * _BASE_REWARD) / usersNumber**2;
     }
 
-    /// @notice calculates the fee, if the number of users is 0, will return _commissionByBaseReward
+    /// @notice calculates the fee, if the number of users is 0, will return _COMMISSION_BY_BASE_REWARD
     /// @param usersNumber the current monthly active users (MAU) that the platform has
     function calculateFee(uint256 usersNumber) public pure returns(uint256) {
-        if(usersNumber == 0) return (_commissionByBaseReward);
-        return _commissionByBaseReward / usersNumber**2;
+        if(usersNumber == 0) return (_COMMISSION_BY_BASE_REWARD);
+        return _COMMISSION_BY_BASE_REWARD / usersNumber**2;
     }
 
     /**
@@ -79,7 +79,7 @@ contract Utils {
     *  in the strikes number
     */ 
     function calculateFeeForUsersWithStrikes(uint64 numberOfStrikes, uint256 usersNumber) public pure returns(uint256) {
-        require(numberOfStrikes > 0, "Number of strikes should be greater than zero"); 
+        require(numberOfStrikes > 0, "Strikes not greater than zero"); 
         return 3 * calculateFee(usersNumber) * numberOfStrikes;
     }
 
@@ -119,7 +119,7 @@ contract Utils {
         }
 
         require(numberOfCharacters > 3, "At least 4 characters");
-        require(!charAfterNullSpace, "Invalid null value in between username");
+        require(!charAfterNullSpace, "Null value in between username");
 
         return true;
     }

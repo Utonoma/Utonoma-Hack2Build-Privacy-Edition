@@ -111,13 +111,24 @@ contract Utils_test {
     }
 
     function shouldContentBeEliminatedShouldRevert() public {
-        //pass as parameters 2 likes, 2 dislikes (4 votes in total) and 5 for minimum quorum
+        //pass as parameters 2 likes, 2 dislikes (4 votes in total) and 6 for minimum quorum
         try utils.shouldContentBeEliminated(2,2) {
             Assert.ok(false, 'method execution should fail');
         } catch Error(string memory reason) {
             Assert.equal(
                 reason, 
-                "Minimum quorum hasn't been reached", 
+                "Minimum quorum not reached", 
+                "In the shouldContentBeEliminated method if the total number of votes (likes plus dislikes) are less than the minimumQuorum the transaction should be reverted");
+        } catch (bytes memory /*lowLevelData*/) {
+            Assert.ok(false, 'failed unexpected');
+        }
+        //pass as parameters 3 likes, 2 dislikes (5 votes in total) and 6 for minimum quorum
+        try utils.shouldContentBeEliminated(3,2) {
+            Assert.ok(false, 'method execution should fail');
+        } catch Error(string memory reason) {
+            Assert.equal(
+                reason, 
+                "Minimum quorum not reached", 
                 "In the shouldContentBeEliminated method if the total number of votes (likes plus dislikes) are less than the minimumQuorum the transaction should be reverted");
         } catch (bytes memory /*lowLevelData*/) {
             Assert.ok(false, 'failed unexpected');
@@ -242,7 +253,7 @@ contract Utils_test {
         } catch Error(string memory reason) {
             Assert.equal(
                 reason, 
-                "Invalid null value in between username", 
+                "Null value in between username", 
                 "When using isValidUserName method, transaction would revert if the received username has a null value in between");
         } catch (bytes memory /*lowLevelData*/) {
             Assert.ok(false, 'failed unexpected');
@@ -253,7 +264,7 @@ contract Utils_test {
         } catch Error(string memory reason) {
             Assert.equal(
                 reason, 
-                "Invalid null value in between username", 
+                "Null value in between username", 
                 "When using isValidUserName method, transaction would revert if the received username has a null value at the start");
         } catch (bytes memory /*lowLevelData*/) {
             Assert.ok(false, 'failed unexpected');
@@ -300,7 +311,7 @@ contract Utils_test {
         } catch Error(string memory reason) {
             Assert.equal(
                 reason, 
-                "Number of strikes should be greater than zero", 
+                "Strikes not greater than zero", 
                 "When using the calculateFeeForUsersWithStrikes method, the number of strikes that it receives should be greater than zero");
         } catch (bytes memory /*lowLevelData*/) {
             Assert.ok(false, 'failed unexpected');

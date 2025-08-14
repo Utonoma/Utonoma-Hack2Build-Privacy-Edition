@@ -126,7 +126,7 @@ contract Utonoma is ERC20, ContentStorage, Users, Time {
         require(msg.sender == _owner, "Only the owner can withdraw");
         uint256 maxBalance = IERC20(address(this)).balanceOf(address(this));
         require(maxBalance > 0, "Nothing to withdraw");
-        IERC20(address(this)).transfer(_owner, maxBalance);
+        require(IERC20(address(this)).transfer(_owner, maxBalance), "Transfer failed");
     }
 
     function _collectFee(uint256 fee) internal {
@@ -134,7 +134,8 @@ contract Utonoma is ERC20, ContentStorage, Users, Time {
         approve(address(this), fee);
         require(IERC20(address(this)).allowance(msg.sender, address(this)) >= fee, 
             "No allowance to this smarcontract for the fee amount");
-        IERC20(address(this)).transferFrom(msg.sender, address(this), fee);
+        require(IERC20(address(this)).transferFrom(msg.sender, address(this), fee),
+            "Transfer failed");
         _burn(address(this), calculateFeeToBurn(fee));
     }
 

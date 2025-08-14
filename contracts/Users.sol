@@ -30,9 +30,9 @@ contract Users is Utils {
     }
 
     /// @notice gets the account of the owner of a username
-    /// @param userName is the username from wich wants to know the owner's account
-    function getUserNameOwner(bytes15 userName) public view returns(address) {
-        return _userNames[userName];
+    /// @param requestedUserName is the username from wich wants to know the owner's account
+    function getUserNameOwner(bytes15 requestedUserName) public view returns(address) {
+        return _userNames[requestedUserName];
     }
 
     /// @notice gets the account of the owner of a user name
@@ -67,13 +67,13 @@ contract Users is Utils {
     /// @param metadata bytes32 of a CID containing the additional information of the user, set it to 0x0 to not incluide it
     function createUser(bytes15 proposedUserName, bytes32 metadata) public {
         isValidUserName(proposedUserName);
-        require(getUserProfile(msg.sender).userName == 0x000000000000000000000000000000, "Account already have a username");
+        require(getUserProfile(msg.sender).userName == bytes15(0), "Account already have a username");
         require(getUserNameOwner(proposedUserName) == address(0), "Username isn't available");
 
         _userNames[proposedUserName] = msg.sender;
         _users[msg.sender].userName = proposedUserName;
 
-        if(metadata != 0x0000000000000000000000000000000000000000000000000000000000000000) 
+        if(metadata != bytes32(0)) 
             _users[msg.sender].userMetadataHash = metadata; 
     }
 
@@ -98,9 +98,11 @@ contract Users is Utils {
         uint256 startTimeMinusCurrent = currentTime - startTimeOfNetwork;
         uint256 elapsedMonths = startTimeMinusCurrent / 30 days;
 
+        uint256 MAUArrayLength = _MAU.length;
+
         //If there are no users during the whole period then fill with 0 in the report
-        if(elapsedMonths > _MAU.length) {
-            uint256 monthsWithNoInteraction = elapsedMonths - _MAU.length;
+        if(elapsedMonths > MAUArrayLength) {
+            uint256 monthsWithNoInteraction = elapsedMonths - MAUArrayLength;
             for(uint i = 0; i < monthsWithNoInteraction; i++) {
                 _MAU.push(0);
             }
@@ -111,7 +113,7 @@ contract Users is Utils {
         bool shouldCountAsNewInteraction;
 
         //If the interaction is the first of a new opening period.
-        if(elapsedMonths + 1 > _MAU.length) {
+        if(elapsedMonths + 1 > MAUArrayLength) {
             _MAU.push(1);
         }
 
@@ -120,14 +122,14 @@ contract Users is Utils {
 
         //If the previous interaction was before the begining of the new period
         else {
-            uint startTimeOfNewPeriod = startTimeOfNetwork + (30 days * _MAU.length);
+            uint startTimeOfNewPeriod = startTimeOfNetwork + (30 days * MAUArrayLength);
             if(startTimeOfNewPeriod < latestUserInteraction) {
                 shouldCountAsNewInteraction = true;
             }
         }
 
         if(shouldCountAsNewInteraction) {
-            _MAU[_MAU.length - 1]++;
+            _MAU[MAUArrayLength - 1]++;
         }
 
         _users[account].latestInteraction = currentTime;
