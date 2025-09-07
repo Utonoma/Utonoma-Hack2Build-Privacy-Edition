@@ -12,7 +12,6 @@
 /*.asm
 /proofs/
 /verifier.sol
-/*.json
 !input.json
 /node_modules/
 /CommitCircuit_cpp/
