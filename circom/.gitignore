@@ -1,0 +1,12 @@
+/build/
+/out/
+/*.zkey
+/*.r1cs
+/*.sym
+/*_js/
+/*.ptau
+/*.wasm
+/proofs/
+/verifier.sol
+/*.json
+!input.json
