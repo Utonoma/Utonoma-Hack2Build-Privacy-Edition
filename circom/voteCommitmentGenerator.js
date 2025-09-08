@@ -3,21 +3,23 @@ const circomlibjs = require("circomlibjs");
 
 async function main() {
   // Example values
-  const vote = 1n; // 0 = dislike, 1 = like
-  const secret = 12345678901234567890123456789012n; // must be bigint
-  const id = 3n; // proposalId
+  const vote = 0n; // 0 = dislike, 1 = like
+  const secret = 1234567890123456789012345678901221322n; // must be bigint
+  const index = 1n; // index of the content in the content type library
+  const contentType = 0n; // One of the content types available in Utonoma
 
   // Build Poseidon
   const poseidon = await circomlibjs.buildPoseidon();
 
   // Calculate commitment
-  const commitment = poseidon.F.toObject(poseidon([vote, secret, id]));
+  const commitment = poseidon.F.toObject(poseidon([vote, secret, index, contentType]));
 
   // Prepare input object
   const input = {
     vote: Number(vote), // Circom likes integers in decimal
     secret: secret.toString(),
-    id: Number(id),
+    index: Number(index),
+    contentType: Number(contentType),
     voteCommitment: commitment.toString()
   };
 
