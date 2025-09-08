@@ -9,23 +9,15 @@ template LikeOrDislikeCircuit() {
   signal input voteCommitment;
 
 
-  signal input vote; // 0 for dislike and 1 for like
-  signal input secret; // randomness
-  signal input index;
-  signal input contentType;
+  signal input s1;
+  signal input s2;
 
 
-  // Check that vote is binary
-  vote * (1 - vote) === 0;
+  component hasher = Poseidon(2);
+  hasher.inputs[0] <== s1;
+  hasher.inputs[1] <== s2;
 
-
-  component h = Poseidon(4);
-  h.inputs[0] <== vote;
-  h.inputs[1] <== secret;
-  h.inputs[2] <== index;
-  h.inputs[3] <== contentType;
-
-  h.out === voteCommitment;
+  hasher.out === voteCommitment;
 }
 
 
