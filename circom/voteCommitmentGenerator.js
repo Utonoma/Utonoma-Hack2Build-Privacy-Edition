@@ -1,26 +1,27 @@
 const fs = require("fs");
 const circomlibjs = require("circomlibjs");
+const crypto = require("crypto");
 
 async function main() {
-  // Example values
-  const vote = 0n; // 0 = dislike, 1 = like
-  const secret = 1234567890123456789012345678901221322n; // must be bigint
-  const index = 1n; // index of the content in the content type library
-  const contentType = 0n; // One of the content types available in Utonoma
+
+
+  // Generate random secrets (bigints)
+  // You can also set them manually if needed
+  const s1 = BigInt("0x" + crypto.randomBytes(31).toString("hex")); // 248-bit secret
+  const s2 = BigInt("0x" + crypto.randomBytes(31).toString("hex"));
+
 
   // Build Poseidon
   const poseidon = await circomlibjs.buildPoseidon();
 
   // Calculate commitment
-  const commitment = poseidon.F.toObject(poseidon([vote, secret, index, contentType]));
+  const voteCommitment = poseidon.F.toObject(poseidon([s1, s2]));
 
-  // Prepare input object
+  // Prepare input.json
   const input = {
-    vote: Number(vote), // Circom likes integers in decimal
-    secret: secret.toString(),
-    index: Number(index),
-    contentType: Number(contentType),
-    voteCommitment: commitment.toString()
+    s1: s1.toString(),
+    s2: s2.toString(),
+    voteCommitment: voteCommitment.toString()
   };
 
   // Write to file
