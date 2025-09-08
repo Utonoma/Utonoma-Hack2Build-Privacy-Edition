@@ -10,9 +10,13 @@
 /*.hpp
 /*.dat
 /*.asm
+/*.wtns
 /proofs/
 /verifier.sol
-!input.json
+input.json
+proof.json
+public.json
 /node_modules/
 /CommitCircuit_cpp/
 /LikeOrDislikeCircuit_cpp/
+!./LikeOrDislikeCircuit/
