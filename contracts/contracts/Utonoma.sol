@@ -4,9 +4,10 @@ pragma solidity 0.8.22;
 
 import {ERC20} from "@openzeppelin/contracts/token/ERC20/ERC20.sol";
 import {IERC20} from "@openzeppelin/contracts/token/ERC20/IERC20.sol";
-import {ContentStorage} from "contracts/ContentStorage.sol";
-import {Users} from "contracts/Users.sol";
-import {Time} from "contracts/Time.sol";
+import {ContentStorage} from "./ContentStorage.sol";
+import {Users} from "./Users.sol";
+import {Time} from "./Time.sol";
+import {PrivateVoting} from "./PrivateVoting.sol";
 
 /**
 * @title The main contract (it's the only one that should be deployed). Contains all the logic that involves the 

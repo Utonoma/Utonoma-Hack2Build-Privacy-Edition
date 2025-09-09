@@ -2,7 +2,7 @@
 
 pragma solidity 0.8.22;
 
-import {Utils} from "contracts/Utils.sol";
+import {Utils} from "./Utils.sol";
 
 contract Users is Utils {
 
