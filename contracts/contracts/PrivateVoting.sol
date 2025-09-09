@@ -14,7 +14,7 @@ contract PrivateVoting is Groth16Verifier {
     }
 
     /// @notice Store a vote commitment, allways hide this method behind a paywall to avoid spamming
-    function commitVote(uint256 newVoteCommitment) external {
+    function commitVote(uint256 newVoteCommitment) internal {
         _secretVotes[newVoteCommitment] = true;
     }
 
@@ -24,7 +24,7 @@ contract PrivateVoting is Groth16Verifier {
         uint[2][2] calldata _pB,
         uint[2] calldata _pC,
         uint[1] calldata _pubSignals
-    ) external returns (bool) {
+    ) internal returns (bool) {
 
         require(_secretVotes[_pubSignals[0]] == true, "Secret vote not commited yet");
         require(voteVerifier.verifyProof(_pA, _pB, _pC, _pubSignals), "Invalid proof ");
