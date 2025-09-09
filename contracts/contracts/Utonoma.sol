@@ -19,7 +19,7 @@ import {PrivateVoting} from "./PrivateVoting.sol";
 * contract is not aware of the ERC20 logic. Use other contracts to create a separation of concerns and use 
 * this contract to build the wanted business logic from all the different modules in the other contracts.
 */
-contract Utonoma is ERC20, ContentStorage, Users, Time {
+contract Utonoma is ERC20, ContentStorage, Users, Time, PrivateVoting {
     
     address internal _owner;
 
@@ -75,6 +75,19 @@ contract Utonoma is ERC20, ContentStorage, Users, Time {
         _updateContent(content, id);
         _logUserInteraction(block.timestamp, _startTimeOfTheNetwork);
         emit disliked(id.index, uint256(id.contentType));
+    }
+
+    function revealVote(
+        uint[2] calldata _pA,
+        uint[2][2] calldata _pB,
+        uint[2] calldata _pC,
+        uint[1] calldata _pubSignals,
+        Identifier calldata id,
+        bool vote //true for like and false for dislike
+    ) external {
+        require(checkVoteValidity(_pA, _pB, _pC, _pubSignals));
+        if(vote) like(id);
+        else dislike(id);
     }
 
     /**
