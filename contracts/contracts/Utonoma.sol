@@ -56,7 +56,7 @@ contract Utonoma is ERC20, ContentStorage, Users, Time {
 
     /// @dev adds one to the likes count of the content
     /// @notice this call counts as a user interaction
-    function like(Identifier calldata id) external {
+    function like(Identifier calldata id) public {
         _collectFee(calculateFee(currentPeriodMAU()));
         Content memory content = getContentById(id);
         content.likes++;
@@ -67,7 +67,7 @@ contract Utonoma is ERC20, ContentStorage, Users, Time {
 
     /// @dev adds one to the likes count of the content
     /// @notice this call counts as a user interaction
-    function dislike(Identifier calldata id) external {
+    function dislike(Identifier calldata id) public {
         _collectFee(calculateFee(currentPeriodMAU()));
         Content memory content = getContentById(id);
         content.dislikes++;
