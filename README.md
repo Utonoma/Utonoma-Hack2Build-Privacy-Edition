@@ -34,6 +34,16 @@ The twist?
 The full incentive model and technical details are described in the whitepaper:  
 👉 [Utonoma Whitepaper (English)](https://blog.utonoma.com/wp-content/uploads/2024/04/utonoma_en.pdf)
 
+## 📖 How to run the smart contract in local.
+**Prerequisite: Install Node js**
+1. **Install the npm depencies** → Navigate to the /contracts folder and type in the terminal "npm install" this will install the requred npm packages required.
+2. **Compile the smart contract** → Run npx hardhat compile
+3. **Run a node of hardhat** → Open another terminal and navitage to the /contracts folder, then type "npx hardhat node", this will start a local blockchain
+4. **Deploy the smart contract in a Hardhat local network** → Go back to the first terminal and run "npx hardhat run deploy.js --network localhost"
+Now you can make RPC calls via http://127.0.0.1:8545, Chain ID: 31337.
+5. **Verify that the server its running** → Go back to the terminal where you executed npx hardhat node and you'll see some messages related to the Utonoma contract being deployed on the new blockchain.
+
+
 ## 📖 How to compile the circuits
 **Prerequisite: Install Rust, Node and Circom** Refer to this guide for the installation: https://docs.circom.io/getting-started/installation/
 1. **Install the npm depencies** → Navigate to the /circom folder and type in the terminal "npm install" this will install the requred npm packages required by the circuit.
