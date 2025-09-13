@@ -43,8 +43,16 @@ The full incentive model and technical details are described in the whitepaper:
 Now you can make RPC calls via http://127.0.0.1:8545, Chain ID: 31337.
 5. **Verify that the server its running** → Go back to the terminal where you executed npx hardhat node and you'll see some messages related to the Utonoma contract being deployed on the new blockchain.
 
+## 📖 How to generate the zkSNARK proofs
+1. **Install the npm depencies** → Navigate to the /circom folder and type in the terminal "npm install" this will install the requred npm packages required by the circuit.
+2. **Generate the secrets and the vote commitment** → In this same folder, run the command "node voteCommitmentGenerator.js" It will create a file called input.json that is required for the next step (everytime you run this 
+command, a new vote commitment and new secrets will be created).
+3. **Generate the witness** → Run the command "snarkjs wtns calculate ./LikeOrDislikeCircuit/LikeOrDislikeCircuit.wasm input.json witness.wtns". This will compute a witness with the information of the input.json file and will create a file with the name witness.wtns
+4. **Generate the zkSNARK proof and the public signals to validate it** Run the following command:
+snarkjs groth16 prove ./LikeOrDislikeCircuit/LikeOrDislikeCircuit.zkey witness.wtns proof.json public.json
+It will create the proof.json and the public.json files.
 
-## 📖 How to compile the circuits
+## 📖 How to compile the circuits and create the verification key, the zkey and the the wasm file required to calculate the witness and the verification smart contract
 **Prerequisite: Install Rust, Node and Circom** Refer to this guide for the installation: https://docs.circom.io/getting-started/installation/
 1. **Install the npm depencies** → Navigate to the /circom folder and type in the terminal "npm install" this will install the requred npm packages required by the circuit.
 2. **Compile the circuit** → Run circom LikeOrDislikeCircuit.circom --r1cs --wasm --sym --c
@@ -63,7 +71,7 @@ Then this:
 snarkjs zkey contribute LikeOrDislikeCircuit_0000.zkey LikeOrDislikeCircuit_0001.zkey --name="1st Contributor Name" -v
 And after, this:
 snarkjs zkey export verificationkey LikeOrDislikeCircuit_0001.zkey verification_key.json
-7. **Generate a proof** 
+7. **Generate a proof for** 
 snarkjs groth16 prove LikeOrDislikeCircuit_0001.zkey witness.wtns proof.json public.json
 
 Validate proof:
