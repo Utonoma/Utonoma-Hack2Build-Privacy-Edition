@@ -9,6 +9,13 @@ app.use(bodyParser.json({ limit: '10mb' }));
 // read verification key for off-chain verification:
 const verificationKey = JSON.parse(fs.readFileSync('../circom/verification_key.json'));
 
+async function proofToSolidityCallData(proof, publicSignals) {
+  const calldata = await snarkjs.groth16.exportSolidityCallData(proof, publicSignals);
+  //the array comes as a string, so we need to parse it
+  const parsedArray = JSON.parse(`[${calldata}]`);
+  return [pA, pB, pC, pubSignals] = parsedArray;;
+}
+
 // Endpoint: receive proof + publicSignals + vote meta (contentId,vote)
 app.post('/submitReveal', async (req, res) => {
   try {
@@ -21,7 +28,9 @@ app.post('/submitReveal', async (req, res) => {
     if (!ok) {
       return res.status(400).json({ error: "invalid proof" });
     }
-    return res.json({ status: 'submitted'});
+    const solidityCalldata = await proofToSolidityCallData(proof, publicSignals);
+    console.log(solidityCalldata)
+    return res.json({ status: solidityCalldata });
   } catch (err) {
     console.error("Error submitReveal:", err);
     return res.status(500).json({ error: err.toString() });
