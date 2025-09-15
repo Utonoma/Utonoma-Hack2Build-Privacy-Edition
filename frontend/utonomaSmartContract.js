@@ -1,6 +1,6 @@
-export const utonomaSepoliaAddress = '0xBed329C06DD3C5ddB7DFbd7597Bd552b2Fb3863D'
+export const utonomaSepoliaAddress = '0x0C092409e915c678b56853EfDbf925F2C13F0484'
 
-export const sepoliaTokenSymbol = 'testVersi'
+export const sepoliaTokenSymbol = 'utomi'
 
 export const tokenDecimals = 18
 
@@ -508,6 +508,56 @@ export const utonomaABI = [
 	{
 		"inputs": [
 			{
+				"internalType": "uint256[2]",
+				"name": "_pA",
+				"type": "uint256[2]"
+			},
+			{
+				"internalType": "uint256[2][2]",
+				"name": "_pB",
+				"type": "uint256[2][2]"
+			},
+			{
+				"internalType": "uint256[2]",
+				"name": "_pC",
+				"type": "uint256[2]"
+			},
+			{
+				"internalType": "uint256[1]",
+				"name": "_pubSignals",
+				"type": "uint256[1]"
+			},
+			{
+				"components": [
+					{
+						"internalType": "uint256",
+						"name": "index",
+						"type": "uint256"
+					},
+					{
+						"internalType": "enum ContentStorage.ContentTypes",
+						"name": "contentType",
+						"type": "uint8"
+					}
+				],
+				"internalType": "struct ContentStorage.Identifier",
+				"name": "id",
+				"type": "tuple"
+			},
+			{
+				"internalType": "bool",
+				"name": "vote",
+				"type": "bool"
+			}
+		],
+		"name": "revealVote",
+		"outputs": [],
+		"stateMutability": "nonpayable",
+		"type": "function"
+	},
+	{
+		"inputs": [
+			{
 				"internalType": "address",
 				"name": "from",
 				"type": "address"
@@ -999,19 +1049,6 @@ export const utonomaABI = [
 		"type": "function"
 	},
 	{
-		"inputs": [],
-		"name": "getMinContentTypes",
-		"outputs": [
-			{
-				"internalType": "uint256",
-				"name": "",
-				"type": "uint256"
-			}
-		],
-		"stateMutability": "pure",
-		"type": "function"
-	},
-	{
 		"inputs": [
 			{
 				"components": [
@@ -1057,8 +1094,27 @@ export const utonomaABI = [
 	{
 		"inputs": [
 			{
+				"internalType": "uint256",
+				"name": "voteCommitment",
+				"type": "uint256"
+			}
+		],
+		"name": "getSecretVotes",
+		"outputs": [
+			{
+				"internalType": "bool",
+				"name": "",
+				"type": "bool"
+			}
+		],
+		"stateMutability": "view",
+		"type": "function"
+	},
+	{
+		"inputs": [
+			{
 				"internalType": "bytes15",
-				"name": "userName",
+				"name": "requestedUserName",
 				"type": "bytes15"
 			}
 		],
@@ -1230,6 +1286,53 @@ export const utonomaABI = [
 				"internalType": "uint256",
 				"name": "",
 				"type": "uint256"
+			}
+		],
+		"stateMutability": "view",
+		"type": "function"
+	},
+	{
+		"inputs": [
+			{
+				"internalType": "uint256[2]",
+				"name": "_pA",
+				"type": "uint256[2]"
+			},
+			{
+				"internalType": "uint256[2][2]",
+				"name": "_pB",
+				"type": "uint256[2][2]"
+			},
+			{
+				"internalType": "uint256[2]",
+				"name": "_pC",
+				"type": "uint256[2]"
+			},
+			{
+				"internalType": "uint256[1]",
+				"name": "_pubSignals",
+				"type": "uint256[1]"
+			}
+		],
+		"name": "verifyProof",
+		"outputs": [
+			{
+				"internalType": "bool",
+				"name": "",
+				"type": "bool"
+			}
+		],
+		"stateMutability": "view",
+		"type": "function"
+	},
+	{
+		"inputs": [],
+		"name": "voteVerifier",
+		"outputs": [
+			{
+				"internalType": "contract Groth16Verifier",
+				"name": "",
+				"type": "address"
 			}
 		],
 		"stateMutability": "view",
