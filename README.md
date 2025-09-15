@@ -34,6 +34,27 @@ The twist?
 The full incentive model and technical details are described in the whitepaper:  
 👉 [Utonoma Whitepaper (English)](https://blog.utonoma.com/wp-content/uploads/2024/04/utonoma_en.pdf)
 
+```mermaid
+sequenceDiagram
+    participant Voter
+    participant CommitmentCreator
+    participant SmartContract
+    participant Relayer
+
+    CommitmentCreator->>SmartContract: Submit vote commitment + fee
+    SmartContract-->>CommitmentCreator: Commitment ID issued
+
+    CommitmentCreator->>Voter: Share secrets to reveal vote (QR or text)
+
+    Voter->>Relayer: <br>Reveals the zkSNARK proof<br/>+ like or dislike + content ID
+    Relayer->>SmartContract: Validates zkSNARK proof and submit tx
+
+    SmartContract->>SmartContract: Verify zkSNARK proof
+    SmartContract-->>SmartContract: Proof valid (vote accepted) and marks it to not be revealed again
+
+    SmartContract-->>Voter: Vote recorded (identity not revealed)
+```
+
 ## 📖 How to compile the circuits
 **Prerequisite: Install Rust, Node and Circom** Refer to this guide for the installation: https://docs.circom.io/getting-started/installation/
 1. **Install the npm depencies** → Navigate to the /circom folder and type in the terminal "npm install" this will install the requred npm packages required by the circuit.
