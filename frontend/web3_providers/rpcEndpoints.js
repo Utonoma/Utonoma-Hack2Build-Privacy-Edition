@@ -1,2 +1,2 @@
 export const sepoliaRpcEndpoint = 'https://api.avax-test.network/ext/bc/C/rpc'
-export const sepoliaEventFilterEndpoint = 'https://api.studio.thegraph.com/query/106360/utonoma-sepolia-get-contents-uploaded/version/latest'
+export const sepoliaEventFilterEndpoint = 'https://api.studio.thegraph.com/query/106360/utonoma-fuji-get-contents-uploaded/v0.0.1'
