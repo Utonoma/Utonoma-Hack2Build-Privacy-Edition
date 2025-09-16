@@ -38,6 +38,17 @@ While the original Utonoma ensures decentralized moderation, it has a **privacy 
 
 ## 3. How the Solution Works  
 
+1. Anyone can create vote commitments with **zk-proofs**, based on secret keys.  
+2. These commitments (**blank ballots**) are uploaded to the smart contract, paying the respective voting fee.  
+3. They are distributed to users via **QR codes or text** (secrets + commitments).  
+4. When voting:  
+   1. User calls a **relayer service** to reveal the blank ballot.  
+   2. They attach **like/dislike + content ID + zkSNARK proof**.  
+   3. The relayer submits the transaction (paying for the gas).  
+5. The smart contract **verifies the zkSNARK** and records the vote, marking it to not be revealed again.  
+
+**Result:** No link between the voter, their real account, or their real identity.  
+
 ```mermaid
 sequenceDiagram
     participant Voter
