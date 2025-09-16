@@ -70,6 +70,10 @@ sequenceDiagram
     SmartContract-->>Voter: Vote recorded (identity not revealed)
 ```
 
+Here is a demo on how it works:
+https://youtu.be/Nia5ICcm_0Q
+
+
 ## 4. Developer section
 You can find a memory of commands used for the development of the solution
 
