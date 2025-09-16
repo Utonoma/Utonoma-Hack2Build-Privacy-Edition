@@ -74,9 +74,111 @@ Here is a demo on how it works:
 https://youtu.be/Nia5ICcm_0Q
 
 
-## 4. Developer section
-You can find a memory of commands used for the development of the solution
+# Hackathon Judges Guide
 
+Welcome, judges! This guide will walk you through setting up and testing the Utonoma voting dApp on the Avalanche Fuji testnet.
+
+## Prerequisites
+
+Before you begin, please ensure you have the following:
+
+-   **Node.js** installed on your machine.
+-   A Web3 wallet browser extension (e.g., **Core Wallet** or MetaMask) configured for the **Avalanche Fuji Testnet**.
+-   **Testnet AVAX** in your wallet for gas fees.
+-   **test_utomi tokens** for voting fees. Please email [adrian.sequeira@utonoma.com](mailto:adrian.sequeira@utonoma.com) to request these.
+
+---
+
+## 1. Run the Frontend
+
+1.  Clone the project and navigate to its directory:
+    ```bash
+    git clone <your-repo-url>
+    cd <your-repo-directory>
+    ```
+
+2.  Navigate to the frontend folder and install its dependencies:
+    ```bash
+    cd frontend
+    npm install
+    ```
+
+3.  Start the development server:
+    ```bash
+    npm run start
+    ```
+    The application will open in your browser at `http://localhost:3000`.
+
+## 2. Load the Smart Contract in Remix IDE
+
+1.  Open the [Remix IDE](https://remix.ethereum.org/).
+2.  In the **File Explorer** panel, upload the `./contracts` folder from this project.
+3.  Open the `Utonoma.sol` contract file.
+4.  Go to the **Solidity Compiler** tab:
+    -   Select compiler version `0.8.22`.
+    -   Open **Advanced Configurations** and set the optimization to **200 runs**.
+    -   Click **Compile Utonoma.sol**.
+5.  Go to the **Deploy & Run Transactions** tab:
+    -   Set the **Environment** to `Injected Provider - MetaMask` (or your wallet). If Core Wallet is not listed, select "Customize this list..." and add it.
+    -   Ensure your wallet is connected to the **Fuji Testnet**.
+    -   In the **At Address** field, paste the contract address: `0xda753C40bcebb2e808D89d57fbE42d2DA51Fd06E`
+    -   Click **At Address**. The contract's functions will now appear in the bottom panel.
+
+## 3. Create a Vote Commitment
+
+1.  Open a new terminal and navigate to the `circom` folder of the project:
+    ```bash
+    cd circom
+    ```
+
+2.  Run the script to generate a vote commitment:
+    ```bash
+    node voteCommitmentGenerator.js
+    ```
+    This will output a JSON string to the terminal.
+
+3.  Copy the value of the `voteCommitment` field from the output.
+
+4.  In Remix IDE, find the `COMMITVOTE` function in the deployed contract panel. Paste the copied `voteCommitment` value into its field and click **transact**. Confirm the transaction in your wallet (this requires `test_utomi` tokens).
+
+## 4. Reveal Your Vote
+
+1.  **Install SNARKJS** (if not already installed globally):
+    ```bash
+    npm install -g snarkjs
+    ```
+
+2.  **Generate the Witness** (ensure you are in the `circom` directory):
+    ```bash
+    snarkjs wtns calculate ./LikeOrDislikeCircuit/LikeOrDislikeCircuit.wasm input.json witness.wtns
+    ```
+
+3.  **Generate the Proof**:
+    ```bash
+    snarkjs groth16 prove ./LikeOrDislikeCircuit/LikeOrDislikeCircuit.zkey witness.wtns proof.json public.json
+    ```
+
+4.  **Generate the Calldata** for the Solidity function:
+    ```bash
+    snarkjs generatecall
+    ```
+    This command will output several arrays.
+
+5.  **Reveal the Vote in Remix**:
+    -   Go back to the frontend in your browser, find the "bunny caricature" video, and note its current like/dislike count.
+    -   In Remix, find the `revealVote` function.
+    -   Copy each array from the `snarkjs generatecall` output into the corresponding fields: `_pA`, `_pB`, `_pC`, and `_pubSignals`.
+    -   For the `_id` field, enter `[0,5]` (the ID for the bunny video).
+    -   For the `_vote` field, enter `0` for a dislike or `1` for a like.
+    -   Click **transact** and confirm the transaction in your wallet.
+
+6.  **Verify the Vote**:
+    -   Return to the frontend application and refresh the page.
+    -   Find the "bunny in the forest" video again. You should see the like or dislike count increased by one.
+
+
+# 5. Developer section
+You can find a memory of commands used for the development of the solution
 📖 How to run the smart contract in local.
 **Prerequisite: Install Node js**
 1. **Install the npm depencies** → Navigate to the /contracts folder and type in the terminal "npm install" this will install the requred npm packages required.
