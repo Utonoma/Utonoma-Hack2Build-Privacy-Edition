@@ -1,0 +1,120 @@
+<!DOCTYPE html>
+<html id="htmlTag" lang="en">
+  <script>
+    //Script for multilingual support 
+    const $htmlTag = document.querySelector("#htmlTag")
+    switch(navigator.language.substring(0,2)) {
+      case "es":
+        $htmlTag.lang = "es"
+        $htmlTag.classList.add("spanishLang")
+        break
+      default:
+        $htmlTag.classList.add("englishLang")
+        break
+    }
+  </script>
+<head>
+  <meta charset="UTF-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1.0">
+  <title>Upload to Utonoma</title>
+  <link rel="preload" href="./assets/fonts/fontsLoader.css" as="style" onload="this.onload=null;this.rel='stylesheet'">
+  <noscript><link rel="stylesheet" href="./assets/fonts/fontsLoader.css"></noscript>
+  <!--Inline the critical css in the following style tag--> 
+  <style type="text/css">
+    :root {
+      --cyberYellow: #fdd30f;
+      --pirateBlack: #383838;
+      --electricBlueLemonade: #0063b1;
+      --vibrantOrange: #FF7420;
+      --snow: #fffafa;
+      --baseFontFamily: NotoSans, sans-serif, Helvetica;
+      --headline1: normal 3rem/100% var(--baseFontFamily);
+      --headline6: normal 1.19rem/normal var(--baseFontFamily);
+    }
+
+    form > div {
+      text-align: left;
+    }
+
+    form h2 {
+      font: var(--headline1); 
+      margin-bottom: 21px;
+    }
+
+    /*Start of selectors for multilingual support*/ 
+    body [lang=en], 
+    body [lang=es] {
+      display: none;
+    }
+
+    .spanishLang [lang=es] {
+      display: inline;
+    }
+
+    .englishLang [lang=en] {
+      display: inline;
+    }
+    /*End of selectors for multilingual support*/
+
+    body {
+      background-color: var(--pirateBlack);
+      color: var(--snow);
+      font-family: var(--baseFontFamily);
+      margin: 0;
+    }
+
+    @media screen and (min-width: 700px) {
+
+    }
+  </style>
+</head>
+<body>
+  <button 
+    id="buttonRightPanelToCenterPanel"
+    class="Button--horizontalText" 
+    style="margin-top: 7rem; transform: rotate(-90deg); color: var(--snow);" 
+    onclick="location.href='/'"
+    type="button">
+    <span style="font: var(--headline6);" lang="en">BACK</span>
+    <span style="font: var(--headline6);" lang="es">ATRAS</span>
+    <svg width="21" height="36" viewBox="0 0 21 36" fill="none" xmlns="http://www.w3.org/2000/svg"
+      style="transform: rotate(-90deg);">
+      <g clip-path="url(#clip0_541_508)">
+      <path d="M1.16406 1.19029L18.3187 17.4749L1.16406 34.7478" stroke="#fffafa" stroke-width="3.28351"/>
+      </g>
+      <defs>
+      <clipPath id="clip0_541_508">
+      <rect width="20.6681" height="35.9052" fill="white"/>
+      </clipPath>
+      </defs>
+    </svg>
+  </button>
+  <div style="display: flex; justify-content: center;">
+    <div style="text-align: left">
+      <h2 style="font: var(--headline1); margin-bottom: 21px;">
+        <span lang="en">Redeem a blind signature vote</span>
+        <span lang="es">Reclama un voto firmado en blanco</span>
+      </h2>
+      <label for="textAreaShortVideoTitle" style="font: var(--headline6);">
+        <span lang="en">Paste the text here</span>
+        <span lang="es">Pega el texto aquí</span>
+      </label>
+      <textarea style="width: 100%; margin-top: 21px;" id="textAreaShortVideoTitle" required maxlength="100" rows="10"></textarea>
+    </div>
+  </div>
+  <div style="display: flex; justify-content: center;"> 
+    <button 
+      type="submit" 
+      id="buttonUploadContent"
+      class="Button--horizontalText" 
+      style="margin: 21px 0; background-color: var(--cyberYellow);"
+    >
+      <h1 style="font: var(--headline6); margin: 0;">
+        <span lang="en">Cash In</span>
+        <span lang="es">Canjear</span>
+      </h1>
+      <img src="../assets/icons/continue-active-icon.svg" style="width: 1.5rem; transform: rotate(-90deg);" alt="">
+    </button>
+  </div>
+</body>
+</html>
