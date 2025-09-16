@@ -92,11 +92,6 @@ Before you begin, please ensure you have the following:
 ## 1. Run the Frontend
 
 1.  Clone the project and navigate to its directory:
-    ```bash
-    git clone <your-repo-url>
-    cd <your-repo-directory>
-    ```
-
 2.  Navigate to the frontend folder and install its dependencies:
     ```bash
     cd frontend
@@ -112,7 +107,7 @@ Before you begin, please ensure you have the following:
 ## 2. Load the Smart Contract in Remix IDE
 
 1.  Open the [Remix IDE](https://remix.ethereum.org/).
-2.  In the **File Explorer** panel, upload the `./contracts` folder from this project.
+2.  In the **File Explorer** panel, upload the `./contracts/contracts` folder from this project.
 3.  Open the `Utonoma.sol` contract file.
 4.  Go to the **Solidity Compiler** tab:
     -   Select compiler version `0.8.22`.
