@@ -14,7 +14,7 @@ contract PrivateVoting is Groth16Verifier {
     }
 
     /// @notice Store a vote commitment, allways hide this method behind a paywall to avoid spamming
-    function commitVote(uint256 newVoteCommitment) internal {
+    function _commitVote(uint256 newVoteCommitment) internal {
         _secretVotes[newVoteCommitment] = true;
     }
 

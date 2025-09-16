@@ -77,6 +77,13 @@ contract Utonoma is ERC20, ContentStorage, Users, Time, PrivateVoting {
         emit disliked(id.index, uint256(id.contentType));
     }
 
+    /// @dev commits a vote by paying a fee to the platform
+    /// @notice this call counts as a user interaction
+    function commitVote(uint256 newVoteCommitment) public {
+        _collectFee(calculateFee(currentPeriodMAU()));
+        _commitVote(newVoteCommitment);
+    }
+
     function revealVote(
         uint[2] calldata _pA,
         uint[2][2] calldata _pB,
@@ -86,8 +93,18 @@ contract Utonoma is ERC20, ContentStorage, Users, Time, PrivateVoting {
         bool vote //true for like and false for dislike
     ) external {
         require(checkVoteValidity(_pA, _pB, _pC, _pubSignals));
-        if(vote) like(id);
-        else dislike(id);
+        Content memory content = getContentById(id);
+        if(vote) {
+            content.likes++;
+            emit liked(id.index, uint256(id.contentType));
+        }
+        else {
+            content.dislikes++;
+            emit disliked(id.index, uint256(id.contentType));
+        } 
+        _updateContent(content, id);
+        _logUserInteraction(block.timestamp, _startTimeOfTheNetwork);
+        emit liked(id.index, uint256(id.contentType));
     }
 
     /**
